@@ -1,3 +1,5 @@
+import { Picture } from "./Picture";
+import { hasImage } from "@/content/assets";
 import type { Winner } from "@/content/winners";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -11,41 +13,53 @@ function usePlace(w: Winner) {
 }
 
 /*
- * Winner presentation system.
- *  - WinnerFeature: the top finisher. Prestige from scale: an oversized rank
- *    numeral, the name set huge, prize and place as badges. If a real
- *    portrait is supplied it sits behind the name (name overlaps its lower
- *    part); without one the record is purely typographic. Never a placeholder.
- *  - WinnerSupport: 2nd/3rd, same anatomy at smaller scale.
+ * Winner presentation system (championship editorial, not casino):
+ *  - WinnerFeature (1st): oversized outlined rank numeral; when a genuine
+ *    portrait is registered it stands in front of the numeral, fading into
+ *    the arena at the bottom (CSS mask: no background removal needed), and
+ *    the name overlaps its lower part. Without a portrait: typographic.
+ *  - WinnerSupport (2nd/3rd): same anatomy, smaller.
+ * Never a placeholder person.
  */
 
 export function WinnerFeature({ winner }: { winner: Winner }) {
   const { t } = useI18n();
   const place = usePlace(winner);
-  const hasImage = Boolean(winner.image);
+  const portrait = winner.imageId && hasImage(winner.imageId) ? winner.imageId : null;
 
   return (
-    <article className="relative grid items-end gap-6 md:grid-cols-12">
-      <div aria-hidden className="relative md:col-span-5">
-        <span className="display-xl block select-none text-[clamp(14rem,48vw,30rem)] leading-[0.78] text-transparent [-webkit-text-stroke:3px_var(--alba-gold)]">
+    <article
+      className={cn(
+        "relative grid items-end gap-6 md:grid-cols-12",
+        portrait && "pt-[clamp(2rem,6vw,4rem)]",
+      )}
+    >
+      <div className="relative md:col-span-5">
+        <span
+          aria-hidden
+          className={cn(
+            "display-xl block select-none leading-[0.78] text-transparent [-webkit-text-stroke:3px_var(--alba-gold)]",
+            "text-[clamp(14rem,48vw,30rem)]",
+          )}
+        >
           {winner.position}
         </span>
-        {hasImage ? (
-          <img
-            src={winner.image}
-            alt=""
-            loading="lazy"
-            className="absolute bottom-0 left-[12%] h-[105%] w-auto object-contain"
+        {portrait ? (
+          <Picture
+            id={portrait}
+            alt={winner.imageAlt ?? winner.name}
+            sizes="(min-width: 768px) 34vw, 80vw"
+            className="absolute bottom-0 left-[12%] h-[112%] w-[78%] [mask-image:linear-gradient(to_bottom,black_64%,transparent)]"
+            imgClassName="h-full object-cover object-[50%_18%]"
           />
         ) : null}
       </div>
 
-      <div className={cn("relative md:col-span-7", hasImage && "md:-ml-[18%]")}>
+      <div className={cn("relative md:col-span-7", portrait && "md:-ml-[16%] md:pb-6")}>
         <p className="label inline-block rounded-full bg-alba-gold px-4 py-1.5 text-alba-ink">
           {place}
         </p>
         <h4 className="display-xl mt-5 text-[clamp(3.5rem,10vw,8.5rem)]">{winner.name}</h4>
-        {hasImage && winner.imageAlt ? <p className="sr-only">{winner.imageAlt}</p> : null}
         <dl className="mt-8 flex flex-wrap gap-x-12 gap-y-6">
           {winner.prize ? (
             <div>
@@ -70,6 +84,7 @@ export function WinnerFeature({ winner }: { winner: Winner }) {
 export function WinnerSupport({ winner }: { winner: Winner }) {
   const { t } = useI18n();
   const place = usePlace(winner);
+  const portrait = winner.imageId && hasImage(winner.imageId) ? winner.imageId : null;
   return (
     <article className="relative flex items-end gap-5 border-t-2 border-alba-paper/25 pt-6">
       <span
@@ -78,21 +93,31 @@ export function WinnerSupport({ winner }: { winner: Winner }) {
       >
         {winner.position}
       </span>
-      {winner.image ? (
-        <img
-          src={winner.image}
-          alt={winner.imageAlt ?? ""}
-          loading="lazy"
-          className="h-28 w-auto object-contain"
+      {portrait ? (
+        <Picture
+          id={portrait}
+          alt={winner.imageAlt ?? winner.name}
+          sizes="120px"
+          className="w-28 shrink-0 [mask-image:linear-gradient(to_bottom,black_70%,transparent)]"
         />
       ) : null}
       <div>
         <p className="label text-alba-gold">{place}</p>
         <h4 className="display-xl mt-1 text-4xl">{winner.name}</h4>
-        <p className="mt-2 text-base text-alba-paper/85">
-          {[winner.prize, winner.location].filter(Boolean).join(", ")}
-        </p>
-        <span className="sr-only">{t("win.prize")}</span>
+        <dl className="mt-2 text-base text-alba-paper/85">
+          {winner.prize ? (
+            <div className="flex gap-2">
+              <dt>{t("win.prize")}:</dt>
+              <dd>{winner.prize}</dd>
+            </div>
+          ) : null}
+          {winner.location ? (
+            <div className="flex gap-2">
+              <dt>{t("win.location")}:</dt>
+              <dd>{winner.location}</dd>
+            </div>
+          ) : null}
+        </dl>
       </div>
     </article>
   );

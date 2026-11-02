@@ -6,6 +6,8 @@
  * src/assets/winners/, import it here, and set `image` + `imageAlt`.
  */
 
+import type { SiteImageId } from "./assets";
+
 export type Winner = {
   id: string;
   name: string;
@@ -14,7 +16,12 @@ export type Winner = {
   location?: string;
   /** Display string exactly as verified, e.g. "TZS 130,000". */
   prize?: string;
-  image?: string;
+  /**
+   * Portrait from the asset registry (content/assets.ts). Only a genuine photo
+   * of the winner. If the registry slot is still empty, the UI shows the
+   * typographic record instead.
+   */
+  imageId?: SiteImageId;
   imageAlt?: string;
   /** Link to a record in content/tournaments.ts, only once verified. */
   tournamentId?: string;
@@ -28,5 +35,8 @@ export const winners: Winner[] = [
     position: 1,
     location: "Dar es Salaam, Tanzania",
     prize: "TZS 130,000",
+    // Slot is registered; the genuine photo has not been received yet.
+    imageId: "davidSanyaPortrait",
+    imageAlt: "David Sanya, first-place Albastini winner",
   },
 ];

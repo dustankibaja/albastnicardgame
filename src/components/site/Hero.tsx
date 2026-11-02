@@ -22,42 +22,57 @@ type Layer = {
   /** position/size inside the stage, mobile first then desktop */
   box: string;
   rotate: number;
+  /** depth: farther cards are slightly smaller, softer shadow, slower parallax */
+  scale: number;
+  shadow: string;
   dx: number;
   dy: number;
   dr: number;
   delay: number;
 };
 
+/*
+ * A held hand, not a row: heavy overlap, uneven rotations, three depths.
+ * Back → front: red, black, blue. Each card keeps its visible artwork
+ * (corner index + chip) unobscured enough to read; the phone overlaps the
+ * front card's edge so both experiences share one stage.
+ */
 const cards: Layer[] = [
   {
     id: "aceRed",
     alt: "alt.aceRed",
-    box: "left-[3%] top-[22%] w-[30%] lg:left-[2%] lg:top-[30%] lg:w-[29%]",
-    rotate: -15,
-    dx: 6,
-    dy: 40,
-    dr: -3,
+    box: "left-[0%] top-[25%] w-[31%] lg:left-[1%] lg:top-[29%] lg:w-[30%]",
+    rotate: -19,
+    scale: 0.93,
+    shadow: "shadow-[0_18px_30px_-16px_rgb(0_0_0/0.5)]",
+    dx: 5,
+    dy: 30,
+    dr: -2,
     delay: 140,
   },
   {
     id: "aceBlack",
     alt: "alt.aceBlack",
-    box: "left-[15%] top-[10%] w-[30%] lg:left-[20%] lg:top-[19%] lg:w-[29%]",
-    rotate: -4,
-    dx: 10,
-    dy: 60,
-    dr: -1.5,
-    delay: 220,
+    box: "left-[11%] top-[13%] w-[31%] lg:left-[13%] lg:top-[18%] lg:w-[30%]",
+    rotate: -7,
+    scale: 0.97,
+    shadow: "shadow-[0_24px_40px_-18px_rgb(0_0_0/0.55)]",
+    dx: 9,
+    dy: 48,
+    dr: -1,
+    delay: 210,
   },
   {
     id: "aceBlue",
     alt: "alt.aceBlue",
-    box: "left-[64%] top-[18%] w-[30%] lg:left-[38%] lg:top-[26%] lg:w-[29%]",
-    rotate: 9,
-    dx: 14,
-    dy: 50,
-    dr: 2,
-    delay: 300,
+    box: "left-[57%] top-[21%] w-[31%] lg:left-[26%] lg:top-[24%] lg:w-[30%]",
+    rotate: 6,
+    scale: 1,
+    shadow: "shadow-[0_34px_54px_-20px_rgb(0_0_0/0.65)]",
+    dx: 13,
+    dy: 64,
+    dr: 1.5,
+    delay: 280,
   },
 ];
 
@@ -109,7 +124,7 @@ export function Hero() {
 
         {/* The stage: physical cards and the app, together. */}
         <div className="relative lg:col-span-7">
-          <div className="relative mx-auto aspect-[1/0.9] w-full max-w-[560px] lg:aspect-[1/0.78] lg:max-w-none">
+          <div className="relative mx-auto aspect-[1/0.98] w-full max-w-[560px] lg:aspect-[1/0.78] lg:max-w-none">
             {cards.map((c) => (
               <div
                 key={c.id}
@@ -122,8 +137,8 @@ export function Hero() {
                     alt={t(c.alt)}
                     priority
                     sizes="(min-width: 1024px) 18vw, 31vw"
-                    className="overflow-hidden rounded-[7%] shadow-[0_30px_50px_-18px_rgb(0_0_0/0.65)]"
-                    style={{ transform: `rotate(${c.rotate}deg)` }}
+                    className={cn("overflow-hidden rounded-[7%]", c.shadow)}
+                    style={{ transform: `rotate(${c.rotate}deg) scale(${c.scale})` }}
                   />
                 </div>
               </div>
@@ -131,15 +146,15 @@ export function Hero() {
 
             {/* Phone: centred on mobile, overlapping the hand on desktop. */}
             <div
-              className="depth absolute left-[29%] top-0 z-10 w-[42%] lg:left-[64%] lg:top-[2%] lg:w-[31%]"
-              style={depthVars(18, 90, 1.5)}
+              className="depth absolute left-[27%] top-0 z-10 w-[46%] lg:left-[49%] lg:top-[0%] lg:w-[37%]"
+              style={depthVars(20, 96, 1.5)}
             >
               <div className="enter" style={{ ["--delay" as string]: "260ms" }}>
                 <PhoneMockup
                   alt={t("alt.app")}
                   priority
-                  sizes="(min-width: 1024px) 18vw, 42vw"
-                  className="rotate-[4deg]"
+                  sizes="(min-width: 1024px) 22vw, 46vw"
+                  className="rotate-[5deg]"
                 />
               </div>
             </div>

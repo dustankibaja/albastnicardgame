@@ -36,7 +36,7 @@ export function FinalCTA() {
 
       <div className="shell relative pb-[clamp(5rem,10vw,8rem)] pt-[clamp(15rem,62vw,17rem)] sm:pt-[clamp(8rem,14vw,12rem)]">
         <Reveal className="max-w-3xl">
-          <h2 id="final-title" className="display-xl text-[clamp(5rem,17vw,13rem)] leading-[0.8]">
+          <h2 id="final-title" className="display-xl type-poster">
             {t("final.title1")}
             <br />
             {t("final.title2")}

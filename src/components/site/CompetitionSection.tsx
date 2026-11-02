@@ -71,7 +71,7 @@ export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
 
         <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:items-start">
           <Reveal className="lg:col-span-4 lg:pt-6">
-            <p className="max-w-[30ch] text-xl leading-snug text-alba-paper/90">{t("tour.body")}</p>
+            <p className="type-lede max-w-[26ch] text-alba-paper/90">{t("tour.body")}</p>
           </Reveal>
           <Reveal
             delay={100}
@@ -89,9 +89,9 @@ export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
 
         {/* Winners — verified records only; the block disappears if there are none. */}
         {feature ? (
-          <div className="mt-[clamp(6rem,12vw,11rem)]">
+          <div className="mt-[clamp(5rem,9vw,8rem)] border-t border-alba-paper/15 pt-[clamp(3rem,6vw,5rem)]">
             <Reveal>
-              <h3 className="display-xl text-[clamp(2.75rem,7vw,6rem)]">
+              <h3 className="display-xl type-editorial">
                 <span className="block sm:inline">{t("win.title1")}</span>{" "}
                 <span className="block sm:inline">{t("win.title2")}</span>
               </h3>

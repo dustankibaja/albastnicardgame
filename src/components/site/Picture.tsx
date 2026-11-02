@@ -3,7 +3,8 @@ import { siteImages, type SiteImageId } from "@/content/assets";
 import { cn } from "@/lib/utils";
 
 /**
- * Responsive AVIF/WebP image from the asset registry.
+ * Responsive AVIF/WebP image from the asset registry. Renders nothing for
+ * registry slots that are still awaiting a genuine asset.
  * `sizes` must describe the real rendered width so the browser picks the
  * smallest file that stays sharp.
  */
@@ -25,6 +26,8 @@ export function Picture({
   priority?: boolean;
 }) {
   const { image } = siteImages[id];
+  // Slot awaiting a genuine asset: render nothing (never a placeholder).
+  if (!image) return null;
   const srcSet = (list: [string, number][]) => list.map(([src, w]) => `${src} ${w}w`).join(", ");
   const fallback = image.webp[image.webp.length - 1]!;
   return (

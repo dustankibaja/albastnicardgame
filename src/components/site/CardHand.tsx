@@ -53,7 +53,7 @@ export function CardHand({ cards, label }: { cards: HandCard[]; label: TKey }) {
   const current = cards[active]!;
 
   return (
-    <div className="grid gap-8">
+    <div className="grid gap-6 md:grid-cols-[auto_minmax(0,1fr)] md:items-center md:gap-10">
       <div
         role="tablist"
         aria-label={t(label)}
@@ -76,7 +76,7 @@ export function CardHand({ cards, label }: { cards: HandCard[]; label: TKey }) {
               tabIndex={selected ? 0 : -1}
               onClick={() => setActive(i)}
               className={cn(
-                "group relative -mx-[1.5%] w-[34%] max-w-[230px] shrink-0 rounded-[9%] text-left outline-offset-4 first:ml-0",
+                "group relative -mx-[1.5%] w-[34%] max-w-[180px] shrink-0 rounded-[9%] text-left outline-offset-4 first:ml-0 md:w-[140px] xl:w-[160px]",
                 "transition-transform duration-[var(--dur-std)] ease-[var(--ease-out)]",
                 "motion-safe:hover:-translate-y-1",
                 selected ? "z-10 motion-safe:-translate-y-2.5" : "z-0",
@@ -86,7 +86,7 @@ export function CardHand({ cards, label }: { cards: HandCard[]; label: TKey }) {
               <Picture
                 id={c.id}
                 alt={t(c.alt)}
-                sizes="(min-width: 768px) 230px, 34vw"
+                sizes="(min-width: 1280px) 160px, (min-width: 768px) 140px, 34vw"
                 className={cn(
                   "overflow-hidden rounded-[8%] shadow-[0_24px_40px_-20px_rgb(0_0_0/0.55)] ring-offset-2",
                   selected ? "ring-4 ring-alba-blue" : "ring-0",
@@ -109,18 +109,15 @@ export function CardHand({ cards, label }: { cards: HandCard[]; label: TKey }) {
         id={`${uid}-panel`}
         role="tabpanel"
         aria-labelledby={`${uid}-tab-${active}`}
-        className="min-h-[13rem] max-w-xl"
+        className="min-h-[11rem] max-w-md md:min-w-[17rem]"
       >
         <p aria-hidden className="label text-muted-foreground">
           {t("two.hint")}
         </p>
-        <h3
-          key={`${active}-t`}
-          className={cn("display-xl mt-3 text-[clamp(3.5rem,8vw,6.5rem)]", current.tone)}
-        >
+        <h3 key={`${active}-t`} className={cn("display-xl type-editorial mt-2", current.tone)}>
           {t(current.title)}
         </h3>
-        <p key={`${active}-b`} className="mt-4 max-w-[34ch] text-xl leading-snug">
+        <p key={`${active}-b`} className="type-lede mt-3 max-w-[32ch]">
           {t(current.body)}
         </p>
       </div>
