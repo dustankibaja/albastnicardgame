@@ -3,7 +3,6 @@ import { CardsButton } from "./CardsButton";
 import { DownloadButton } from "./DownloadButton";
 import { PhoneMockup } from "./PhoneMockup";
 import { Picture } from "./Picture";
-import { Wave } from "./Wave";
 import type { SiteImageId } from "@/content/assets";
 import { usePointerDepth, useScrollProgress } from "@/hooks/use-depth";
 import { useI18n, type TKey } from "@/lib/i18n";
@@ -89,7 +88,7 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="on-dark relative isolate overflow-hidden bg-alba-blue text-alba-paper"
     >
-      <div className="shell relative z-10 grid items-center gap-4 pb-[clamp(2.5rem,7vw,7rem)] lg:gap-6 pt-24 sm:pt-28 lg:grid-cols-12 lg:pt-32">
+      <div className="shell relative z-10 grid items-center gap-4 pb-[clamp(0.75rem,1.5vw,1.5rem)] lg:gap-6 pt-24 sm:pt-28 lg:grid-cols-12 lg:pt-32">
         <div className="lg:col-span-5">
           <h1 id="hero-title" className="display-xl">
             <span className="enter block text-[clamp(4.25rem,19vw,10rem)] lg:text-[clamp(5.5rem,8.6vw,9.75rem)]">
@@ -169,9 +168,8 @@ export function Hero() {
           </div>
         </div>
       </div>
-
-      {/* Card-wave edge into the white "card stock" chapter. */}
-      <Wave fill="var(--alba-paper)" className="relative z-0 -mb-px -mt-[clamp(44px,7vw,120px)]" />
+      {/* The wave edge now belongs to the next chapter: the hero blue flows
+          straight onto the real table photograph (Phase 4). */}
     </section>
   );
 }

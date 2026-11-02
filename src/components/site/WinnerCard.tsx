@@ -30,16 +30,17 @@ export function WinnerFeature({ winner }: { winner: Winner }) {
   return (
     <article
       className={cn(
-        "relative grid items-end gap-6 md:grid-cols-12",
-        portrait && "pt-[clamp(2rem,6vw,4rem)]",
+        "relative grid items-end gap-6 lg:grid-cols-12",
+        portrait && "pt-[clamp(4rem,10vw,6rem)]",
       )}
     >
-      <div className="relative md:col-span-5">
+      <div className="relative lg:col-span-5">
         <span
           aria-hidden
           className={cn(
             "display-xl block select-none leading-[0.78] text-transparent [-webkit-text-stroke:3px_var(--alba-gold)]",
             "text-[clamp(14rem,48vw,30rem)]",
+            portrait && "max-lg:text-[clamp(16rem,52vw,24rem)]",
           )}
         >
           {winner.position}
@@ -47,15 +48,15 @@ export function WinnerFeature({ winner }: { winner: Winner }) {
         {portrait ? (
           <Picture
             id={portrait}
-            alt={winner.imageAlt ?? winner.name}
-            sizes="(min-width: 768px) 34vw, 80vw"
-            className="absolute bottom-0 left-[12%] h-[112%] w-[78%] [mask-image:linear-gradient(to_bottom,black_64%,transparent)]"
-            imgClassName="h-full object-cover object-[50%_18%]"
+            alt={winner.imageAltKey ? t(winner.imageAltKey) : winner.name}
+            sizes="(min-width: 1024px) 34vw, 70vw"
+            className="absolute bottom-0 left-[8%] aspect-[720/880] h-[132%] lg:left-[12%] lg:h-[118%]"
+            imgClassName="h-full w-full object-contain [mask-image:radial-gradient(ellipse_64%_84%_at_48%_38%,black_50%,transparent_100%)]"
           />
         ) : null}
       </div>
 
-      <div className={cn("relative md:col-span-7", portrait && "md:-ml-[16%] md:pb-6")}>
+      <div className={cn("relative lg:col-span-7", portrait && "lg:-ml-[16%] lg:pb-6")}>
         <p className="label inline-block rounded-full bg-alba-gold px-4 py-1.5 text-alba-ink">
           {place}
         </p>
@@ -96,7 +97,7 @@ export function WinnerSupport({ winner }: { winner: Winner }) {
       {portrait ? (
         <Picture
           id={portrait}
-          alt={winner.imageAlt ?? winner.name}
+          alt={winner.imageAltKey ? t(winner.imageAltKey) : winner.name}
           sizes="120px"
           className="w-28 shrink-0 [mask-image:linear-gradient(to_bottom,black_70%,transparent)]"
         />

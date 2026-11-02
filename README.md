@@ -5,11 +5,15 @@ with the physical cards around a table, or on the Albastini app.
 
 **INGIA UWANJANI. TUCHEZE.**
 
-## Status: Phase 3 built, awaiting design review
+## Status: Phase 4 built, awaiting design review
 
 - Phase 1 (`docs/PHASE-1.md`): truthful, safe, stable foundation.
 - Phase 2 (`docs/PHASE-2.md`): visual system, motion, hero and chapter redesign.
 - Phase 3 (`docs/PHASE-3.md`): art-direction refinement, asset slots, provenance.
+- Phase 4 (`docs/PHASE-4.md`): real David portrait, real table and card-front photography.
+
+Genuine source originals live untouched in `assets-source/` (not bundled), with
+derivative steps documented next to them.
 
 Ground rules for anyone editing this repo:
 

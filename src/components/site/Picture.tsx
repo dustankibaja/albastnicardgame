@@ -41,7 +41,8 @@ export function Picture({
         height={Math.round(image.width * image.ratio)}
         loading={priority ? "eager" : "lazy"}
         decoding={priority ? "sync" : "async"}
-        fetchPriority={priority ? "high" : "auto"}
+        // Non-hero images never compete with the hero for bandwidth.
+        fetchPriority={priority ? "high" : "low"}
         className={cn("block h-auto w-full", imgClassName)}
       />
     </picture>

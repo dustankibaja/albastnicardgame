@@ -24,6 +24,20 @@ import boxExpansion300Avif from "@/assets/optimized/boxExpansion-300.avif";
 import boxExpansion300Webp from "@/assets/optimized/boxExpansion-300.webp";
 import boxExpansion600Avif from "@/assets/optimized/boxExpansion-600.avif";
 import boxExpansion600Webp from "@/assets/optimized/boxExpansion-600.webp";
+import davidSanyaPortrait440Avif from "@/assets/optimized/davidSanyaPortrait-440.avif";
+import davidSanyaPortrait440Webp from "@/assets/optimized/davidSanyaPortrait-440.webp";
+import davidSanyaPortrait720Avif from "@/assets/optimized/davidSanyaPortrait-720.avif";
+import davidSanyaPortrait720Webp from "@/assets/optimized/davidSanyaPortrait-720.webp";
+import cardsOnTable800Avif from "@/assets/optimized/cardsOnTable-800.avif";
+import cardsOnTable800Webp from "@/assets/optimized/cardsOnTable-800.webp";
+import cardsOnTable1440Avif from "@/assets/optimized/cardsOnTable-1440.avif";
+import cardsOnTable1440Webp from "@/assets/optimized/cardsOnTable-1440.webp";
+import cardsOnTable2048Avif from "@/assets/optimized/cardsOnTable-2048.avif";
+import cardsOnTable2048Webp from "@/assets/optimized/cardsOnTable-2048.webp";
+import cardFrontsOnWhite640Avif from "@/assets/optimized/cardFrontsOnWhite-640.avif";
+import cardFrontsOnWhite640Webp from "@/assets/optimized/cardFrontsOnWhite-640.webp";
+import cardFrontsOnWhite1180Avif from "@/assets/optimized/cardFrontsOnWhite-1180.avif";
+import cardFrontsOnWhite1180Webp from "@/assets/optimized/cardFrontsOnWhite-1180.webp";
 import appHome250Avif from "@/assets/optimized/appHome-250.avif";
 import appHome250Webp from "@/assets/optimized/appHome-250.webp";
 import appHome500Avif from "@/assets/optimized/appHome-500.avif";
@@ -107,6 +121,44 @@ export const images = {
     webp: [
       [boxExpansion300Webp, 300],
       [boxExpansion600Webp, 600],
+    ],
+  },
+  davidSanyaPortrait: {
+    ratio: 1.222,
+    width: 720,
+    avif: [
+      [davidSanyaPortrait440Avif, 440],
+      [davidSanyaPortrait720Avif, 720],
+    ],
+    webp: [
+      [davidSanyaPortrait440Webp, 440],
+      [davidSanyaPortrait720Webp, 720],
+    ],
+  },
+  cardsOnTable: {
+    ratio: 0.439,
+    width: 2048,
+    avif: [
+      [cardsOnTable800Avif, 800],
+      [cardsOnTable1440Avif, 1440],
+      [cardsOnTable2048Avif, 2048],
+    ],
+    webp: [
+      [cardsOnTable800Webp, 800],
+      [cardsOnTable1440Webp, 1440],
+      [cardsOnTable2048Webp, 2048],
+    ],
+  },
+  cardFrontsOnWhite: {
+    ratio: 0.891,
+    width: 1750,
+    avif: [
+      [cardFrontsOnWhite640Avif, 640],
+      [cardFrontsOnWhite1180Avif, 1180],
+    ],
+    webp: [
+      [cardFrontsOnWhite640Webp, 640],
+      [cardFrontsOnWhite1180Webp, 1180],
     ],
   },
   appHome: {

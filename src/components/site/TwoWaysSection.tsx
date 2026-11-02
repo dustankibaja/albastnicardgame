@@ -4,6 +4,7 @@ import { CardsButton } from "./CardsButton";
 import { PhoneMockup } from "./PhoneMockup";
 import { Picture } from "./Picture";
 import { Reveal } from "./Reveal";
+import { Wave } from "./Wave";
 import { hasImage } from "@/content/assets";
 import { useScrollProgress } from "@/hooks/use-depth";
 import { useI18n } from "@/lib/i18n";
@@ -15,7 +16,8 @@ import { useI18n } from "@/lib/i18n";
  *  3. A full-width card-wave band closes the chapter; the phone rises out
  *     of it on the right (partial device: only the upper screen shows, so it
  *     differs from the hero's full phone).
- *  4. When a cleared "real play" photo exists it appears as a glimpse
+ *  4. The genuine table photo is the strip behind the headline (Phase 4).
+ *  5. When a cleared community photo exists it appears as a glimpse
  *     beside the hand; until then nothing is rendered there.
  */
 const hand: HandCard[] = [
@@ -49,27 +51,48 @@ export function TwoWaysSection() {
   const { t } = useI18n();
   const stage = useRef<HTMLDivElement>(null);
   useScrollProgress(stage);
-  const glimpse = hasImage("communityPlay")
-    ? "communityPlay"
-    : hasImage("cardsOnTable")
-      ? "cardsOnTable"
-      : null;
+  // Only cleared community photography may appear here; the slot is empty.
+  const glimpse = hasImage("communityPlay") ? "communityPlay" : null;
 
   return (
     <section
       id="play"
       aria-labelledby="play-title"
-      className="relative overflow-x-clip bg-alba-paper pt-[clamp(1.5rem,4vw,3rem)] text-alba-ink"
+      className="relative overflow-x-clip bg-alba-paper text-alba-ink"
     >
-      <div className="shell">
-        <Reveal>
-          <h2 id="play-title" className="display-xl type-headline">
-            <span className="block sm:inline">{t("two.title1")}</span>{" "}
-            <span className="block text-alba-blue sm:inline">{t("two.title2")}</span>
-          </h2>
-        </Reveal>
+      {/*
+        FROM THE TABLE: a real table. Genuine photo of Albastini cards on a
+        wooden table as a strip behind the headline; its lower edge becomes the
+        card-wave, and the interactive hand rests on it.
+      */}
+      <div className="relative isolate overflow-hidden">
+        <Picture
+          id="cardsOnTable"
+          alt={t("alt.table")}
+          sizes="100vw"
+          className="absolute inset-0 -z-10"
+          imgClassName="h-full w-full object-cover object-[46%_58%]"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgb(0_0_0/0.86)_0%,rgb(0_0_0/0.8)_55%,rgb(0_0_0/0.42)_100%)]"
+        />
+        <div className="shell pb-[clamp(4.5rem,10vw,8.5rem)] pt-[calc(clamp(44px,7vw,120px)+clamp(1.25rem,3vw,2.25rem))]">
+          <Reveal>
+            <h2 id="play-title" className="display-xl type-headline text-alba-paper">
+              <span className="block sm:inline">{t("two.title1")}</span>{" "}
+              <span className="block text-alba-gold sm:inline">{t("two.title2")}</span>
+            </h2>
+          </Reveal>
+        </div>
+        {/* Hero blue hangs over the table along the card-wave… */}
+        <Wave fill="var(--alba-blue)" flip className="absolute inset-x-0 top-0 -mt-px" />
+        {/* …and the table gives way to the white "card stock" along it again. */}
+        <Wave fill="var(--alba-paper)" className="absolute inset-x-0 bottom-0 -mb-px" />
+      </div>
 
-        <div className="mt-8 grid gap-10 lg:mt-10 lg:grid-cols-12 lg:gap-8">
+      <div className="shell relative z-10 -mt-[clamp(3rem,5vw,4.5rem)]">
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-8">
             <CardHand cards={hand} label="two.tabs" />
             <div className="mt-6">

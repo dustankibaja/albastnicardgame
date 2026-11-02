@@ -7,6 +7,7 @@
  */
 
 import type { SiteImageId } from "./assets";
+import type { TKey } from "@/lib/i18n";
 
 export type Winner = {
   id: string;
@@ -22,7 +23,8 @@ export type Winner = {
    * typographic record instead.
    */
   imageId?: SiteImageId;
-  imageAlt?: string;
+  /** i18n key for the portrait's alt text */
+  imageAltKey?: TKey;
   /** Link to a record in content/tournaments.ts, only once verified. */
   tournamentId?: string;
 };
@@ -35,8 +37,8 @@ export const winners: Winner[] = [
     position: 1,
     location: "Dar es Salaam, Tanzania",
     prize: "TZS 130,000",
-    // Slot is registered; the genuine photo has not been received yet.
+    // Genuine photograph (Phase 4). Alt text lives in i18n ("alt.david").
     imageId: "davidSanyaPortrait",
-    imageAlt: "David Sanya, first-place Albastini winner",
+    imageAltKey: "alt.david",
   },
 ];

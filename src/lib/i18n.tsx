@@ -132,6 +132,9 @@ const dict = {
     "alt.appHow": "Albastini app home screen, How to Play button highlighted",
     "alt.boxSafari": "Albastini Safari Edition card box",
     "alt.boxExpansion": "Albastini Safari Edition Expansion Pack box",
+    "alt.david": "David Sanya, Albastini first-place winner",
+    "alt.table": "Albastini cards spread across a wooden table",
+    "alt.fronts": "Nine Albastini card fronts in different colours, laid out on white",
   },
   sw: {
     "nav.play": "Cheza",
@@ -251,6 +254,10 @@ const dict = {
     "alt.appHow": "Skrini ya mwanzo ya app ya Albastini, kitufe cha How to Play kimeangaziwa",
     "alt.boxSafari": "Boksi la karata la Albastini Safari Edition",
     "alt.boxExpansion": "Boksi la Albastini Safari Edition Expansion Pack",
+    "alt.david": "David Sanya, mshindi wa nafasi ya kwanza wa Albastini",
+    "alt.table": "Karata za Albastini zimetandazwa juu ya meza ya mbao",
+    "alt.fronts":
+      "Sura tisa za karata za Albastini za rangi tofauti, zimepangwa juu ya rangi nyeupe",
   },
 } as const;
 

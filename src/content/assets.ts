@@ -73,19 +73,19 @@ export const siteImages = {
 
   /* ---- Slots awaiting genuine assets (render nothing until filled) ---- */
   davidSanyaPortrait: {
-    image: null,
-    provenance: "awaiting",
-    note: "Genuine David Sanya photograph supplied by the project owner. Not received in this session. Allowed: crop, background removal, tonal/colour correction, resize. No regeneration.",
+    image: images.davidSanyaPortrait,
+    provenance: "real_source_photo",
+    note: "Genuine photograph of David Sanya (project owner, Phase 4). Derivative: crop, alpha-matte background separation, uniform gamma lift. No regeneration. See assets-source/phase4/DERIVATIVES.md.",
   },
   cardsOnTable: {
-    image: null,
-    provenance: "awaiting",
-    note: "Genuine photo of Albastini cards spread on a wooden table. Not received in this session.",
+    image: images.cardsOnTable,
+    provenance: "real_source_photo",
+    note: "Genuine photo of Albastini cards fanned on a wooden table (shows card backs). Crop only. Not an official scan.",
   },
   cardFrontsOnWhite: {
-    image: null,
-    provenance: "awaiting",
-    note: "Genuine photo of multiple card fronts on white. Not received in this session.",
+    image: images.cardFrontsOnWhite,
+    provenance: "real_source_photo",
+    note: "Genuine product photo of nine card fronts on white, shot at an angle. Crop only. Not official isolated scans; never extract/reconstruct cards from it.",
   },
   communityPlay: {
     image: null,

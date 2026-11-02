@@ -53,7 +53,7 @@ export function CardHand({ cards, label }: { cards: HandCard[]; label: TKey }) {
   const current = cards[active]!;
 
   return (
-    <div className="grid gap-6 md:grid-cols-[auto_minmax(0,1fr)] md:items-center md:gap-10">
+    <div className="grid gap-6 md:grid-cols-[auto_minmax(0,1fr)] md:items-end md:gap-10">
       <div
         role="tablist"
         aria-label={t(label)}

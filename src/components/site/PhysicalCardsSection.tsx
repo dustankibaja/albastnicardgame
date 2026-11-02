@@ -11,10 +11,8 @@ import { useI18n } from "@/lib/i18n";
  * TAKE THE GAME TO THE TABLE. Product first, generous white space, form last.
  *
  * Stage: the Safari Edition box (real product photo) dominates, rising out of
- * the arena above; the expansion pack supports it from behind; one ace rests
- * at the box's foot. Slots for genuine photography render only when filled:
- *  - cardsOnTable: full-bleed "the table" photo under the product stage
- *  - boxDetail:    a detail crop (needs a high-res product photo)
+ * the arena above; the expansion pack supports it; the genuine photo of nine
+ * card fronts lies beneath them. The table photo is used once only (Two Ways).
  * No specs, prices, stock or purchase claims.
  */
 export function PhysicalCardsSection() {
@@ -27,42 +25,55 @@ export function PhysicalCardsSection() {
       id="cards"
       aria-labelledby="cards-title"
       className="relative bg-alba-paper text-alba-ink"
+      // The product is pulled up into the arena by the stage offset, so the
+      // anchor clears the navbar, that offset, and the box's rotation/parallax
+      // overhang (+3.5rem): visitors land with the whole product in view.
+      style={{ scrollMarginTop: "calc(8.5rem + clamp(9rem, 20vw, 18rem))" }}
     >
       <div className="shell grid gap-10 pb-[clamp(5rem,10vw,9rem)] lg:grid-cols-12 lg:gap-8">
         {/* Product stage — pulled up across the arena edge. */}
         <div ref={stage} className="relative z-10 -mt-[clamp(9rem,20vw,18rem)] lg:col-span-7">
           <div className="relative mx-auto aspect-[1/1] w-full max-w-[760px]">
+            {/* Genuine photo of nine card fronts on pure white (real_source_photo,
+                not official scans): it merges into the page, so the real cards
+                lie on the table beneath the boxes. Lowest layer. */}
             <div
-              className="depth absolute right-[0%] top-[24%] w-[46%]"
+              className="depth absolute left-[22%] w-[78%]"
+              style={{
+                // Drift capped below the 12px clearance (0.75rem) so parallax can
+                // never lift the photo over the arena edge.
+                ["--dy" as string]: 10,
+                // Anchored just below the arena edge (= this stage's pull-up),
+                // so the photo's white ground never shows over the night blue.
+                top: "calc(clamp(9rem, 20vw, 18rem) + 0.75rem)",
+              }}
+            >
+              <Picture
+                id="cardFrontsOnWhite"
+                alt={t("alt.fronts")}
+                sizes="(min-width: 1024px) 590px, 78vw"
+              />
+            </div>
+            <div
+              className="depth absolute right-[0%] top-[14%] z-10 w-[44%]"
               style={{ ["--dy" as string]: 20 }}
             >
               <Picture
                 id="boxExpansion"
                 alt={t("alt.boxExpansion")}
-                sizes="(min-width: 1024px) 340px, 46vw"
+                sizes="(min-width: 1024px) 340px, 44vw"
                 className="rotate-[7deg] drop-shadow-[0_30px_40px_rgb(0_0_0/0.3)]"
               />
             </div>
             <div
-              className="depth absolute left-[6%] top-0 w-[58%]"
+              className="depth absolute -top-[4%] left-[4%] z-20 w-[54%]"
               style={{ ["--dy" as string]: -34 }}
             >
               <Picture
                 id="boxSafari"
                 alt={t("alt.boxSafari")}
-                sizes="(min-width: 1024px) 440px, 58vw"
+                sizes="(min-width: 1024px) 420px, 54vw"
                 className="-rotate-[3deg] drop-shadow-[0_50px_60px_rgb(0_0_0/0.45)]"
-              />
-            </div>
-            <div
-              className="depth absolute bottom-[3%] left-[52%] w-[22%]"
-              style={{ ["--dy" as string]: 56, ["--dr" as string]: 3 }}
-            >
-              <Picture
-                id="aceBlue"
-                alt={t("alt.aceBlue")}
-                sizes="(min-width: 1024px) 170px, 22vw"
-                className="rotate-[16deg] overflow-hidden rounded-[8%] shadow-[0_22px_34px_-14px_rgb(0_0_0/0.5)]"
               />
             </div>
           </div>
@@ -95,19 +106,14 @@ export function PhysicalCardsSection() {
         </Reveal>
       </div>
 
-      {hasImage("cardsOnTable") || hasImage("boxDetail") ? (
-        <div className="shell grid gap-6 pb-[clamp(5rem,10vw,9rem)] md:grid-cols-12">
-          <Picture
-            id="cardsOnTable"
-            alt=""
-            sizes="(min-width: 768px) 66vw, 100vw"
-            className="overflow-hidden rounded-[1.5rem] md:col-span-8"
-          />
+      {/* Detail crop slot: renders only once a high-res product photo exists. */}
+      {hasImage("boxDetail") ? (
+        <div className="shell pb-[clamp(5rem,10vw,9rem)]">
           <Picture
             id="boxDetail"
             alt=""
-            sizes="(min-width: 768px) 30vw, 100vw"
-            className="overflow-hidden rounded-[1.5rem] md:col-span-4"
+            sizes="(min-width: 768px) 40vw, 100vw"
+            className="max-w-xl overflow-hidden rounded-[1.5rem]"
           />
         </div>
       ) : null}
