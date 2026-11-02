@@ -12,97 +12,92 @@ export type Lang = "en" | "sw";
 
 /**
  * All user-facing copy lives here. Add a key to both `en` and `sw`.
+ * Kiswahili strings added or changed in Phase 1 should get a native review.
  */
 const dict = {
   en: {
-    "nav.home": "Home",
-    "nav.game": "The Game",
-    "nav.tournament": "Tournament",
-    "nav.winners": "Winners",
-    "nav.menu": "Menu",
-    "nav.theme": "Toggle theme",
+    "nav.play": "Play",
+    "nav.howto": "How to play",
+    "nav.tournaments": "Tournaments",
+    "nav.cards": "Physical cards",
+    "nav.menu": "Open menu",
+    "nav.closeMenu": "Close menu",
+    "nav.primary": "Main",
+
+    "lang.label": "Language",
+
+    "brand.name": "Albastini",
+    "brand.tagline": "INGIA UWANJANI. TUCHEZE.",
 
     "cta.app": "Download the app",
-    "cta.cards": "Get the physical cards",
+    "cta.appShort": "Get the app",
+    "cta.cards": "Card availability",
+    "cta.playApp": "Play on the app",
 
-    "hero.eyebrow": "ALBASTINI CARD GAME",
+    "hero.eyebrow": "Albastini",
     "hero.title": "The game is on.",
     "hero.sub": "Play. Compete. Win. The Albastini card game — on your phone and on your table.",
-    "hero.badge": "Safari Edition",
-
-    "intro.eyebrow": "What is Albastini",
-    "intro.title": "More than a card game.",
-    "intro.body":
-      "Albastini is a fast, tactical card game born in Tanzania. Read the table, play your points, take the round.",
-    "intro.f1.t": "Strategy",
-    "intro.f1.b": "Every card is points. Every point is a decision.",
-    "intro.f2.t": "Competition",
-    "intro.f2.b": "Ranked tables, tournaments and real winners.",
-    "intro.f3.t": "Fun",
-    "intro.f3.b": "Rounds in minutes. Rivalries for years.",
-    "intro.f4.t": "Community",
-    "intro.f4.b": "Played in living rooms, hostels and bars nationwide.",
 
     "game.eyebrow": "Two ways to play",
     "game.title": "Pick your table.",
-    "game.app.tag": "Digital",
+    "game.app.tag": "Mobile app",
     "game.app.t": "The Albastini app",
     "game.app.b": "Play Albastini digitally wherever you are.",
-    "game.phys.tag": "Physical",
+    "game.phys.tag": "Physical cards",
     "game.phys.t": "Physical Albastini",
     "game.phys.b": "Bring the game to the table with physical Albastini cards.",
 
-    "stats.eyebrow": "The community",
-    "stats.title": "The game is already on.",
-    "stats.games": "Games played",
-    "stats.players": "Active players",
-    "stats.coins": "Coins won",
+    "how.eyebrow": "How to play",
+    "how.title": "Learn the game.",
+    "how.body":
+      "The official How to Play guide is inside the Albastini app. Download the app, then tap How to Play on the home screen.",
 
     "tour.eyebrow": "Tournaments",
     "tour.title": "Play for the win.",
-    "tour.body":
-      "Albastini runs live tournaments with real prize pools. Qualify in the app, show up, take the crown.",
+    "tour.body": "Albastini tournaments bring players together to compete for the top spot.",
     "tour.next": "Next tournament",
+    "tour.numbered": "Tournament #{n}",
+    "tour.detailsSoon": "Start time and details coming soon.",
+    "tour.none": "The next tournament will be announced soon.",
+    "tour.live": "In progress now",
+    "tour.ended": "This tournament has ended.",
+    "tour.startsIn": "Starts in",
     "tour.days": "Days",
     "tour.hours": "Hours",
     "tour.minutes": "Minutes",
     "tour.seconds": "Seconds",
-    "tour.live": "Live now",
-    "tour.cta": "Join the tournament",
-    "tour.prize": "Prize pool",
-    "tour.venue": "Venue",
-    "tour.format": "Format",
+    "tour.timeTz": "{time} (Tanzania time)",
+    "tour.mode.app": "In the Albastini app",
+    "tour.mode.in_person": "In person",
+    "tour.mode.hybrid": "In the app and in person",
 
-    "win.eyebrow": "Latest tournament",
-    "win.title1": "They played.",
-    "win.title2": "They won.",
-    "win.body": "Celebrate the three players who conquered the latest Albastini tournament.",
+    "win.eyebrow": "Winners",
+    "win.title": "They played. They won.",
     "win.p1": "First place",
     "win.p2": "Second place",
     "win.p3": "Third place",
+    "win.place": "Place {n}",
     "win.prize": "Prize",
+    "win.location": "From",
 
-    "phys.eyebrow": "Physical Albastini",
-    "phys.title": "Hold the game in your hands.",
+    "phys.eyebrow": "Physical cards",
+    "phys.title": "Take the game to the table.",
     "phys.body":
-      "Heavy card stock, bold colour blocks, the Albastini points chip. The Safari Edition deck is coming.",
-    "phys.spec1": "54 cards",
-    "phys.spec2": "Points chips",
-    "phys.spec3": "Rigid box",
-    "phys.soon": "Coming soon",
-    "phys.notify": "Get notified when available",
-    "form.email": "Email address",
-    "form.placeholder": "you@example.com",
-    "form.submit": "Notify me",
-    "form.thanks1": "You're on the list.",
-    "form.thanks2": "We'll let you know when the physical cards are available.",
-    "form.invalid": "Enter a valid email address.",
+      "Physical Albastini cards are made for real tables, real friends and one more game.",
+    "phys.status": "Card availability updates coming soon.",
 
-    "app.eyebrow": "Mobile app",
-    "app.title1": "The game.",
-    "app.title2": "In your pocket.",
-    "app.body": "Quick matches, ranked tables and tournament qualifiers — anywhere in the country.",
-    "app.soon": "Available now on Android and iOS",
+    "form.title": "Get card updates",
+    "form.closed": "Sign-up isn't open yet. It will open once updates can be sent to you.",
+    "form.name": "Name",
+    "form.phone": "Phone number",
+    "form.email": "Email (optional)",
+    "form.submit": "Notify me",
+    "form.sending": "Sending…",
+    "form.success": "You're on the list. We'll let you know when cards are available.",
+    "form.failed": "Your details weren't saved. Try again.",
+    "form.err.name": "Enter your name.",
+    "form.err.phone": "Enter a phone number, for example 0712 345 678.",
+    "form.err.email": "Enter a valid email address, or leave it empty.",
 
     "modal.title": "Choose your device",
     "modal.body": "Pick your platform to download Albastini from the official store.",
@@ -111,102 +106,94 @@ const dict = {
     "modal.close": "Close",
 
     "final.title": "Ready to play?",
-    "final.sub": "Ingia Uwanjani Tucheze Albastini.",
 
     "footer.tagline": "The Tanzanian card game.",
     "footer.rights": "All rights reserved.",
-    "footer.egg": "Ace of Albastini. You found it.",
-
   },
   sw: {
-    "nav.home": "Nyumbani",
-    "nav.game": "Mchezo",
-    "nav.tournament": "Mashindano",
-    "nav.winners": "Washindi",
-    "nav.menu": "Menyu",
-    "nav.theme": "Badilisha mandhari",
+    "nav.play": "Cheza",
+    "nav.howto": "Jinsi ya kucheza",
+    "nav.tournaments": "Mashindano",
+    "nav.cards": "Karata halisi",
+    "nav.menu": "Fungua menyu",
+    "nav.closeMenu": "Funga menyu",
+    "nav.primary": "Kuu",
+
+    "lang.label": "Lugha",
+
+    "brand.name": "Albastini",
+    "brand.tagline": "INGIA UWANJANI. TUCHEZE.",
 
     "cta.app": "Pakua app",
-    "cta.cards": "Pata karata halisi",
+    "cta.appShort": "Pakua app",
+    "cta.cards": "Upatikanaji wa karata",
+    "cta.playApp": "Cheza kwenye app",
 
-    "hero.eyebrow": "ALBASTINI CARD GAME",
+    "hero.eyebrow": "Albastini",
     "hero.title": "Mchezo umeanza.",
     "hero.sub": "Cheza. Shindana. Shinda. Mchezo wa karata Albastini — simuni na mezani.",
-    "hero.badge": "Safari Edition",
-
-    "intro.eyebrow": "Albastini ni nini",
-    "intro.title": "Zaidi ya karata.",
-    "intro.body":
-      "Albastini ni mchezo wa karata wa kasi na akili uliozaliwa Tanzania. Soma meza, tumia pointi zako, chukua raundi.",
-    "intro.f1.t": "Mkakati",
-    "intro.f1.b": "Kila karata ni pointi. Kila pointi ni uamuzi.",
-    "intro.f2.t": "Ushindani",
-    "intro.f2.b": "Meza za daraja, mashindano na washindi wa kweli.",
-    "intro.f3.t": "Furaha",
-    "intro.f3.b": "Raundi za dakika. Ushindani wa miaka.",
-    "intro.f4.t": "Jumuiya",
-    "intro.f4.b": "Unachezwa sebuleni, mabwenini na baa kote nchini.",
 
     "game.eyebrow": "Njia mbili za kucheza",
     "game.title": "Chagua meza yako.",
-    "game.app.tag": "Kidijitali",
+    "game.app.tag": "App ya simu",
     "game.app.t": "App ya Albastini",
     "game.app.b": "Cheza Albastini kidijitali ulipo popote.",
-    "game.phys.tag": "Halisi",
+    "game.phys.tag": "Karata halisi",
     "game.phys.t": "Karata za Albastini",
     "game.phys.b": "Leta mchezo mezani na karata halisi za Albastini.",
 
-    "stats.eyebrow": "Jumuiya",
-    "stats.title": "Mchezo unaendelea.",
-    "stats.games": "Michezo iliyochezwa",
-    "stats.players": "Wachezaji hai",
-    "stats.coins": "Coins zilizoshindwa",
+    "how.eyebrow": "Jinsi ya kucheza",
+    "how.title": "Jifunze mchezo.",
+    "how.body":
+      "Mwongozo rasmi wa jinsi ya kucheza uko ndani ya app ya Albastini. Pakua app, kisha bonyeza How to Play kwenye skrini ya mwanzo.",
 
     "tour.eyebrow": "Mashindano",
     "tour.title": "Cheza kwa ushindi.",
-    "tour.body":
-      "Albastini huandaa mashindano ya moja kwa moja na zawadi halisi. Fuzu kwenye app, fika, chukua taji.",
+    "tour.body": "Mashindano ya Albastini yanawakutanisha wachezaji kushindania nafasi ya juu.",
     "tour.next": "Mashindano yajayo",
+    "tour.numbered": "Mashindano #{n}",
+    "tour.detailsSoon": "Muda wa kuanza na maelezo zaidi yatatangazwa hivi karibuni.",
+    "tour.none": "Mashindano yajayo yatatangazwa hivi karibuni.",
+    "tour.live": "Yanaendelea sasa",
+    "tour.ended": "Mashindano haya yamekwisha.",
+    "tour.startsIn": "Yanaanza baada ya",
     "tour.days": "Siku",
     "tour.hours": "Saa",
     "tour.minutes": "Dakika",
     "tour.seconds": "Sekunde",
-    "tour.live": "Yanaendelea",
-    "tour.cta": "Jiunge na mashindano",
-    "tour.prize": "Zawadi",
-    "tour.venue": "Ukumbi",
-    "tour.format": "Muundo",
+    "tour.timeTz": "{time} (saa za Tanzania)",
+    "tour.mode.app": "Ndani ya app ya Albastini",
+    "tour.mode.in_person": "Ana kwa ana",
+    "tour.mode.hybrid": "Kwenye app na ana kwa ana",
 
-    "win.eyebrow": "Mashindano ya karibuni",
-    "win.title1": "Walicheza.",
-    "win.title2": "Walishinda.",
-    "win.body": "Tunawapongeza wachezaji watatu waliotwaa mashindano ya karibuni ya Albastini.",
+    "win.eyebrow": "Washindi",
+    "win.title": "Walicheza. Walishinda.",
     "win.p1": "Nafasi ya kwanza",
     "win.p2": "Nafasi ya pili",
     "win.p3": "Nafasi ya tatu",
+    "win.place": "Nafasi ya {n}",
     "win.prize": "Zawadi",
+    "win.location": "Kutoka",
 
-    "phys.eyebrow": "Karata halisi za Albastini",
-    "phys.title": "Shika mchezo mkononi.",
+    "phys.eyebrow": "Karata halisi",
+    "phys.title": "Leta mchezo mezani.",
     "phys.body":
-      "Karata nene, rangi thabiti, na chipu ya pointi ya Albastini. Deki ya Safari Edition inakuja.",
-    "phys.spec1": "Karata 54",
-    "phys.spec2": "Chipu za pointi",
-    "phys.spec3": "Boksi gumu",
-    "phys.soon": "Inakuja hivi karibuni",
-    "phys.notify": "Pata taarifa zikipatikana",
-    "form.email": "Barua pepe",
-    "form.placeholder": "wewe@mfano.com",
-    "form.submit": "Nitaarifu",
-    "form.thanks1": "Umo kwenye orodha.",
-    "form.thanks2": "Tutakujuza karata halisi zikipatikana.",
-    "form.invalid": "Weka barua pepe sahihi.",
+      "Karata halisi za Albastini ni kwa ajili ya meza halisi, marafiki halisi na mchezo mmoja zaidi.",
+    "phys.status": "Taarifa za upatikanaji wa karata zinakuja hivi karibuni.",
 
-    "app.eyebrow": "App ya simu",
-    "app.title1": "Mchezo.",
-    "app.title2": "Mfukoni mwako.",
-    "app.body": "Michezo ya haraka, meza za daraja na kufuzu mashindano — kila kona ya nchi.",
-    "app.soon": "Inapatikana sasa kwa Android na iOS",
+    "form.title": "Pata taarifa za karata",
+    "form.closed":
+      "Usajili bado haujafunguliwa. Utafunguliwa pindi tutakapoweza kukutumia taarifa.",
+    "form.name": "Jina",
+    "form.phone": "Namba ya simu",
+    "form.email": "Barua pepe (si lazima)",
+    "form.submit": "Nitaarifu",
+    "form.sending": "Inatuma…",
+    "form.success": "Umo kwenye orodha. Tutakujulisha karata zikipatikana.",
+    "form.failed": "Taarifa zako hazijahifadhiwa. Jaribu tena.",
+    "form.err.name": "Weka jina lako.",
+    "form.err.phone": "Weka namba ya simu, kwa mfano 0712 345 678.",
+    "form.err.email": "Weka barua pepe sahihi, au iache wazi.",
 
     "modal.title": "Chagua kifaa chako",
     "modal.body": "Chagua jukwaa lako ili kupakua Albastini kutoka kwenye duka rasmi.",
@@ -215,23 +202,26 @@ const dict = {
     "modal.close": "Funga",
 
     "final.title": "Uko tayari kucheza?",
-    "final.sub": "Ingia Uwanjani Tucheze Albastini.",
-
 
     "footer.tagline": "Mchezo wa karata wa Tanzania.",
     "footer.rights": "Haki zote zimehifadhiwa.",
-    "footer.egg": "Ace ya Albastini. Umeiona.",
   },
 } as const;
 
 export type TKey = keyof (typeof dict)["en"];
 
-type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (k: TKey) => string };
+type Vars = Record<string, string | number>;
+type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (k: TKey, vars?: Vars) => string };
+
+function interpolate(s: string, vars?: Vars) {
+  if (!vars) return s;
+  return s.replace(/\{(\w+)\}/g, (m, k: string) => (k in vars ? String(vars[k]) : m));
+}
 
 const LanguageContext = createContext<Ctx>({
   lang: "en",
   setLang: () => {},
-  t: (k) => dict.en[k],
+  t: (k, vars) => interpolate(dict.en[k], vars),
 });
 
 const STORAGE_KEY = "albastini-lang";
@@ -240,17 +230,32 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("en");
 
   useEffect(() => {
-    const saved = window.localStorage.getItem(STORAGE_KEY);
-    if (saved === "en" || saved === "sw") setLangState(saved);
+    try {
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      if (saved === "en" || saved === "sw") setLangState(saved);
+    } catch {
+      /* storage unavailable: keep English */
+    }
   }, []);
+
+  // Keep <html lang> in sync on load (saved preference) and on every change.
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   const setLang = useCallback((l: Lang) => {
     setLangState(l);
-    window.localStorage.setItem(STORAGE_KEY, l);
-    document.documentElement.lang = l;
+    try {
+      window.localStorage.setItem(STORAGE_KEY, l);
+    } catch {
+      /* ignore */
+    }
   }, []);
 
-  const t = useCallback((k: TKey) => dict[lang][k] ?? dict.en[k], [lang]);
+  const t = useCallback(
+    (k: TKey, vars?: Vars) => interpolate(dict[lang][k] ?? dict.en[k], vars),
+    [lang],
+  );
 
   const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t]);
 

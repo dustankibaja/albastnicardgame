@@ -2,6 +2,7 @@
 @source "../src";
 @import "tw-animate-css";
 
+/* Class-based so shadcn `dark:` styles never follow the OS setting. No .dark class is ever applied (single theme). */
 @custom-variant dark (&:is(.dark *));
 
 /*
@@ -56,69 +57,49 @@
   --shadow-chip: var(--shadow-chip-v);
 }
 
+/*
+ * PHASE 1 — SINGLE THEME FOUNDATION
+ * One token set, no light/dark variants. Every colour is one of the six logo
+ * colours (blue, yellow, red, green, black, white) or a tint/opacity of one of
+ * them. No beige, warm paper, grey or charcoal as separate colours.
+ * Final values are tuned in Phase 2.
+ */
 :root {
   --radius: 0.75rem;
 
+  /* The six logo colours. "gold" is the logo yellow (name kept for class compat). */
   --alba-blue: oklch(0.44 0.245 264);
   --alba-red: oklch(0.56 0.226 29);
   --alba-green: oklch(0.5 0.14 152);
   --alba-gold: oklch(0.9 0.185 101);
-  --alba-ink: oklch(0.16 0.006 260);
-  --alba-paper: oklch(0.98 0.005 95);
+  --alba-ink: oklch(0 0 0);
+  --alba-paper: oklch(1 0 0);
 
-  --background: oklch(0.985 0.004 95);
-  --foreground: oklch(0.17 0.006 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.17 0.006 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.17 0.006 260);
-  --primary: oklch(0.9 0.185 101);
-  --primary-foreground: oklch(0.16 0.006 260);
-  --secondary: oklch(0.95 0.006 95);
-  --secondary-foreground: oklch(0.2 0.006 260);
-  --muted: oklch(0.955 0.005 95);
-  --muted-foreground: oklch(0.48 0.01 260);
-  --accent: oklch(0.44 0.245 264);
-  --accent-foreground: oklch(0.99 0 0);
-  --destructive: oklch(0.56 0.226 29);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.9 0.006 260);
-  --input: oklch(0.9 0.006 260);
-  --ring: oklch(0.44 0.245 264);
+  --background: var(--alba-paper);
+  --foreground: var(--alba-ink);
+  --card: var(--alba-paper);
+  --card-foreground: var(--alba-ink);
+  --popover: var(--alba-paper);
+  --popover-foreground: var(--alba-ink);
+  --primary: var(--alba-gold);
+  --primary-foreground: var(--alba-ink);
+  /* Quiet surfaces are a light tint of the brand blue, not a grey. */
+  --secondary: color-mix(in oklab, var(--alba-blue) 6%, var(--alba-paper));
+  --secondary-foreground: var(--alba-ink);
+  --muted: color-mix(in oklab, var(--alba-blue) 6%, var(--alba-paper));
+  /* Secondary text is black at reduced strength (≥ 4.5:1 on white and on --secondary). */
+  --muted-foreground: color-mix(in oklab, var(--alba-ink) 68%, var(--alba-paper));
+  --accent: var(--alba-blue);
+  --accent-foreground: var(--alba-paper);
+  --destructive: var(--alba-red);
+  --destructive-foreground: var(--alba-paper);
+  --border: color-mix(in oklab, var(--alba-ink) 14%, var(--alba-paper));
+  --input: color-mix(in oklab, var(--alba-ink) 30%, var(--alba-paper));
+  --ring: var(--alba-blue);
 
-  --shadow-card-v: 0 1px 2px oklch(0.16 0.006 260 / 0.06), 0 18px 40px -18px oklch(0.16 0.006 260 / 0.28);
-  --shadow-lift-v: 0 2px 4px oklch(0.16 0.006 260 / 0.08), 0 34px 60px -22px oklch(0.16 0.006 260 / 0.36);
+  --shadow-card-v: 0 1px 2px oklch(0 0 0 / 0.06), 0 18px 40px -18px oklch(0 0 0 / 0.28);
+  --shadow-lift-v: 0 2px 4px oklch(0 0 0 / 0.08), 0 34px 60px -22px oklch(0 0 0 / 0.36);
   --shadow-chip-v: 0 10px 30px -12px oklch(0.9 0.185 101 / 0.55);
-}
-
-.dark {
-  --background: oklch(0.145 0.008 262);
-  --foreground: oklch(0.98 0.003 95);
-  --card: oklch(0.195 0.01 262);
-  --card-foreground: oklch(0.98 0.003 95);
-  --popover: oklch(0.195 0.01 262);
-  --popover-foreground: oklch(0.98 0.003 95);
-  --primary: oklch(0.88 0.19 100);
-  --primary-foreground: oklch(0.14 0.006 260);
-  --secondary: oklch(0.24 0.012 262);
-  --secondary-foreground: oklch(0.98 0.003 95);
-  --muted: oklch(0.235 0.012 262);
-  --muted-foreground: oklch(0.72 0.014 262);
-  --accent: oklch(0.56 0.22 264);
-  --accent-foreground: oklch(0.99 0 0);
-  --destructive: oklch(0.63 0.21 29);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.99 0 0 / 12%);
-  --input: oklch(0.99 0 0 / 16%);
-  --ring: oklch(0.88 0.19 100);
-
-  --alba-blue: oklch(0.55 0.23 264);
-  --alba-red: oklch(0.62 0.21 29);
-  --alba-green: oklch(0.6 0.15 152);
-
-  --shadow-card-v: 0 1px 2px oklch(0 0 0 / 0.5), 0 20px 44px -18px oklch(0 0 0 / 0.75);
-  --shadow-lift-v: 0 2px 6px oklch(0 0 0 / 0.55), 0 40px 70px -24px oklch(0 0 0 / 0.85);
-  --shadow-chip-v: 0 12px 34px -12px oklch(0.88 0.19 100 / 0.4);
 }
 
 @layer base {
@@ -126,8 +107,24 @@
     border-color: var(--color-border);
   }
 
-  html {
-    scroll-behavior: smooth;
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* In-page anchors land below the fixed navbar. */
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+
+  /* Visible keyboard focus everywhere, including plain links and toggles. */
+  :focus-visible {
+    outline: 3px solid var(--alba-blue);
+    outline-offset: 3px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--alba-gold);
   }
 
   body {
@@ -156,7 +153,7 @@
 @utility eyebrow {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
 }
@@ -181,7 +178,8 @@
 }
 
 @utility triangle-band {
-  background-image: linear-gradient(135deg, currentColor 25%, transparent 25% 75%, currentColor 75%),
+  background-image:
+    linear-gradient(135deg, currentColor 25%, transparent 25% 75%, currentColor 75%),
     linear-gradient(45deg, currentColor 25%, transparent 25% 75%, currentColor 75%);
   background-size: 14px 14px;
   opacity: 0.12;
@@ -195,8 +193,6 @@
   mask-image: radial-gradient(ellipse at center, black, transparent 75%);
 }
 
-
-
 @utility card-face {
   background: var(--alba-paper);
   border-radius: 0.9rem;
@@ -204,39 +200,26 @@
 }
 
 /* --- Motion --- */
-@utility reveal {
-  opacity: 0;
-  transform: translateY(22px);
+/*
+ * Reveal is progressive enhancement: server HTML is always visible. JS only
+ * "arms" (hides) elements that are below the fold at mount, then reveals them
+ * on scroll. If JS fails, nothing is ever hidden.
+ */
+.reveal {
   transition:
     opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-@utility reveal-in {
-  opacity: 1;
-  transform: none;
-}
-
-@utility float-slow {
-  animation: alba-float 7s ease-in-out infinite;
-}
-
-@keyframes alba-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+.reveal-armed {
+  opacity: 0;
+  transform: translateY(22px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .float-slow {
-    animation: none;
-  }
-  .reveal {
+  .reveal,
+  .reveal-armed {
     opacity: 1;
     transform: none;
+    transition: none;
   }
 }

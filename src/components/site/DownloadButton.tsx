@@ -1,14 +1,22 @@
-import { useState } from "react";
 import { AlbaButton, type AlbaButtonProps } from "./AlbaButton";
-import { DownloadModal } from "./DownloadModal";
+import { useDownload } from "./DownloadModal";
 
-export function DownloadButton(props: AlbaButtonProps) {
-  const [open, setOpen] = useState(false);
-
+/**
+ * APP CTA family. Every "download / play on the app" action uses this button,
+ * so they all look and behave the same (yellow primary, opens the store dialog).
+ */
+export function DownloadButton({ variant: _v, onClick, ...props }: AlbaButtonProps) {
+  const { openDownload } = useDownload();
   return (
-    <>
-      <AlbaButton {...props} onClick={() => setOpen(true)} />
-      <DownloadModal open={open} onClose={() => setOpen(false)} />
-    </>
+    <AlbaButton
+      {...props}
+      type="button"
+      variant="primary"
+      aria-haspopup="dialog"
+      onClick={(e) => {
+        onClick?.(e);
+        openDownload();
+      }}
+    />
   );
 }

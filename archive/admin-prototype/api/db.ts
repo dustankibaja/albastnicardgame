@@ -37,6 +37,7 @@ export type DbSchema = {
   signups: Signup[];
 };
 
+// Phase 1: the default tournament below is stale (#25) and is NOT verified data.
 const defaultDb: DbSchema = {
   tournament: {
     name: "Albastini Tournament #25",
@@ -45,52 +46,8 @@ const defaultDb: DbSchema = {
     prizePool: "TSh 250,000",
     format: "64 players · knockout",
   },
-  winners: [
-    {
-      id: "w-2026-01",
-      name: "Winner name pending",
-      image: "/assets/winner-1.jpg",
-      tournament: "Albastini Tournament",
-      date: "June 2026",
-      year: 2026,
-      position: 1,
-      prize: "TSh 2,000,000",
-      city: "Dar es Salaam",
-    },
-    {
-      id: "w-2026-02",
-      name: "Winner name pending",
-      image: "/assets/winner-2.jpg",
-      tournament: "Albastini Tournament",
-      date: "June 2026",
-      year: 2026,
-      position: 2,
-      prize: "TSh 1,000,000",
-      city: "Dar es Salaam",
-    },
-    {
-      id: "w-2026-03",
-      name: "Winner name pending",
-      image: "/assets/winner-3.jpg",
-      tournament: "Albastini Tournament",
-      date: "June 2026",
-      year: 2026,
-      position: 3,
-      prize: "TSh 500,000",
-      city: "Mwanza",
-    },
-    {
-      id: "w-2025-01",
-      name: "Winner name pending",
-      image: "/assets/winner-4.jpg",
-      tournament: "Albastini Season Opener",
-      date: "November 2025",
-      year: 2025,
-      position: 1,
-      prize: "TSh 1,500,000",
-      city: "Arusha",
-    },
-  ],
+  // Placeholder winners removed in Phase 1: they were not real records.
+  winners: [],
   signups: [],
 };
 

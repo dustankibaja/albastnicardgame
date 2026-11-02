@@ -1,37 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AppSection } from "@/components/site/AppSection";
+import { CompetitionSection } from "@/components/site/CompetitionSection";
+import { DownloadProvider } from "@/components/site/DownloadModal";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { Footer } from "@/components/site/Footer";
 import { GameSection } from "@/components/site/GameSection";
 import { Hero } from "@/components/site/Hero";
-import { Intro } from "@/components/site/Intro";
+import { HowToPlaySection } from "@/components/site/HowToPlaySection";
 import { Navbar } from "@/components/site/Navbar";
 import { PhysicalCardsSection } from "@/components/site/PhysicalCardsSection";
-import { StatsSection } from "@/components/site/StatsSection";
-import { TournamentSection } from "@/components/site/TournamentSection";
-import { WinnersSection } from "@/components/site/WinnersSection";
 import { LanguageProvider } from "@/lib/i18n";
-import { ThemeProvider } from "@/lib/theme";
 
-import { getTournament, getWinners } from "@/api/api";
-
-const title = "Albastini — The Tanzanian Card Game";
+const title = "Albastini — Ingia uwanjani. Tucheze.";
 const description =
-  "Play. Compete. Win. Albastini is a fast tactical card game from Tanzania — on the app, on the table, and in live tournaments.";
+  "Albastini is a Tanzanian card game you can play two ways: with the physical cards around a table, or on the Albastini app.";
 
 export const Route = createFileRoute("/")({
-  loader: async ({ context: { queryClient } }) => {
-    await Promise.all([
-      queryClient.ensureQueryData({
-        queryKey: ["tournament"],
-        queryFn: () => getTournament(),
-      }),
-      queryClient.ensureQueryData({
-        queryKey: ["winners"],
-        queryFn: () => getWinners(),
-      })
-    ]);
-  },
+  // One clock for SSR + hydration. Tournament/winner content is static and
+  // version-controlled (src/content/), so nothing is fetched or polled.
+  loader: () => ({ renderedAt: Date.now() }),
   head: () => ({
     meta: [
       { title },
@@ -46,25 +32,25 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { renderedAt } = Route.useLoaderData();
   return (
-    <ThemeProvider>
-      <LanguageProvider>
+    <LanguageProvider>
+      <DownloadProvider>
         <div className="min-h-screen bg-background">
           <Navbar />
+          {/* Phase 1 order, staging for the CEO-approved structure:
+              Hero → Two Ways to Play → How to Play → Competition → Physical Cards → Final CTA */}
           <main>
             <Hero />
-            <Intro />
             <GameSection />
-            <StatsSection />
-            <TournamentSection />
-            <WinnersSection />
+            <HowToPlaySection />
+            <CompetitionSection renderedAt={renderedAt} />
             <PhysicalCardsSection />
-            <AppSection />
             <FinalCTA />
           </main>
           <Footer />
         </div>
-      </LanguageProvider>
-    </ThemeProvider>
+      </DownloadProvider>
+    </LanguageProvider>
   );
 }

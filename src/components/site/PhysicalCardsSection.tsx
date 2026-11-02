@@ -2,44 +2,44 @@ import cardBlack from "@/assets/card-black-official.webp";
 import cardBlue from "@/assets/card-blue-official.webp";
 import cardRed from "@/assets/card-red-official.webp";
 import safariBox from "@/assets/box-safari-retail.webp";
-import { AlbaButton } from "./AlbaButton";
 import { CardNotifyForm } from "./CardNotifyForm";
 import { Reveal } from "./Reveal";
-import { useI18n, type TKey } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 
 const cards = [
   { src: cardRed, alt: "Albastini red ace card", rotate: "-rotate-6" },
   { src: cardBlack, alt: "Albastini black ace card", rotate: "rotate-2" },
-  { src: cardBlue, alt: "Albastini blue ace card", rotate: "rotate-8" },
+  { src: cardBlue, alt: "Albastini blue ace card", rotate: "rotate-6" },
 ];
 
-const specs: TKey[] = ["phys.spec1", "phys.spec2", "phys.spec3"];
-
+/**
+ * Physical cards. No purchase, price, stock or product-spec claims: none are
+ * verified. Copy is limited to what the supplied product imagery shows.
+ */
 export function PhysicalCardsSection() {
   const { t } = useI18n();
 
   return (
-    <section id="cards" className="relative overflow-hidden bg-secondary/60 py-24 lg:py-32">
-      <div aria-hidden className="kanga-rule absolute inset-x-0 top-0 h-1.5" />
+    <section id="cards" aria-labelledby="cards-title" className="bg-secondary py-24 lg:py-32">
       <div className="mx-auto grid max-w-[1440px] gap-14 px-5 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-20">
         <Reveal>
-          <div className="relative">
+          <div className="flex flex-col items-center gap-8">
             <img
               src={safariBox}
-              alt="Albastini Safari Edition card box"
+              alt="Albastini Safari Edition box"
               loading="lazy"
-              width={278}
-              height={480}
-              className="w-full max-w-[520px] rounded-3xl object-contain drop-shadow-2xl"
+              width={600}
+              height={1088}
+              className="w-full max-w-[300px] object-contain drop-shadow-2xl sm:max-w-[360px]"
             />
-            <div className="mt-[-3.5rem] flex justify-end gap-3 pr-2 sm:mt-[-5rem] sm:pr-8">
+            <div className="flex justify-center gap-3">
               {cards.map((c) => (
                 <img
                   key={c.alt}
                   src={c.src}
                   alt={c.alt}
                   loading="lazy"
-                  className={`w-24 rounded-xl bg-white shadow-card transition-transform duration-300 sm:w-32 sm:hover:-translate-y-4 sm:hover:rotate-0 sm:hover:shadow-lift ${c.rotate}`}
+                  className={`w-20 rounded-xl bg-alba-paper shadow-card sm:w-28 ${c.rotate}`}
                 />
               ))}
             </div>
@@ -47,39 +47,23 @@ export function PhysicalCardsSection() {
         </Reveal>
 
         <Reveal delay={100}>
-          <span className="eyebrow text-muted-foreground">{t("phys.eyebrow")}</span>
-          <h2 className="display-xl mt-4 text-4xl leading-[0.9] sm:text-5xl lg:text-6xl">
+          <p className="eyebrow text-muted-foreground">{t("phys.eyebrow")}</p>
+          <h2
+            id="cards-title"
+            className="display-xl mt-4 text-4xl leading-[0.9] sm:text-5xl lg:text-6xl"
+          >
             {t("phys.title")}
           </h2>
-          <p className="mt-6 max-w-md leading-relaxed text-muted-foreground">{t("phys.body")}</p>
+          <p className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
+            {t("phys.body")}
+          </p>
+          <p className="mt-6 w-fit rounded-full bg-alba-gold px-4 py-2 text-sm font-bold text-alba-ink">
+            {t("phys.status")}
+          </p>
 
-          <ul className="mt-8 flex flex-wrap gap-2">
-            {specs.map((s) => (
-              <li
-                key={s}
-                className="eyebrow rounded-full border border-border bg-card px-4 py-2 text-[0.55rem] text-muted-foreground"
-              >
-                {t(s)}
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-10 rounded-3xl border border-border bg-card p-6 shadow-card sm:p-8">
-            <div className="flex flex-wrap items-center gap-3">
-              <AlbaButton asChildHref="#notify-email" size="lg" className="w-full sm:w-auto">
-                {t("cta.cards")}
-              </AlbaButton>
-              <span className="eyebrow rounded-full bg-alba-gold/15 px-3 py-1.5 text-[0.55rem] text-alba-gold">
-                {t("phys.soon")}
-              </span>
-            </div>
-            <p className="eyebrow mt-6 text-[0.6rem] text-foreground">{t("phys.notify")}</p>
-            <div className="mt-4">
-              <CardNotifyForm onSubmit={async (email) => {
-                const { addSignup } = await import("@/api/api");
-                await addSignup({ data: email });
-              }} />
-            </div>
+          <div className="mt-10 rounded-3xl border border-border bg-card p-6 sm:p-8">
+            {/* Closed until a real backend, consent wording and notification channel exist. */}
+            <CardNotifyForm />
           </div>
         </Reveal>
       </div>

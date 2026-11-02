@@ -13,12 +13,12 @@ export function Reveal({
   delay?: number;
   as?: "div" | "section" | "li" | "span";
 }) {
-  const { ref, shown } = useReveal<HTMLDivElement>();
+  const { ref, state } = useReveal<HTMLDivElement>();
   return (
     <As
       ref={ref as never}
-      className={cn("reveal", shown && "reveal-in", className)}
-      style={{ transitionDelay: `${delay}ms` }}
+      className={cn("reveal", state === "armed" && "reveal-armed", className)}
+      style={state === "shown" && delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
       {children}
     </As>

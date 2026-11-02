@@ -1,25 +1,26 @@
+import { brandMark } from "@/content/brand";
+import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import logoAsset from "@/assets/albastini-logo.webp";
 
 /**
- * Albastini wordmark — official logo mark with the Albastini wordmark.
+ * Authentic Albastini mark only. The wordmark is NOT typed out: the official
+ * logo file hasn't been supplied yet (see content/brand.ts). The brand name is
+ * kept for screen readers via the image alt.
  */
 export function Logo({ className, showTag = false }: { className?: string; showTag?: boolean }) {
+  const { t } = useI18n();
   return (
-    <span className={cn("group inline-flex items-center gap-2.5", className)}>
+    <span className={cn("inline-flex items-center gap-3", className)}>
       <img
-        src={logoAsset}
-        alt="Albastini logo"
-        width={36}
-        height={36}
-        className="size-9 shrink-0 object-cover transition-transform duration-300 group-hover:rotate-12"
+        src={brandMark.src}
+        alt={t("brand.name")}
+        width={brandMark.width}
+        height={brandMark.height}
+        className="size-11 shrink-0 object-contain"
       />
-      <span className="flex flex-col leading-none">
-        <span className="wordmark text-xl sm:text-2xl">Albastini</span>
-        {showTag ? (
-          <span className="eyebrow mt-1 text-[0.55rem] text-muted-foreground uppercase">INGIA UWANJANI TIUCHEZE</span>
-        ) : null}
-      </span>
+      {showTag ? (
+        <span className="eyebrow text-xs text-muted-foreground">{t("brand.tagline")}</span>
+      ) : null}
     </span>
   );
 }

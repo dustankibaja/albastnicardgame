@@ -1,53 +1,36 @@
-import { useEffect, useState } from "react";
+import { getCountdown } from "@/lib/tournament";
 import { useI18n, type TKey } from "@/lib/i18n";
 
-type Parts = { days: number; hours: number; minutes: number; seconds: number };
-
-function diff(target: number): Parts | null {
-  const ms = target - Date.now();
-  if (ms <= 0) return null;
-  const s = Math.floor(ms / 1000);
-  return {
-    days: Math.floor(s / 86400),
-    hours: Math.floor((s % 86400) / 3600),
-    minutes: Math.floor((s % 3600) / 60),
-    seconds: s % 60,
-  };
-}
-
-const order: { key: keyof Parts; label: TKey }[] = [
+const order: { key: "days" | "hours" | "minutes" | "seconds"; label: TKey }[] = [
   { key: "days", label: "tour.days" },
   { key: "hours", label: "tour.hours" },
   { key: "minutes", label: "tour.minutes" },
   { key: "seconds", label: "tour.seconds" },
 ];
 
-export function TournamentCountdown({ startsAt }: { startsAt: string }) {
+/**
+ * Pure display: the caller owns the clock, so server and client render the
+ * same numbers from the same `now` during hydration. Values are clamped at 0.
+ * The ticking digits are hidden from screen readers (the date/time text next
+ * to it carries the information) to avoid noisy announcements.
+ */
+export function TournamentCountdown({ target, now }: { target: number; now: number }) {
   const { t } = useI18n();
-  const target = new Date(startsAt).getTime();
-  const [parts, setParts] = useState<Parts | null>(null);
-
-  useEffect(() => {
-    setParts(diff(target));
-    const id = window.setInterval(() => setParts(diff(target)), 1000);
-    return () => window.clearInterval(id);
-  }, [target]);
+  const parts = getCountdown(target, now);
 
   return (
-    <div className="rounded-3xl border border-alba-paper/15 bg-alba-ink/60 p-5 sm:p-7">
-      <span className="eyebrow text-primary">{parts ? t("tour.next") : t("tour.live")}</span>
-      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div className="rounded-3xl bg-alba-ink p-5 sm:p-7">
+      <p className="eyebrow text-alba-gold">{t("tour.startsIn")}</p>
+      <div aria-hidden="true" className="mt-5 grid grid-cols-4 gap-2 sm:gap-3">
         {order.map((o) => (
           <div
             key={o.key}
-            className="rounded-2xl border border-alba-paper/10 bg-[oklch(0.12_0.006_260)] px-2 py-4 text-center"
+            className="rounded-2xl border border-alba-paper/20 px-1 py-4 text-center"
           >
-            <span className="display-xl block text-4xl tabular-nums text-alba-paper sm:text-5xl">
-              {String(parts ? parts[o.key] : 0).padStart(2, "0")}
+            <span className="display-xl block text-3xl tabular-nums text-alba-paper sm:text-5xl">
+              {String(parts[o.key]).padStart(2, "0")}
             </span>
-            <span className="eyebrow mt-2 block text-[0.55rem] text-alba-paper/50">
-              {t(o.label)}
-            </span>
+            <span className="eyebrow mt-2 block text-xs text-alba-paper/80">{t(o.label)}</span>
           </div>
         ))}
       </div>

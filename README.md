@@ -1,143 +1,66 @@
-# 🃏 Albastini Website
+# Albastini Website
 
-> **The game is on.**
+The official website for **Albastini**, the Tanzanian card game you can play two ways:
+with the physical cards around a table, or on the Albastini app.
 
-The official website for **Albastini**, a gaming company built around a competitive and social card-game experience.
+**INGIA UWANJANI. TUCHEZE.**
 
-The website introduces visitors to the Albastini ecosystem, showcases the mobile app and physical cards, highlights community statistics and tournament activity, and celebrates players who have won Albastini tournaments.
+## Status: Phase 1 complete (stabilization)
 
----
+Phase 1 made the existing site truthful, safe and ready for the CEO-approved redesign.
+See `docs/PHASE-1.md` for the change log and the content waiting on the Albastini team.
 
-## 🎮 About Albastini
+Ground rules for anyone editing this repo:
 
-Albastini is a card gaming brand combining **digital gameplay, physical cards, tournaments, and community** into one experience.
+- **Never invent data.** No placeholder winners, stats, prices, dates or product specs.
+  If something isn't verified, leave it out; the UI has neutral empty states.
+- **One theme.** No light/dark mode. Colours come only from the logo: blue, yellow,
+  red, green, black, white (and tints of them).
+- **Official assets only.** Don't redraw, regenerate or "improve" the logo, cards,
+  packaging or app screenshots.
+- **Lovable sync.** This repo syncs with Lovable. Don't force-push or rewrite pushed
+  history (see `AGENTS.md`).
 
-The website serves as the public-facing home of Albastini and is designed to help visitors:
+## Stack
 
-- Discover what Albastini is
-- Learn about the game
-- Download the Albastini app
-- Learn about the physical Albastini cards
-- See community statistics
-- Discover upcoming tournaments
-- Explore previous tournament winners
-- Stay connected with Albastini
+React 19 + TypeScript, TanStack Start (SSR) + TanStack Router, Vite, Tailwind v4.
+Deployed on Vercel.
 
----
+```bash
+npm ci
+npm run dev      # local dev server
+npm run build    # production build
+npx tsc --noEmit # type-check
+npm run lint
+```
 
-## ✨ Website Features
-
-### 🃏 The Game
-
-An introduction to Albastini and the overall gaming experience.
-
-### 📱 Albastini App
-
-Promotes the Albastini mobile application and provides a clear call-to-action for users who want to start playing.
-
-### 🃏 Physical Cards
-
-Showcases the physical Albastini cards and allows visitors to request notifications when cards become available.
-
-### 📊 Community Statistics
-
-Highlights important Albastini metrics including:
-
-- Total games played
-- Total active players
-- Total coins
-
-These statistics are designed to communicate the size and activity of the Albastini community.
-
-### 🏆 Tournaments
-
-Provides information about Albastini tournaments and displays a countdown to the next tournament.
-
-### 👑 Tournament Hall of Fame
-
-Showcases previous Albastini tournament winners.
-
-The winners section is data-driven so new winners can be added without rebuilding the component.
-
-Each winner can include:
-
-- Player name
-- Player image
-- Tournament
-- Date
-- Position
-- Prize
-
-### 🌍 English & Swahili
-
-The website supports both:
-
-- English
-- Swahili
-
-Users can switch languages through the language selector.
-
-### 🌓 Light & Dark Themes
-
-The website supports both light and dark visual themes while maintaining the Albastini brand identity.
-
----
-
-## 🎨 Design Philosophy
-
-The website intentionally avoids the typical generic gaming-site aesthetic.
-
-The design is inspired by the physical Albastini game and its cards.
-
-The visual language focuses on:
-
-- Bold typography
-- Albastini brand colors
-- Card-inspired geometric elements
-- Tactile surfaces
-- Clean layouts
-- Playful interactions
-- Subtle animations
-- Strong visual hierarchy
-
-The goal is to make the website feel like a **digital extension of the Albastini game**.
-
-> **Keep it beautiful. Keep it simple. Keep it Albastini.**
-
----
-
-## 🧱 Project Structure
-
-A simplified view of the project:
+## Where things live
 
 ```text
 src/
-├── components/
-│   ├── Navbar/
-│   ├── Hero/
-│   ├── Intro/
-│   ├── GameSection/
-│   ├── StatsSection/
-│   ├── TournamentSection/
-│   ├── WinnersSection/
-│   ├── PhysicalCardsSection/
-│   ├── CardNotifyForm/
-│   ├── AppSection/
-│   ├── FinalCTA/
-│   └── Footer/
-│
-├── data/
-│   ├── cards.ts
-│   ├── tournament.ts
-│   ├── winners.ts
-│   └── stats.ts
-│
-├── styles/
-│   └── ...
-│
-├── assets/
-│   ├── cards/
-│   ├── winners/
-│   └── ...
-│
-└── ...
+├── content/              the only place public data lives (version-controlled)
+│   ├── tournaments.ts    tournaments: typed, verified fields only
+│   ├── winners.ts        verified winners only (image optional)
+│   ├── links.ts          app store links (NEED VERIFICATION)
+│   ├── brand.ts          brand mark; swap in the official logo here
+│   └── navigation.ts     section anchors
+├── lib/
+│   ├── tournament.ts     phase (upcoming/live/ended), countdown, Tanzania-time formatting
+│   └── i18n.tsx          all English + Kiswahili copy
+├── components/site/      page sections and shared CTAs
+│   ├── DownloadButton    APP CTA family (yellow, opens the store dialog)
+│   └── CardsButton       PHYSICAL CARD CTA family (outline, goes to #cards)
+└── routes/index.tsx      the homepage
+archive/admin-prototype/  the disabled admin panel, kept for reference only
+```
+
+## Updating tournaments and winners
+
+Edit `src/content/tournaments.ts` or `src/content/winners.ts` and redeploy.
+
+- Use full ISO times with the Tanzania offset, e.g. `2026-11-21T20:00:00+03:00`.
+- Leave `startAt` out until the start time is confirmed. The site then shows the date
+  with "details coming soon", and never a countdown or a "live" state.
+- Set `status: "completed"` once an event is over. Even if you forget, an event stops
+  being shown as upcoming/live after its calendar day ends in Tanzania.
+- Winners without a photo render as text-only cards. Never add a placeholder portrait.

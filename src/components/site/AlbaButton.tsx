@@ -16,7 +16,7 @@ export const albaButton = cva(
         quiet: "text-foreground/70 hover:text-foreground",
       },
       size: {
-        sm: "h-9 px-4 text-[0.7rem]",
+        sm: "h-10 px-4 text-xs",
         md: "h-11 px-6 text-xs sm:text-sm",
         lg: "h-13 px-8 text-sm sm:text-base",
       },
@@ -25,7 +25,8 @@ export const albaButton = cva(
   },
 );
 
-export type AlbaButtonProps = ComponentProps<"button"> & VariantProps<typeof albaButton> & { asChildHref?: string };
+export type AlbaButtonProps = ComponentProps<"button"> &
+  VariantProps<typeof albaButton> & { asChildHref?: string };
 
 export function AlbaButton({ className, variant, size, asChildHref, ...props }: AlbaButtonProps) {
   if (asChildHref) {
