@@ -20,9 +20,9 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
-  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-card: "Playfair Display", Georgia, serif;
+  --font-display: "Archivo Display", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-sans:
+    "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -51,6 +51,7 @@
   --color-alba-gold: var(--alba-gold);
   --color-alba-ink: var(--alba-ink);
   --color-alba-paper: var(--alba-paper);
+  --color-alba-night: var(--alba-night);
 
   --shadow-card: var(--shadow-card-v);
   --shadow-lift: var(--shadow-lift-v);
@@ -58,22 +59,41 @@
 }
 
 /*
- * PHASE 1 — SINGLE THEME FOUNDATION
- * One token set, no light/dark variants. Every colour is one of the six logo
- * colours (blue, yellow, red, green, black, white) or a tint/opacity of one of
- * them. No beige, warm paper, grey or charcoal as separate colours.
- * Final values are tuned in Phase 2.
+ * ALBASTINI DESIGN SYSTEM — PHASE 2
+ *
+ * Colour: only the six logo colours (blue, yellow, red, green, black, white),
+ * their tints with white and shades with black. Blue is the environment,
+ * yellow is the action/signal colour, red and green are rare accents.
+ * Type: Archivo (compressed, heavy) for display; Instrument Sans for reading.
+ * Motif: the wave band from the Albastini card faces.
  */
+
+@font-face {
+  font-family: "Archivo Display";
+  src: url("/fonts/archivo-display.woff2") format("woff2");
+  font-weight: 600 900;
+  font-stretch: 62% 100%;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("/fonts/instrument-sans.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
 :root {
   --radius: 0.75rem;
 
-  /* The six logo colours. "gold" is the logo yellow (name kept for class compat). */
-  --alba-blue: oklch(0.44 0.245 264);
-  --alba-red: oklch(0.56 0.226 29);
-  --alba-green: oklch(0.5 0.14 152);
-  --alba-gold: oklch(0.9 0.185 101);
-  --alba-ink: oklch(0 0 0);
-  --alba-paper: oklch(1 0 0);
+  /* The six logo colours ("gold" = logo yellow; name kept for class compat). */
+  --alba-blue: #1238d4;
+  --alba-gold: #ffe11a;
+  --alba-red: #e3261c;
+  --alba-green: #12884a;
+  --alba-ink: #000000;
+  --alba-paper: #ffffff;
+  /* Depth: brand blue shaded with black (not a new hue). */
+  --alba-night: color-mix(in oklab, var(--alba-blue) 42%, var(--alba-ink));
 
   --background: var(--alba-paper);
   --foreground: var(--alba-ink);
@@ -83,23 +103,33 @@
   --popover-foreground: var(--alba-ink);
   --primary: var(--alba-gold);
   --primary-foreground: var(--alba-ink);
-  /* Quiet surfaces are a light tint of the brand blue, not a grey. */
   --secondary: color-mix(in oklab, var(--alba-blue) 6%, var(--alba-paper));
   --secondary-foreground: var(--alba-ink);
   --muted: color-mix(in oklab, var(--alba-blue) 6%, var(--alba-paper));
-  /* Secondary text is black at reduced strength (≥ 4.5:1 on white and on --secondary). */
-  --muted-foreground: color-mix(in oklab, var(--alba-ink) 68%, var(--alba-paper));
+  --muted-foreground: color-mix(in oklab, var(--alba-ink) 70%, var(--alba-paper));
   --accent: var(--alba-blue);
   --accent-foreground: var(--alba-paper);
   --destructive: var(--alba-red);
   --destructive-foreground: var(--alba-paper);
   --border: color-mix(in oklab, var(--alba-ink) 14%, var(--alba-paper));
-  --input: color-mix(in oklab, var(--alba-ink) 30%, var(--alba-paper));
+  --input: color-mix(in oklab, var(--alba-ink) 35%, var(--alba-paper));
   --ring: var(--alba-blue);
 
-  --shadow-card-v: 0 1px 2px oklch(0 0 0 / 0.06), 0 18px 40px -18px oklch(0 0 0 / 0.28);
-  --shadow-lift-v: 0 2px 4px oklch(0 0 0 / 0.08), 0 34px 60px -22px oklch(0 0 0 / 0.36);
-  --shadow-chip-v: 0 10px 30px -12px oklch(0.9 0.185 101 / 0.55);
+  --shadow-card-v: 0 1px 2px rgb(0 0 0 / 0.08), 0 22px 44px -20px rgb(0 0 0 / 0.45);
+  --shadow-lift-v: 0 2px 6px rgb(0 0 0 / 0.1), 0 40px 70px -28px rgb(0 0 0 / 0.55);
+  --shadow-chip-v: none;
+
+  /* Layout */
+  --gutter: clamp(1.25rem, 5vw, 4.5rem);
+  --max: 1440px;
+  --section-y: clamp(5rem, 11vw, 10rem);
+
+  /* Motion tokens */
+  --dur-fast: 150ms;
+  --dur-std: 260ms;
+  --dur-enter: 650ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-std: cubic-bezier(0.2, 0, 0, 1);
 }
 
 @layer base {
@@ -113,12 +143,27 @@
     }
   }
 
+  body {
+    background-color: var(--alba-ink);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--alba-gold);
+    color: var(--alba-ink);
+  }
+
   /* In-page anchors land below the fixed navbar. */
   [id] {
     scroll-margin-top: 5rem;
   }
 
-  /* Visible keyboard focus everywhere, including plain links and toggles. */
+  /* Visible keyboard focus everywhere. Yellow on dark/blue, blue on white. */
   :focus-visible {
     outline: 3px solid var(--alba-blue);
     outline-offset: 3px;
@@ -126,80 +171,65 @@
   .on-dark :focus-visible {
     outline-color: var(--alba-gold);
   }
-
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-
-  ::selection {
-    background: var(--alba-gold);
-    color: var(--alba-ink);
-  }
 }
 
-/* --- Typography utilities --- */
+/* --- Typography --- */
 @utility display-xl {
   font-family: var(--font-display);
   font-weight: 900;
-  letter-spacing: -0.035em;
-  line-height: 0.9;
+  font-stretch: 62%;
+  letter-spacing: -0.005em;
+  word-spacing: 0.06em;
+  line-height: 0.86;
   text-transform: uppercase;
 }
 
-@utility eyebrow {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
+/* Small labels: sentence case, readable, not tracked-out caps. */
+@utility label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0;
 }
 
-@utility wordmark {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-style: italic;
-  letter-spacing: -0.03em;
-  text-transform: none;
-}
-
-/* --- Brand details --- */
-@utility kanga-rule {
-  background-image: linear-gradient(
-    90deg,
-    var(--alba-blue) 0 25%,
-    var(--alba-red) 25% 50%,
-    var(--alba-green) 50% 75%,
-    var(--alba-gold) 75% 100%
-  );
-}
-
-@utility triangle-band {
-  background-image:
-    linear-gradient(135deg, currentColor 25%, transparent 25% 75%, currentColor 75%),
-    linear-gradient(45deg, currentColor 25%, transparent 25% 75%, currentColor 75%);
-  background-size: 14px 14px;
-  opacity: 0.12;
-}
-
-/* Subtle card-inspired dot grid for section backgrounds. */
-@utility alba-dots {
-  background-image: radial-gradient(currentColor 1px, transparent 1px);
-  background-size: 22px 22px;
-  color: color-mix(in oklab, var(--foreground) 18%, transparent);
-  mask-image: radial-gradient(ellipse at center, black, transparent 75%);
-}
-
-@utility card-face {
-  background: var(--alba-paper);
-  border-radius: 0.9rem;
-  box-shadow: var(--shadow-card-v);
+/* Layout container */
+@utility shell {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 
 /* --- Motion --- */
+
+/* Page-load entrance (hero only). Content is never held back more than ~0.5s. */
+@keyframes alba-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+}
+.enter {
+  animation: alba-enter var(--dur-enter) var(--ease-out) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+/*
+ * Depth layers driven by two CSS variables set from JS:
+ *   --p   scroll progress of the parent stage (-1 … 1)
+ *   --mx/--my  pointer position over the hero (-1 … 1), fine pointers only
+ * Each layer sets its own --dx/--dy/--dr multipliers. Transform only.
+ */
+.depth {
+  transform: translate3d(
+      calc(var(--mx, 0) * var(--dx, 0) * 1px),
+      calc(var(--p, 0) * var(--dy, 0) * 1px + var(--my, 0) * var(--dx, 0) * 0.6px),
+      0
+    )
+    rotate(calc(var(--p, 0) * var(--dr, 0) * 1deg));
+  will-change: transform;
+}
+
 /*
  * Reveal is progressive enhancement: server HTML is always visible. JS only
  * "arms" (hides) elements that are below the fold at mount, then reveals them
@@ -207,15 +237,22 @@
  */
 .reveal {
   transition:
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity var(--dur-enter) var(--ease-out),
+    transform var(--dur-enter) var(--ease-out);
 }
 .reveal-armed {
   opacity: 0;
-  transform: translateY(22px);
+  transform: translate3d(0, 28px, 0);
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+  .depth {
+    transform: none;
+    will-change: auto;
+  }
   .reveal,
   .reveal-armed {
     opacity: 1;

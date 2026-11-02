@@ -1,27 +1,15 @@
 import { AlbaButton, type AlbaButtonProps } from "./AlbaButton";
-import { cn } from "@/lib/utils";
 
 /**
- * PHYSICAL CARD CTA family. Always the outline style and always points to the
- * physical cards section. Wording must never imply purchase until it's real.
+ * PHYSICAL CARD CTA family. Always the outline style (inherits the text colour
+ * of its surroundings, so it works on blue, black and white) and always points
+ * to the physical cards section. Never implies purchase.
  */
 export function CardsButton({
-  className,
-  onDark = false,
   variant: _v,
   asChildHref: _h,
+  onDark: _d,
   ...props
 }: AlbaButtonProps & { onDark?: boolean }) {
-  return (
-    <AlbaButton
-      {...props}
-      asChildHref="#cards"
-      variant="outline"
-      className={cn(
-        onDark &&
-          "border-alba-paper/60 text-alba-paper hover:border-alba-paper hover:bg-alba-paper/10",
-        className,
-      )}
-    />
-  );
+  return <AlbaButton {...props} asChildHref="#cards" variant="outline" />;
 }

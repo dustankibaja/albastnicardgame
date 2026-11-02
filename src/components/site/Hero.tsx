@@ -1,57 +1,103 @@
-import cardBlack from "@/assets/card-black-official-v2.webp";
-import cardBlue from "@/assets/card-blue-official.webp";
-import cardFan from "@/assets/card-fan.webp";
-import cardRed from "@/assets/card-red-official.webp";
+import { useRef } from "react";
 import { CardsButton } from "./CardsButton";
 import { DownloadButton } from "./DownloadButton";
-import { useI18n } from "@/lib/i18n";
+import { PhoneMockup } from "./PhoneMockup";
+import { Picture } from "./Picture";
+import { Wave } from "./Wave";
+import type { SiteImageId } from "@/content/assets";
+import { usePointerDepth, useScrollProgress } from "@/hooks/use-depth";
+import { useI18n, type TKey } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
-const heroCards = [
+/*
+ * Hero: TWO WAYS TO PLAY. ONE ALBASTINI.
+ * Physical cards and the real app share one stage. Objects sit in depth
+ * layers (scroll + gentle pointer response on desktop); the inner element
+ * carries the page-load entrance so the two transforms never fight.
+ */
+
+type Layer = {
+  id: SiteImageId;
+  alt: TKey;
+  /** position/size inside the stage, mobile first then desktop */
+  box: string;
+  rotate: number;
+  dx: number;
+  dy: number;
+  dr: number;
+  delay: number;
+};
+
+const cards: Layer[] = [
   {
-    src: cardRed,
-    alt: "Albastini red ace playing card",
-    className: "-rotate-12 -mr-10 z-10 translate-y-6",
+    id: "aceRed",
+    alt: "alt.aceRed",
+    box: "left-[3%] top-[22%] w-[30%] lg:left-[2%] lg:top-[30%] lg:w-[29%]",
+    rotate: -15,
+    dx: 6,
+    dy: 40,
+    dr: -3,
+    delay: 140,
   },
   {
-    src: cardBlack,
-    alt: "Albastini black ace playing card",
-    className: "-rotate-2 z-20",
+    id: "aceBlack",
+    alt: "alt.aceBlack",
+    box: "left-[15%] top-[10%] w-[30%] lg:left-[20%] lg:top-[19%] lg:w-[29%]",
+    rotate: -4,
+    dx: 10,
+    dy: 60,
+    dr: -1.5,
+    delay: 220,
   },
   {
-    src: cardBlue,
-    alt: "Albastini blue ace playing card",
-    className: "rotate-10 -ml-10 z-10 translate-y-6",
+    id: "aceBlue",
+    alt: "alt.aceBlue",
+    box: "left-[64%] top-[18%] w-[30%] lg:left-[38%] lg:top-[26%] lg:w-[29%]",
+    rotate: 9,
+    dx: 14,
+    dy: 50,
+    dr: 2,
+    delay: 300,
   },
 ];
 
 export function Hero() {
   const { t } = useI18n();
+  const stage = useRef<HTMLElement>(null);
+  useScrollProgress(stage);
+  usePointerDepth(stage);
 
   return (
-    <section id="top" className="relative overflow-hidden pt-28 sm:pt-32 lg:pt-40">
-      {/* geometric brand details */}
-      <div
-        aria-hidden
-        className="triangle-band pointer-events-none absolute -right-10 top-24 hidden h-56 w-56 sm:block text-alba-blue lg:h-80 lg:w-80"
-      />
-      <div aria-hidden className="alba-dots pointer-events-none absolute inset-0 opacity-[0.35]" />
-
-      <div className="relative mx-auto grid max-w-[1440px] items-center gap-12 px-5 pb-16 sm:px-8 lg:grid-cols-[0.95fr_1fr] lg:gap-10 lg:pb-28">
-        <div className="max-w-xl lg:max-w-2xl">
-          <span className="eyebrow inline-flex items-center gap-2 text-muted-foreground">
-            <span className="kanga-rule inline-block h-1 w-8 rounded-full" />
-            {t("hero.eyebrow")}
-          </span>
-
-          <h1 className="display-xl mt-6 text-[3.25rem] leading-[0.86] tracking-[-0.01em] sm:text-7xl lg:text-[6.4rem]">
-            {t("hero.title")}
+    <section
+      id="top"
+      ref={stage}
+      aria-labelledby="hero-title"
+      className="on-dark relative isolate overflow-hidden bg-alba-blue text-alba-paper"
+    >
+      <div className="shell relative z-10 grid items-center gap-4 pb-[clamp(2.5rem,7vw,7rem)] lg:gap-6 pt-24 sm:pt-28 lg:grid-cols-12 lg:pt-32">
+        <div className="lg:col-span-5">
+          <h1 id="hero-title" className="display-xl">
+            <span className="enter block text-[clamp(4.25rem,19vw,10rem)] lg:text-[clamp(5.5rem,8.6vw,9.75rem)]">
+              <span className="block whitespace-nowrap">{t("hero.title1")}</span>
+              <span className="block whitespace-nowrap">{t("hero.title2")}</span>
+            </span>
+            <span
+              className="enter mt-3 block text-[clamp(2.4rem,10.5vw,5.75rem)] text-alba-gold lg:text-[clamp(3rem,5.6vw,5.75rem)]"
+              style={{ ["--delay" as string]: "80ms" }}
+            >
+              {t("hero.one")}
+            </span>
           </h1>
-
-          <p className="mt-7 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p
+            className="enter mt-6 max-w-[28ch] text-xl leading-snug text-alba-paper/90 sm:text-2xl"
+            style={{ ["--delay" as string]: "140ms" }}
+          >
             {t("hero.sub")}
           </p>
-
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <div
+            className="enter mt-8 flex flex-col gap-3 sm:flex-row"
+            style={{ ["--delay" as string]: "180ms" }}
+          >
             <DownloadButton size="lg" className="w-full sm:w-auto">
               {t("cta.app")}
             </DownloadButton>
@@ -61,35 +107,60 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative">
-          {/* Deliberate overlapping card composition — the real Albastini artwork. */}
-          <div className="relative mx-auto hidden max-w-[720px] items-end justify-center sm:flex">
-            {heroCards.map((c) => (
-              <img
-                key={c.alt}
-                src={c.src}
-                alt={c.alt}
-                width={500}
-                height={710}
-                className={`w-[34%] rounded-xl bg-white shadow-[0_28px_50px_rgba(0,0,0,0.45)] ${c.className}`}
-              />
+        {/* The stage: physical cards and the app, together. */}
+        <div className="relative lg:col-span-7">
+          <div className="relative mx-auto aspect-[1/0.9] w-full max-w-[560px] lg:aspect-[1/0.78] lg:max-w-none">
+            {cards.map((c) => (
+              <div
+                key={c.id}
+                className={cn("depth absolute", c.box)}
+                style={depthVars(c.dx, c.dy, c.dr)}
+              >
+                <div className="enter" style={{ ["--delay" as string]: `${c.delay}ms` }}>
+                  <Picture
+                    id={c.id}
+                    alt={t(c.alt)}
+                    priority
+                    sizes="(min-width: 1024px) 18vw, 31vw"
+                    className="overflow-hidden rounded-[7%] shadow-[0_30px_50px_-18px_rgb(0_0_0/0.65)]"
+                    style={{ transform: `rotate(${c.rotate}deg)` }}
+                  />
+                </div>
+              </div>
             ))}
-          </div>
 
-          {/* Mobile: the fan artwork reads better at small widths. */}
-          <div className="relative mx-auto max-w-[440px] sm:hidden">
-            <img
-              src={cardFan}
-              alt="A fan of Albastini playing cards in green, red, black and blue with the yellow points chip"
-              width={600}
-              height={600}
-              className="w-full drop-shadow-[0_36px_60px_rgba(0,0,0,0.35)]"
-            />
+            {/* Phone: centred on mobile, overlapping the hand on desktop. */}
+            <div
+              className="depth absolute left-[29%] top-0 z-10 w-[42%] lg:left-[64%] lg:top-[2%] lg:w-[31%]"
+              style={depthVars(18, 90, 1.5)}
+            >
+              <div className="enter" style={{ ["--delay" as string]: "260ms" }}>
+                <PhoneMockup
+                  alt={t("alt.app")}
+                  priority
+                  sizes="(min-width: 1024px) 18vw, 42vw"
+                  className="rotate-[4deg]"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mx-auto mt-2 flex max-w-[560px] justify-between lg:max-w-none lg:px-[2%]">
+            <p className="label">
+              <span className="text-alba-gold">01</span> {t("hero.physical")}
+            </p>
+            <p className="label lg:mr-[4%]">
+              <span className="text-alba-gold">02</span> {t("hero.digital")}
+            </p>
           </div>
         </div>
       </div>
 
-      <div aria-hidden className="kanga-rule h-1.5 w-full" />
+      {/* Card-wave edge into the white "card stock" chapter. */}
+      <Wave fill="var(--alba-paper)" className="relative z-0 -mb-px -mt-[clamp(44px,7vw,120px)]" />
     </section>
   );
+}
+
+function depthVars(dx: number, dy: number, dr: number) {
+  return { ["--dx" as string]: dx, ["--dy" as string]: dy, ["--dr" as string]: dr };
 }

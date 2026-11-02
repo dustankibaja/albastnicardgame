@@ -23,6 +23,7 @@ const dict = {
     "nav.menu": "Open menu",
     "nav.closeMenu": "Close menu",
     "nav.primary": "Main",
+    "nav.home": "Albastini home",
 
     "lang.label": "Language",
 
@@ -34,26 +35,37 @@ const dict = {
     "cta.cards": "Card availability",
     "cta.playApp": "Play on the app",
 
-    "hero.eyebrow": "Albastini",
-    "hero.title": "The game is on.",
-    "hero.sub": "Play. Compete. Win. The Albastini card game — on your phone and on your table.",
+    "hero.title1": "Two ways",
+    "hero.title2": "to play.",
+    "hero.one": "One Albastini.",
+    "hero.sub": "Cards around the table. Albastini on your phone.",
+    "hero.physical": "Physical cards",
+    "hero.digital": "Mobile app",
 
-    "game.eyebrow": "Two ways to play",
-    "game.title": "Pick your table.",
-    "game.app.tag": "Mobile app",
-    "game.app.t": "The Albastini app",
-    "game.app.b": "Play Albastini digitally wherever you are.",
-    "game.phys.tag": "Physical cards",
-    "game.phys.t": "Physical Albastini",
-    "game.phys.b": "Bring the game to the table with physical Albastini cards.",
+    "two.title1": "From the table.",
+    "two.title2": "To the screen.",
+    "two.tabs": "What Albastini feels like",
+    "two.hint": "Choose a card",
+    "two.play.t": "Play",
+    "two.play.b":
+      "Pick up the cards and you're in. Every round is a new chance — and someone always asks for one more game.",
+    "two.friends.t": "Friendship",
+    "two.friends.b":
+      "Albastini brings people to the same table: jokes, rivalries and conversation between turns.",
+    "two.compete.t": "Competition",
+    "two.compete.b":
+      "When friends aren't around, the app keeps the game going — and tournaments show who plays best.",
+    "two.app": "The Albastini app on your phone",
 
-    "how.eyebrow": "How to play",
-    "how.title": "Learn the game.",
-    "how.body":
-      "The official How to Play guide is inside the Albastini app. Download the app, then tap How to Play on the home screen.",
+    "how.title1": "Your next move",
+    "how.title2": "starts here.",
+    "how.body": "The official How to Play guide is inside the Albastini app.",
+    "how.step1": "Download the Albastini app.",
+    "how.step2": "Tap How to Play on the home screen.",
+    "how.callout": "How to Play, on the app's home screen",
 
-    "tour.eyebrow": "Tournaments",
-    "tour.title": "Play for the win.",
+    "tour.title1": "Play for",
+    "tour.title2": "the win.",
     "tour.body": "Albastini tournaments bring players together to compete for the top spot.",
     "tour.next": "Next tournament",
     "tour.numbered": "Tournament #{n}",
@@ -71,21 +83,22 @@ const dict = {
     "tour.mode.in_person": "In person",
     "tour.mode.hybrid": "In the app and in person",
 
-    "win.eyebrow": "Winners",
-    "win.title": "They played. They won.",
-    "win.p1": "First place",
-    "win.p2": "Second place",
-    "win.p3": "Third place",
+    "win.title1": "They played.",
+    "win.title2": "They won.",
+    "win.p1": "1st place",
+    "win.p2": "2nd place",
+    "win.p3": "3rd place",
     "win.place": "Place {n}",
     "win.prize": "Prize",
     "win.location": "From",
 
-    "phys.eyebrow": "Physical cards",
-    "phys.title": "Take the game to the table.",
+    "phys.title1": "Take the game",
+    "phys.title2": "to the table.",
     "phys.body":
       "Physical Albastini cards are made for real tables, real friends and one more game.",
     "phys.status": "Card availability updates coming soon.",
 
+    "form.toggle": "Get card updates",
     "form.title": "Get card updates",
     "form.closed": "Sign-up isn't open yet. It will open once updates can be sent to you.",
     "form.name": "Name",
@@ -105,10 +118,20 @@ const dict = {
     "modal.android": "Download for Android",
     "modal.close": "Close",
 
-    "final.title": "Ready to play?",
+    "final.title1": "Ready to",
+    "final.title2": "play?",
 
     "footer.tagline": "The Tanzanian card game.",
     "footer.rights": "All rights reserved.",
+
+    "alt.aceRed": "Red ace card from the Albastini deck",
+    "alt.aceBlack": "Black ace card from the Albastini deck",
+    "alt.aceBlue": "Blue ace card from the Albastini deck",
+    "alt.app":
+      "Albastini app home screen with Practice Mode, Head to Head, Tournament and How to Play",
+    "alt.appHow": "Albastini app home screen, How to Play button highlighted",
+    "alt.boxSafari": "Albastini Safari Edition card box",
+    "alt.boxExpansion": "Albastini Safari Edition Expansion Pack box",
   },
   sw: {
     "nav.play": "Cheza",
@@ -118,6 +141,7 @@ const dict = {
     "nav.menu": "Fungua menyu",
     "nav.closeMenu": "Funga menyu",
     "nav.primary": "Kuu",
+    "nav.home": "Albastini mwanzo",
 
     "lang.label": "Lugha",
 
@@ -129,26 +153,37 @@ const dict = {
     "cta.cards": "Upatikanaji wa karata",
     "cta.playApp": "Cheza kwenye app",
 
-    "hero.eyebrow": "Albastini",
-    "hero.title": "Mchezo umeanza.",
-    "hero.sub": "Cheza. Shindana. Shinda. Mchezo wa karata Albastini — simuni na mezani.",
+    "hero.title1": "Njia mbili",
+    "hero.title2": "za kucheza.",
+    "hero.one": "Albastini moja.",
+    "hero.sub": "Karata mezani. Albastini simuni mwako.",
+    "hero.physical": "Karata halisi",
+    "hero.digital": "App ya simu",
 
-    "game.eyebrow": "Njia mbili za kucheza",
-    "game.title": "Chagua meza yako.",
-    "game.app.tag": "App ya simu",
-    "game.app.t": "App ya Albastini",
-    "game.app.b": "Cheza Albastini kidijitali ulipo popote.",
-    "game.phys.tag": "Karata halisi",
-    "game.phys.t": "Karata za Albastini",
-    "game.phys.b": "Leta mchezo mezani na karata halisi za Albastini.",
+    "two.title1": "Kutoka mezani.",
+    "two.title2": "Hadi kwenye skrini.",
+    "two.tabs": "Ladha ya Albastini",
+    "two.hint": "Chagua karata",
+    "two.play.t": "Cheza",
+    "two.play.b":
+      "Shika karata na uko ndani ya mchezo. Kila raundi ni nafasi mpya — na daima kuna mtu anayeomba mchezo mmoja zaidi.",
+    "two.friends.t": "Urafiki",
+    "two.friends.b":
+      "Albastini inawaleta watu kwenye meza moja: utani, ushindani na mazungumzo kati ya zamu.",
+    "two.compete.t": "Ushindani",
+    "two.compete.b":
+      "Marafiki wasipokuwepo, app inaendeleza mchezo — na mashindano yanaonyesha nani anacheza vizuri zaidi.",
+    "two.app": "App ya Albastini kwenye simu yako",
 
-    "how.eyebrow": "Jinsi ya kucheza",
-    "how.title": "Jifunze mchezo.",
-    "how.body":
-      "Mwongozo rasmi wa jinsi ya kucheza uko ndani ya app ya Albastini. Pakua app, kisha bonyeza How to Play kwenye skrini ya mwanzo.",
+    "how.title1": "Hatua yako inayofuata",
+    "how.title2": "inaanzia hapa.",
+    "how.body": "Mwongozo rasmi wa jinsi ya kucheza uko ndani ya app ya Albastini.",
+    "how.step1": "Pakua app ya Albastini.",
+    "how.step2": "Bonyeza How to Play kwenye skrini ya mwanzo.",
+    "how.callout": "How to Play, kwenye skrini ya mwanzo ya app",
 
-    "tour.eyebrow": "Mashindano",
-    "tour.title": "Cheza kwa ushindi.",
+    "tour.title1": "Cheza kwa",
+    "tour.title2": "ushindi.",
     "tour.body": "Mashindano ya Albastini yanawakutanisha wachezaji kushindania nafasi ya juu.",
     "tour.next": "Mashindano yajayo",
     "tour.numbered": "Mashindano #{n}",
@@ -166,8 +201,8 @@ const dict = {
     "tour.mode.in_person": "Ana kwa ana",
     "tour.mode.hybrid": "Kwenye app na ana kwa ana",
 
-    "win.eyebrow": "Washindi",
-    "win.title": "Walicheza. Walishinda.",
+    "win.title1": "Walicheza.",
+    "win.title2": "Walishinda.",
     "win.p1": "Nafasi ya kwanza",
     "win.p2": "Nafasi ya pili",
     "win.p3": "Nafasi ya tatu",
@@ -175,12 +210,13 @@ const dict = {
     "win.prize": "Zawadi",
     "win.location": "Kutoka",
 
-    "phys.eyebrow": "Karata halisi",
-    "phys.title": "Leta mchezo mezani.",
+    "phys.title1": "Leta mchezo",
+    "phys.title2": "mezani.",
     "phys.body":
       "Karata halisi za Albastini ni kwa ajili ya meza halisi, marafiki halisi na mchezo mmoja zaidi.",
     "phys.status": "Taarifa za upatikanaji wa karata zinakuja hivi karibuni.",
 
+    "form.toggle": "Pata taarifa za karata",
     "form.title": "Pata taarifa za karata",
     "form.closed":
       "Usajili bado haujafunguliwa. Utafunguliwa pindi tutakapoweza kukutumia taarifa.",
@@ -201,10 +237,20 @@ const dict = {
     "modal.android": "Pakua kwa Android",
     "modal.close": "Funga",
 
-    "final.title": "Uko tayari kucheza?",
+    "final.title1": "Uko tayari",
+    "final.title2": "kucheza?",
 
     "footer.tagline": "Mchezo wa karata wa Tanzania.",
     "footer.rights": "Haki zote zimehifadhiwa.",
+
+    "alt.aceRed": "Karata ya ace nyekundu ya Albastini",
+    "alt.aceBlack": "Karata ya ace nyeusi ya Albastini",
+    "alt.aceBlue": "Karata ya ace ya bluu ya Albastini",
+    "alt.app":
+      "Skrini ya mwanzo ya app ya Albastini yenye Practice Mode, Head to Head, Tournament na How to Play",
+    "alt.appHow": "Skrini ya mwanzo ya app ya Albastini, kitufe cha How to Play kimeangaziwa",
+    "alt.boxSafari": "Boksi la karata la Albastini Safari Edition",
+    "alt.boxExpansion": "Boksi la Albastini Safari Edition Expansion Pack",
   },
 } as const;
 

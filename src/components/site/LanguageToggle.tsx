@@ -6,7 +6,7 @@ const options: { value: Lang; short: string; name: string }[] = [
   { value: "sw", short: "SW", name: "Kiswahili" },
 ];
 
-/** EN / SW switch. Each option names its language in that language. */
+/** EN / SW switch. `onDark` for blue/black surfaces. */
 export function LanguageToggle({
   className,
   onDark = false,
@@ -20,8 +20,8 @@ export function LanguageToggle({
       role="group"
       aria-label={t("lang.label")}
       className={cn(
-        "flex items-center rounded-full border p-0.5",
-        onDark ? "border-alba-paper/30" : "border-border",
+        "flex w-fit items-center rounded-full border-2 p-0.5",
+        onDark ? "border-alba-paper/40" : "border-alba-ink/20",
         className,
       )}
     >
@@ -36,10 +36,14 @@ export function LanguageToggle({
             aria-label={o.name}
             onClick={() => setLang(o.value)}
             className={cn(
-              "eyebrow min-h-9 min-w-10 rounded-full px-2.5 text-xs transition-colors",
+              "h-9 min-w-11 rounded-full px-2.5 text-sm font-bold transition-colors duration-[var(--dur-fast)]",
               active
-                ? "bg-alba-ink text-alba-paper"
-                : "text-muted-foreground hover:text-foreground",
+                ? onDark
+                  ? "bg-alba-paper text-alba-ink"
+                  : "bg-alba-ink text-alba-paper"
+                : onDark
+                  ? "text-alba-paper/85 hover:text-alba-paper"
+                  : "text-alba-ink/75 hover:text-alba-ink",
             )}
           >
             {o.short}

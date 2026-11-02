@@ -4,41 +4,43 @@ import { navLinks } from "@/content/navigation";
 import { useI18n } from "@/lib/i18n";
 
 /**
- * Only verified destinations belong here. Contacts, social accounts, legal
- * pages and store badges are deferred until the Albastini team supplies them.
+ * Quiet continuation of the final chapter. Only verified destinations:
+ * contacts, social accounts, legal pages and store badges are added when
+ * the Albastini team supplies them.
  */
 export function Footer() {
   const { t } = useI18n();
-
   return (
-    <footer className="border-t border-border bg-background py-14">
-      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
-        <div className="grid gap-10 sm:grid-cols-[1fr_auto] sm:items-start">
-          <div>
-            <Logo showTag />
-            <p className="mt-4 max-w-xs text-base text-muted-foreground">{t("footer.tagline")}</p>
+    <footer className="on-dark bg-alba-ink text-alba-paper">
+      <div className="shell border-t border-alba-paper/20 py-12">
+        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+          <div className="flex items-center gap-4">
+            <Logo size={52} />
+            <div>
+              <p className="display-xl text-2xl">{t("brand.tagline")}</p>
+              <p className="mt-1 text-base text-alba-paper/80">{t("footer.tagline")}</p>
+            </div>
           </div>
-
-          <nav aria-label={t("nav.primary")} className="flex flex-wrap gap-x-7 gap-y-3">
+          <nav
+            aria-label={t("nav.primary")}
+            className="grid grid-cols-2 gap-x-10 gap-y-2 sm:flex sm:gap-8"
+          >
             {navLinks.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
-                className="eyebrow py-2 text-muted-foreground underline-offset-8 transition-colors hover:text-foreground hover:underline"
+                className="label py-2 text-alba-paper/85 decoration-2 underline-offset-8 hover:text-alba-paper hover:underline"
               >
                 {t(l.key)}
               </a>
             ))}
           </nav>
         </div>
-
-        <div aria-hidden className="kanga-rule my-9 h-1 w-full rounded-full" />
-
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted-foreground">
+        <div className="mt-12 flex flex-col-reverse gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-alba-paper/75">
             © {new Date().getFullYear()} Albastini. {t("footer.rights")}
           </p>
-          <LanguageToggle className="w-fit" />
+          <LanguageToggle onDark />
         </div>
       </div>
     </footer>

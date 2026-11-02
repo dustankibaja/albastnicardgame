@@ -3,14 +3,14 @@ import { CompetitionSection } from "@/components/site/CompetitionSection";
 import { DownloadProvider } from "@/components/site/DownloadModal";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { Footer } from "@/components/site/Footer";
-import { GameSection } from "@/components/site/GameSection";
 import { Hero } from "@/components/site/Hero";
 import { HowToPlaySection } from "@/components/site/HowToPlaySection";
 import { Navbar } from "@/components/site/Navbar";
 import { PhysicalCardsSection } from "@/components/site/PhysicalCardsSection";
+import { TwoWaysSection } from "@/components/site/TwoWaysSection";
 import { LanguageProvider } from "@/lib/i18n";
 
-const title = "Albastini — Ingia uwanjani. Tucheze.";
+const title = "Albastini — Two ways to play. One Albastini.";
 const description =
   "Albastini is a Tanzanian card game you can play two ways: with the physical cards around a table, or on the Albastini app.";
 
@@ -36,13 +36,12 @@ function Index() {
   return (
     <LanguageProvider>
       <DownloadProvider>
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen bg-alba-ink">
           <Navbar />
-          {/* Phase 1 order, staging for the CEO-approved structure:
-              Hero → Two Ways to Play → How to Play → Competition → Physical Cards → Final CTA */}
+          {/* CEO-approved journey: Hero / Two Ways → How to Play → Competition → Physical Cards → Final CTA */}
           <main>
             <Hero />
-            <GameSection />
+            <TwoWaysSection />
             <HowToPlaySection />
             <CompetitionSection renderedAt={renderedAt} />
             <PhysicalCardsSection />

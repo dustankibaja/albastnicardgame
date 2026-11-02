@@ -1,28 +1,34 @@
-import appHome from "@/assets/app-home-public.webp";
+import type { ReactNode } from "react";
+import { Picture } from "./Picture";
 import { cn } from "@/lib/utils";
 
 /**
- * Lightweight CSS phone frame showing a real Albastini app screenshot.
- * The screenshot is cropped below the profile bar so no personal account
- * name, avatar or balance is published.
+ * Phone frame around the real Albastini app screenshot (cropped below the
+ * personal profile bar). `sizes` should match the rendered width.
  */
-export function PhoneMockup({ className }: { className?: string }) {
+export function PhoneMockup({
+  className,
+  alt,
+  sizes,
+  priority = false,
+  children,
+}: {
+  className?: string;
+  alt: string;
+  sizes: string;
+  priority?: boolean;
+  children?: ReactNode;
+}) {
   return (
     <div
       className={cn(
-        "relative aspect-[500/899] w-[210px] rounded-[2rem] border-4 border-alba-ink bg-alba-ink p-2 shadow-lift sm:w-[240px]",
+        "relative rounded-[13%/7%] bg-alba-ink p-[4.5%] shadow-[0_40px_80px_-30px_rgb(0_0_0/0.7)]",
         className,
       )}
     >
-      <div className="h-full w-full overflow-hidden rounded-[1.6rem]">
-        <img
-          src={appHome}
-          alt="Albastini app home screen with Practice Mode, Head to Head, Tournament and How to Play"
-          loading="lazy"
-          width={500}
-          height={899}
-          className="h-full w-full object-cover object-top"
-        />
+      <div className="relative overflow-hidden rounded-[10%/5.5%]">
+        <Picture id="appHome" alt={alt} sizes={sizes} priority={priority} />
+        {children}
       </div>
     </div>
   );

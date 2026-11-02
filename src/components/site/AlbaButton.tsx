@@ -2,23 +2,30 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
+/**
+ * Two CTA families only (see DownloadButton / CardsButton):
+ *   primary  = APP actions (yellow)
+ *   outline  = PHYSICAL CARD actions (outline in the current text colour)
+ * Interaction motion uses the FAST/STANDARD tokens; transform/colour only.
+ */
 export const albaButton = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-display font-extrabold uppercase tracking-[0.12em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:translate-y-px",
+  [
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full",
+    "font-display font-extrabold uppercase [font-stretch:78%] tracking-[0.02em]",
+    "transition-[transform,background-color,border-color,color] duration-[var(--dur-fast)] ease-[var(--ease-std)]",
+    "active:translate-y-px disabled:pointer-events-none disabled:opacity-45",
+  ].join(" "),
   {
     variants: {
       variant: {
-        primary:
-          "bg-primary text-primary-foreground shadow-chip hover:-translate-y-0.5 hover:brightness-105",
-        ink: "bg-foreground text-background hover:-translate-y-0.5",
+        primary: "bg-alba-gold text-alba-ink hover:-translate-y-0.5",
         outline:
-          "border-2 border-foreground/25 text-foreground hover:-translate-y-0.5 hover:border-foreground/60 hover:bg-foreground/5",
-        blue: "bg-alba-blue text-white shadow-card hover:-translate-y-0.5 hover:brightness-110",
-        quiet: "text-foreground/70 hover:text-foreground",
+          "border-2 border-current bg-transparent text-current hover:-translate-y-0.5 hover:bg-current/10",
       },
       size: {
-        sm: "h-10 px-4 text-xs",
-        md: "h-11 px-6 text-xs sm:text-sm",
-        lg: "h-13 px-8 text-sm sm:text-base",
+        sm: "h-10 px-4 text-[0.95rem]",
+        md: "h-12 px-6 text-[1.05rem]",
+        lg: "h-14 px-8 text-[1.15rem]",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },

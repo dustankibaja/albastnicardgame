@@ -5,10 +5,10 @@ with the physical cards around a table, or on the Albastini app.
 
 **INGIA UWANJANI. TUCHEZE.**
 
-## Status: Phase 1 complete (stabilization)
+## Status: Phase 2 built, awaiting design review
 
-Phase 1 made the existing site truthful, safe and ready for the CEO-approved redesign.
-See `docs/PHASE-1.md` for the change log and the content waiting on the Albastini team.
+- Phase 1 (`docs/PHASE-1.md`): truthful, safe, stable foundation.
+- Phase 2 (`docs/PHASE-2.md`): visual system, motion, hero and chapter redesign.
 
 Ground rules for anyone editing this repo:
 
@@ -43,6 +43,7 @@ src/
 │   ├── winners.ts        verified winners only (image optional)
 │   ├── links.ts          app store links (NEED VERIFICATION)
 │   ├── brand.ts          brand mark; swap in the official logo here
+│   ├── assets.ts         image registry with provenance (swap scans here)
 │   └── navigation.ts     section anchors
 ├── lib/
 │   ├── tournament.ts     phase (upcoming/live/ended), countdown, Tanzania-time formatting
@@ -53,6 +54,11 @@ src/
 └── routes/index.tsx      the homepage
 archive/admin-prototype/  the disabled admin panel, kept for reference only
 ```
+
+## Images
+
+Sources live in `src/assets/`. After replacing or adding one, run
+`node scripts/optimize-images.mjs` to regenerate the AVIF/WebP variants.
 
 ## Updating tournaments and winners
 

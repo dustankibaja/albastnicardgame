@@ -57,7 +57,7 @@ export function CardNotifyForm({ onSubmit }: { onSubmit?: (data: CardInterest) =
     const error = errors[key];
     return (
       <div>
-        <label htmlFor={ids[key]} className="block text-sm font-semibold">
+        <label htmlFor={ids[key]} className="label block">
           {label}
         </label>
         <input
@@ -71,7 +71,7 @@ export function CardNotifyForm({ onSubmit }: { onSubmit?: (data: CardInterest) =
             [error ? errorId : null, open ? null : ids.status].filter(Boolean).join(" ") ||
             undefined
           }
-          className="mt-2 h-12 w-full rounded-xl border-2 border-input bg-card px-4 text-base outline-none focus:border-ring disabled:cursor-not-allowed disabled:bg-secondary"
+          className="mt-2 h-12 w-full rounded-xl border-2 border-alba-ink/40 bg-alba-paper px-4 text-base outline-none focus:border-alba-blue disabled:cursor-not-allowed disabled:border-alba-ink/20 disabled:bg-alba-ink/[0.04]"
         />
         {error ? (
           <p id={errorId} className="mt-1.5 text-sm font-semibold text-destructive">
@@ -103,11 +103,11 @@ export function CardNotifyForm({ onSubmit }: { onSubmit?: (data: CardInterest) =
         }
       }}
     >
-      <h3 id={`${uid}-title`} className="font-display text-xl font-extrabold">
+      <h3 id={`${uid}-title`} className="sr-only">
         {t("form.title")}
       </h3>
       {!open ? (
-        <p id={ids.status} className="mt-2 text-base text-muted-foreground">
+        <p id={ids.status} className="text-base">
           {t("form.closed")}
         </p>
       ) : null}
