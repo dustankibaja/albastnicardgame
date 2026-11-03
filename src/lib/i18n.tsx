@@ -23,6 +23,8 @@ const dict = {
     "nav.menu": "Open menu",
     "nav.closeMenu": "Close menu",
     "nav.primary": "Main",
+    "nav.footer": "Footer",
+    "nav.menuTitle": "Menu",
     "nav.home": "Albastini home",
 
     "lang.label": "Language",
@@ -117,6 +119,7 @@ const dict = {
     "modal.ios": "Download for iOS",
     "modal.android": "Download for Android",
     "modal.close": "Close",
+    "modal.none": "Store links are coming soon. Check back shortly.",
 
     "final.title1": "Ready to",
     "final.title2": "play?",
@@ -144,6 +147,8 @@ const dict = {
     "nav.menu": "Fungua menyu",
     "nav.closeMenu": "Funga menyu",
     "nav.primary": "Kuu",
+    "nav.footer": "Chini ya ukurasa",
+    "nav.menuTitle": "Menyu",
     "nav.home": "Albastini mwanzo",
 
     "lang.label": "Lugha",
@@ -239,6 +244,7 @@ const dict = {
     "modal.ios": "Pakua kwa iOS",
     "modal.android": "Pakua kwa Android",
     "modal.close": "Funga",
+    "modal.none": "Viungo vya maduka vinakuja hivi karibuni. Rudi tena baadaye.",
 
     "final.title1": "Uko tayari",
     "final.title2": "kucheza?",

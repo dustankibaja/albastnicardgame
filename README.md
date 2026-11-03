@@ -5,12 +5,16 @@ with the physical cards around a table, or on the Albastini app.
 
 **INGIA UWANJANI. TUCHEZE.**
 
-## Status: Phase 4 built, awaiting design review
+## Status: Phase 5 complete — launch-ready pending verified inputs
 
 - Phase 1 (`docs/PHASE-1.md`): truthful, safe, stable foundation.
 - Phase 2 (`docs/PHASE-2.md`): visual system, motion, hero and chapter redesign.
 - Phase 3 (`docs/PHASE-3.md`): art-direction refinement, asset slots, provenance.
 - Phase 4 (`docs/PHASE-4.md`): real David portrait, real table and card-front photography.
+- Phase 5 (`docs/PHASE-5.md`): launch QA. Launch checklist is at the end of that file.
+
+Hand-offs: `docs/ASSET-SPECS.md`, `docs/CTA-AUDIT.md`, `docs/LANGUAGE-REVIEW.md`,
+`assets-source/README.md`.
 
 Genuine source originals live untouched in `assets-source/` (not bundled), with
 derivative steps documented next to them.
@@ -34,7 +38,7 @@ Deployed on Vercel.
 ```bash
 npm ci
 npm run dev      # local dev server
-npm run build    # production build
+npm run build    # production build (set VITE_SITE_URL=https://… once the domain is verified)
 npx tsc --noEmit # type-check
 npm run lint
 ```

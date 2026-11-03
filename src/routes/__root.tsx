@@ -84,8 +84,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content: "Albastini — the Tanzanian card game. Ingia uwanjani. Tucheze.",
       },
       { name: "author", content: "Albastini" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       {
@@ -108,6 +106,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         crossOrigin: "anonymous",
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
+      // Derivative of the official card-fan mark (see assets-source/README.md).
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
   }),
 

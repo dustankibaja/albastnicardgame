@@ -65,7 +65,9 @@ export function TwoWaysSection() {
         wooden table as a strip behind the headline; its lower edge becomes the
         card-wave, and the interactive hand rests on it.
       */}
-      <div className="relative isolate overflow-hidden">
+      <div className="relative isolate overflow-hidden bg-alba-night">
+        {/* bg-alba-night: if the photo fails to load the headline stays legible
+            (and contrast checkers see the true dark ground). */}
         <Picture
           id="cardsOnTable"
           alt={t("alt.table")}
@@ -80,8 +82,8 @@ export function TwoWaysSection() {
         <div className="shell pb-[clamp(4.5rem,10vw,8.5rem)] pt-[calc(clamp(44px,7vw,120px)+clamp(1.25rem,3vw,2.25rem))]">
           <Reveal>
             <h2 id="play-title" className="display-xl type-headline text-alba-paper">
-              <span className="block sm:inline">{t("two.title1")}</span>{" "}
-              <span className="block text-alba-gold sm:inline">{t("two.title2")}</span>
+              <span className="keep block sm:inline">{t("two.title1")}</span>{" "}
+              <span className="keep block text-alba-gold sm:inline">{t("two.title2")}</span>
             </h2>
           </Reveal>
         </div>
@@ -93,7 +95,7 @@ export function TwoWaysSection() {
 
       <div className="shell relative z-10 -mt-[clamp(3rem,5vw,4.5rem)]">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-12 xl:col-span-8">
             <CardHand cards={hand} label="two.tabs" />
             <div className="mt-6">
               <CardsButton size="md" className="w-full sm:w-auto">
@@ -110,7 +112,7 @@ export function TwoWaysSection() {
             ) : null}
           </div>
           {/* spacer column: the phone lives in the band below on large screens */}
-          <div className="hidden lg:col-span-4 lg:block" />
+          <div className="hidden xl:col-span-4 xl:block" />
         </div>
       </div>
 

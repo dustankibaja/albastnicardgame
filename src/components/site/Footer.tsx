@@ -22,7 +22,7 @@ export function Footer() {
             </div>
           </div>
           <nav
-            aria-label={t("nav.primary")}
+            aria-label={t("nav.footer")}
             className="grid grid-cols-2 gap-x-10 gap-y-2 sm:flex sm:gap-8"
           >
             {navLinks.map((l) => (

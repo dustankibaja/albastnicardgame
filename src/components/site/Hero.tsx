@@ -91,12 +91,12 @@ export function Hero() {
       <div className="shell relative z-10 grid items-center gap-4 pb-[clamp(0.75rem,1.5vw,1.5rem)] lg:gap-6 pt-24 sm:pt-28 lg:grid-cols-12 lg:pt-32">
         <div className="lg:col-span-5">
           <h1 id="hero-title" className="display-xl">
-            <span className="enter block text-[clamp(4.25rem,19vw,10rem)] lg:text-[clamp(5.5rem,8.6vw,9.75rem)]">
+            <span className="enter block text-[clamp(4.25rem,19vw,10rem)] lg:text-[clamp(5.5rem,8.6vw,8.25rem)]">
               <span className="block whitespace-nowrap">{t("hero.title1")}</span>
               <span className="block whitespace-nowrap">{t("hero.title2")}</span>
             </span>
             <span
-              className="enter mt-3 block text-[clamp(2.4rem,10.5vw,5.75rem)] text-alba-gold lg:text-[clamp(3rem,5.6vw,5.75rem)]"
+              className="enter mt-3 block keep text-[clamp(2.4rem,10.5vw,5.75rem)] text-alba-gold lg:text-[clamp(3rem,5.6vw,5rem)]"
               style={{ ["--delay" as string]: "80ms" }}
             >
               {t("hero.one")}

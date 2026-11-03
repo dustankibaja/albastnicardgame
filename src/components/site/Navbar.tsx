@@ -122,7 +122,7 @@ export function Navbar() {
           ref={overlay}
           role="dialog"
           aria-modal="true"
-          aria-label={t("nav.primary")}
+          aria-label={t("nav.menuTitle")}
           className="on-dark fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-alba-blue text-alba-paper lg:hidden"
         >
           <div className="shell flex h-16 shrink-0 items-center justify-between">

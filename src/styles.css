@@ -1,5 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
+/* Unused shadcn kit (kept for the archived admin prototype): don't generate its classes. */
+@source not "./components/ui";
 @import "tw-animate-css";
 
 /* Class-based so shadcn `dark:` styles never follow the OS setting. No .dark class is ever applied (single theme). */
@@ -132,6 +134,21 @@
   --ease-std: cubic-bezier(0.2, 0, 0, 1);
 }
 
+/*
+ * Very large screens (≥2200px): scale the whole composition proportionally
+ * instead of floating a 1440px column in empty space. Width and root type grow
+ * by the same ratio (1720/1440 ≈ 19px/16px ≈ 1.19), so the approved layout is
+ * unchanged — just larger. Nothing at or below 1920px is affected.
+ */
+@media (min-width: 2200px) {
+  :root {
+    --max: 1720px;
+  }
+  html {
+    font-size: 118.75%;
+  }
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -197,6 +214,14 @@
 @utility type-headline {
   font-size: clamp(2.75rem, 6.2vw, 5.5rem);
   line-height: 0.86;
+  /* Below 360px the minimum would split protected phrases; step down only here. */
+  @media (max-width: 359.98px) {
+    font-size: 2.3rem;
+  }
+}
+/* Protected phrase: never breaks internally (e.g. "FROM THE TABLE."). */
+@utility keep {
+  white-space: nowrap;
 }
 @utility type-editorial {
   font-size: clamp(2.25rem, 4.4vw, 4rem);

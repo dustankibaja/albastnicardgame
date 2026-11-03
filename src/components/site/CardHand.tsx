@@ -109,7 +109,7 @@ export function CardHand({ cards, label }: { cards: HandCard[]; label: TKey }) {
         id={`${uid}-panel`}
         role="tabpanel"
         aria-labelledby={`${uid}-tab-${active}`}
-        className="min-h-[11rem] max-w-md md:min-w-[17rem]"
+        className="min-h-[11rem] max-w-md lg:max-w-[17rem] xl:min-w-[17rem] xl:max-w-md"
       >
         <p aria-hidden className="label text-muted-foreground">
           {t("two.hint")}

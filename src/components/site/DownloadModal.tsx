@@ -121,24 +121,34 @@ function DownloadModal({ open, onClose }: { open: boolean; onClose: () => void }
         </p>
 
         <div className="mt-8 grid gap-3">
-          <a
-            href={appStoreLinks.ios}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-alba-ink px-6 py-4 font-display font-extrabold uppercase tracking-[0.1em] text-alba-paper"
-          >
-            <AppleIcon className="size-5" />
-            {t("modal.ios")}
-          </a>
-          <a
-            href={appStoreLinks.android}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-alba-ink px-6 py-4 font-display font-extrabold uppercase tracking-[0.1em] text-alba-paper"
-          >
-            <PlayIcon className="size-5" />
-            {t("modal.android")}
-          </a>
+          {appStoreLinks.ios.url ? (
+            <a
+              href={appStoreLinks.ios.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-alba-ink px-6 py-4 font-display font-extrabold uppercase tracking-[0.1em] text-alba-paper"
+            >
+              <AppleIcon className="size-5" />
+              {t("modal.ios")}
+            </a>
+          ) : null}
+          {appStoreLinks.android.url ? (
+            <a
+              href={appStoreLinks.android.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-alba-ink px-6 py-4 font-display font-extrabold uppercase tracking-[0.1em] text-alba-paper"
+            >
+              <PlayIcon className="size-5" />
+              {t("modal.android")}
+            </a>
+          ) : null}
+          {/* Empty state: no store destination available — say so, never a dead button. */}
+          {!appStoreLinks.ios.url && !appStoreLinks.android.url ? (
+            <p className="rounded-2xl border-2 border-alba-ink/15 p-5 text-base">
+              {t("modal.none")}
+            </p>
+          ) : null}
         </div>
       </div>
     </div>

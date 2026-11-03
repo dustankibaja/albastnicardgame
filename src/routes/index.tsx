@@ -9,6 +9,7 @@ import { Navbar } from "@/components/site/Navbar";
 import { PhysicalCardsSection } from "@/components/site/PhysicalCardsSection";
 import { TwoWaysSection } from "@/components/site/TwoWaysSection";
 import { LanguageProvider } from "@/lib/i18n";
+import { site } from "@/content/site";
 
 const title = "Albastini — Two ways to play. One Albastini.";
 const description =
@@ -18,16 +19,62 @@ export const Route = createFileRoute("/")({
   // One clock for SSR + hydration. Tournament/winner content is static and
   // version-controlled (src/content/), so nothing is fetched or polled.
   loader: () => ({ renderedAt: Date.now() }),
-  head: () => ({
-    meta: [
+  head: () => {
+    const meta: Record<string, string>[] = [
       { title },
       { name: "description", content: description },
+      { property: "og:site_name", content: site.name },
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+      { property: "og:locale", content: site.locale },
+      { property: "og:locale:alternate", content: site.alternateLocale },
+      // Large card only when approved artwork exists; never an invented image.
+      { name: "twitter:card", content: site.ogImage ? "summary_large_image" : "summary" },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
+    ];
+    const links: Record<string, string>[] = [];
+    const scripts: { type: string; children: string }[] = [];
+    if (site.url) {
+      meta.push({ property: "og:url", content: `${site.url}/` });
+      links.push({ rel: "canonical", href: `${site.url}/` });
+      // Only factually supported structured data: who/what, no ratings,
+      // prices, availability or events.
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": `${site.url}/#org`,
+              name: site.name,
+              url: `${site.url}/`,
+            },
+            {
+              "@type": "WebSite",
+              "@id": `${site.url}/#website`,
+              name: site.name,
+              url: `${site.url}/`,
+              inLanguage: ["en", "sw"],
+              publisher: { "@id": `${site.url}/#org` },
+            },
+          ],
+        }),
+      });
+    }
+    if (site.ogImage && site.url) {
+      meta.push(
+        { property: "og:image", content: `${site.url}${site.ogImage.path}` },
+        { property: "og:image:width", content: String(site.ogImage.width) },
+        { property: "og:image:height", content: String(site.ogImage.height) },
+        { property: "og:image:alt", content: site.ogImage.alt },
+        { name: "twitter:image", content: `${site.url}${site.ogImage.path}` },
+      );
+    }
+    return { meta, links, scripts };
+  },
   component: Index,
 });
 

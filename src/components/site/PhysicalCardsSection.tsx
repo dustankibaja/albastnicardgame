@@ -13,6 +13,8 @@ import { useI18n } from "@/lib/i18n";
  * Stage: the Safari Edition box (real product photo) dominates, rising out of
  * the arena above; the expansion pack supports it; the genuine photo of nine
  * card fronts lies beneath them. The table photo is used once only (Two Ways).
+ * Below 1024px the expansion pack is subordinated (smaller, cropped by the page
+ * edge) so the Safari box clearly leads on small screens (Phase 5 A/B test).
  * No specs, prices, stock or purchase claims.
  */
 export function PhysicalCardsSection() {
@@ -33,8 +35,10 @@ export function PhysicalCardsSection() {
       <div className="shell grid gap-10 pb-[clamp(5rem,10vw,9rem)] lg:grid-cols-12 lg:gap-8">
         {/* Product stage — pulled up across the arena edge. */}
         <div ref={stage} className="relative z-10 -mt-[clamp(9rem,20vw,18rem)] lg:col-span-7">
-          <div className="relative mx-auto aspect-[1/1] w-full max-w-[760px]">
-            {/* Genuine photo of nine card fronts on pure white (real_source_photo,
+          <div className="relative mx-auto aspect-[1/1.34] w-full max-w-[760px] sm:aspect-[1/1.12] lg:aspect-[1/1]">
+            {/* Stage is taller below 1024px so the anchored photo (top fixed to the
+                arena edge) always ends inside it and never covers the headline.
+                Genuine photo of nine card fronts on pure white (real_source_photo,
                 not official scans): it merges into the page, so the real cards
                 lie on the table beneath the boxes. Lowest layer. */}
             <div
@@ -55,13 +59,13 @@ export function PhysicalCardsSection() {
               />
             </div>
             <div
-              className="depth absolute right-[0%] top-[14%] z-10 w-[44%]"
+              className="depth absolute -right-[9%] top-[22%] z-10 w-[34%] lg:right-[0%] lg:top-[14%] lg:w-[44%]"
               style={{ ["--dy" as string]: 20 }}
             >
               <Picture
                 id="boxExpansion"
                 alt={t("alt.boxExpansion")}
-                sizes="(min-width: 1024px) 340px, 44vw"
+                sizes="(min-width: 1024px) 340px, 34vw"
                 className="rotate-[7deg] drop-shadow-[0_30px_40px_rgb(0_0_0/0.3)]"
               />
             </div>
@@ -80,10 +84,12 @@ export function PhysicalCardsSection() {
         </div>
 
         <Reveal className="self-end lg:col-span-5 lg:pb-6">
-          <h2 id="cards-title" className="display-xl type-headline">
-            {t("phys.title1")}
-            <br />
-            {t("phys.title2")}
+          <h2
+            id="cards-title"
+            className="display-xl type-headline lg:text-[clamp(3.25rem,5.2vw,5.5rem)]"
+          >
+            <span className="keep block">{t("phys.title1")}</span>
+            <span className="keep block">{t("phys.title2")}</span>
           </h2>
           <p className="type-lede mt-6 max-w-[28ch]">{t("phys.body")}</p>
           <p className="label mt-6 inline-block rounded-full bg-alba-gold px-4 py-2">

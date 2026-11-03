@@ -63,13 +63,12 @@ export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
             id="tournaments-title"
             className="display-xl text-[clamp(4.5rem,15.5vw,14rem)] leading-[0.8] lg:text-[clamp(7rem,12.2vw,13rem)]"
           >
-            {t("tour.title1")}
-            <br />
-            <span className="text-alba-gold">{t("tour.title2")}</span>
+            <span className="keep block">{t("tour.title1")}</span>
+            <span className="keep block text-alba-gold">{t("tour.title2")}</span>
           </h2>
         </Reveal>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:items-start">
+        <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
           <Reveal className="lg:col-span-4 lg:pt-6">
             <p className="type-lede max-w-[26ch] text-alba-paper/90">{t("tour.body")}</p>
           </Reveal>
@@ -145,8 +144,8 @@ function TournamentPanel({
         <p className="label text-alba-gold">
           {phase === "live" ? t("tour.live") : phase === "ended" ? t("tour.ended") : t("tour.next")}
         </p>
-        <h3 className="display-xl mt-3 text-[clamp(2.75rem,6vw,5rem)] text-alba-paper">
-          {heading}
+        <h3 className="display-xl mt-3 text-[clamp(1.85rem,9.2vw,3.75rem)] text-alba-paper lg:text-[clamp(2.5rem,3.4vw,3.75rem)]">
+          {named ? heading : <DateHeading text={heading} />}
         </h3>
         <ul className="mt-4 grid gap-1 text-xl">
           {named ? <li>{date}</li> : null}
@@ -177,5 +176,17 @@ function TournamentPanel({
         )}
       </div>
     </div>
+  );
+}
+
+/** "Saturday, 21 November 2026" → weekday line + the date kept whole. */
+function DateHeading({ text }: { text: string }) {
+  const i = text.indexOf(", ");
+  if (i < 0) return <span className="keep">{text}</span>;
+  return (
+    <>
+      <span className="block">{text.slice(0, i + 1)}</span>
+      <span className="keep block">{text.slice(i + 2)}</span>
+    </>
   );
 }

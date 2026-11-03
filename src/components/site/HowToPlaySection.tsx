@@ -39,11 +39,10 @@ export function HowToPlaySection() {
       <Wave fill="var(--alba-blue)" flip className="-mt-px" />
 
       <div className="shell grid items-center gap-12 pb-[clamp(5rem,9vw,8rem)] pt-[clamp(2.5rem,5vw,4rem)] lg:grid-cols-12 lg:gap-8">
-        <Reveal className="lg:col-span-5">
+        <Reveal className="lg:col-span-6">
           <h2 id="how-title" className="display-xl type-headline">
-            {t("how.title1")}
-            <br />
-            {t("how.title2")}
+            <span className="keep block">{t("how.title1")}</span>
+            <span className="keep block">{t("how.title2")}</span>
           </h2>
           <p className="type-lede mt-6 max-w-[30ch]">{t("how.body")}</p>
           <ol className="mt-7 grid gap-3">
