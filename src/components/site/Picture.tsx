@@ -15,6 +15,7 @@ export function Picture({
   className,
   imgClassName,
   style,
+  imgStyle,
   priority = false,
 }: {
   id: SiteImageId;
@@ -23,6 +24,8 @@ export function Picture({
   className?: string;
   imgClassName?: string;
   style?: CSSProperties;
+  /** Applied to the <img> itself (e.g. objectPosition). */
+  imgStyle?: CSSProperties;
   priority?: boolean;
 }) {
   const { image } = siteImages[id];
@@ -44,6 +47,7 @@ export function Picture({
         // Non-hero images never compete with the hero for bandwidth.
         fetchPriority={priority ? "high" : "low"}
         className={cn("block h-auto w-full", imgClassName)}
+        style={imgStyle}
       />
     </picture>
   );

@@ -1,44 +1,87 @@
-/**
- * WINNERS — single source of truth.
- *
- * Only verified records. Never add a placeholder portrait: leave `image` out and
- * the UI renders a text-only record. To add a real photo later, put the file in
- * src/assets/winners/, import it here, and set `image` + `imageAlt`.
- */
-
 import type { SiteImageId } from "./assets";
 import type { TKey } from "@/lib/i18n";
 
-export type Winner = {
-  id: string;
-  name: string;
-  /** 1 = first place. */
-  position: number;
-  location?: string;
-  /** Display string exactly as verified, e.g. "TZS 130,000". */
-  prize?: string;
-  /**
-   * Portrait from the asset registry (content/assets.ts). Only a genuine photo
-   * of the winner. If the registry slot is still empty, the UI shows the
-   * typographic record instead.
-   */
-  imageId?: SiteImageId;
-  /** i18n key for the portrait's alt text */
-  imageAltKey?: TKey;
-  /** Link to a record in content/tournaments.ts, only once verified. */
-  tournamentId?: string;
+/**
+ * WINNERS — verified records only.
+ *
+ * `displayName` is the player name used in the Albastini app. It is NOT a
+ * legal name; never research or publish legal names.
+ * Prizes are NOT stored per winner: they derive from `placement` via the
+ * central prize structure below, so they can never disagree.
+ */
+
+export type Placement = 1 | 2 | 3;
+
+/** Recurring tournament prizes, Tanzanian shillings. Change here only. */
+export const tournamentPrizeStructure: Record<Placement, number> = {
+  1: 130000,
+  2: 65000,
+  3: 26000,
 };
 
+export type Winner = {
+  id: string;
+  displayName: string;
+  placement: Placement;
+  location: string;
+  /** Links to content/tournaments.ts. Required: winners are grouped by tournament. */
+  tournamentId: string;
+  /** Genuine photo from the asset registry. Omit if none: the frame shows a typographic state. */
+  portrait?: SiteImageId;
+  portraitAltKey?: TKey;
+  /** "cover" when cropping is safe; "contain" when cropping would cut important content. */
+  imageFit?: "cover" | "contain";
+  /** CSS object-position, e.g. "50% 30%". */
+  imagePosition?: string;
+};
+
+export function prizeFor(placement: Placement) {
+  return tournamentPrizeStructure[placement];
+}
+
+/** "130,000 TSH" — fixed format so server and client render identically. */
+export function formatPrize(amount: number) {
+  return `${String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} TSH`;
+}
+
 export const winners: Winner[] = [
+  // Tournament #26 — 26 September 2026 — verified by the official posters.
   {
-    // Verified record. Tournament number/date intentionally not attached (unverified).
-    id: "david-sanya",
-    name: "David Sanya",
-    position: 1,
+    id: "t26-1-david-sanya",
+    displayName: "David Sanya",
+    placement: 1,
     location: "Dar es Salaam, Tanzania",
-    prize: "TZS 130,000",
-    // Genuine photograph (Phase 4). Alt text lives in i18n ("alt.david").
-    imageId: "davidSanyaPortrait",
-    imageAltKey: "alt.david",
+    tournamentId: "tournament-26",
+    portrait: "davidSanyaPortrait",
+    portraitAltKey: "alt.david",
+    imageFit: "contain",
+    imagePosition: "50% 100%",
+  },
+  {
+    id: "t26-2-bedadi",
+    displayName: "Bedadi",
+    placement: 2,
+    location: "Kilimanjaro, Tanzania",
+    tournamentId: "tournament-26",
+    portrait: "bedadiPortrait",
+    portraitAltKey: "alt.bedadi",
+    imageFit: "cover",
+    imagePosition: "55% 30%",
+  },
+  {
+    // NOTE: the official poster prints "MJESHI"; the owner's handoff and the
+    // asset README say "Jeshi". Using the written instruction; awaiting owner
+    // confirmation (one-word change here if the poster spelling is correct).
+    id: "t26-3-jeshi",
+    displayName: "Jeshi",
+    placement: 3,
+    location: "Iringa, Tanzania",
+    tournamentId: "tournament-26",
+    portrait: "jeshiPortrait",
+    portraitAltKey: "alt.jeshi",
+    // Near-square cut-out: "cover" (bottom-anchored) only trims jacket edges
+    // and gives him the same presence as the other champions.
+    imageFit: "cover",
+    imagePosition: "50% 100%",
   },
 ];

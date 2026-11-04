@@ -19,7 +19,7 @@ const jobs = {
   cardRed: { file: "card-red-official.webp", widths: [240, 500] },
   cardBlack: { file: "card-black-official-v2.webp", widths: [240, 500] },
   cardBlue: { file: "card-blue-official.webp", widths: [240, 500] },
-  cardFan: { file: "card-fan.webp", widths: [300, 600] },
+  cardFan: { file: "brand/albastini-mark-official.png", widths: [300, 600, 1120] },
   boxSafari: { file: "box-safari-retail.webp", widths: [300, 600] },
   boxExpansion: { file: "box-expansion.webp", widths: [300, 600] },
   // Phase 4 — genuine source photography (derivatives documented in assets-source/phase4/DERIVATIVES.md)
@@ -36,6 +36,18 @@ const jobs = {
   cardFrontsOnWhite: {
     file: "photos/card-fronts-on-white.png",
     widths: [640, 1180],
+    q: { avif: 64, webp: 84 },
+  },
+  // Final handoff — official brand mark (navbar/footer) and Tournament #26 champions
+  brandMark: { file: "brand/albastini-mark-official.png", widths: [96, 192] },
+  bedadiPortrait: {
+    file: "photos/bedadi-portrait.jpg",
+    widths: [480, 768],
+    q: { avif: 64, webp: 84 },
+  },
+  jeshiPortrait: {
+    file: "photos/jeshi-portrait.png",
+    widths: [480, 830],
     q: { avif: 64, webp: 84 },
   },
   // Detail crops need a high-resolution source: the 600px box photo goes soft

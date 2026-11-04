@@ -34,3 +34,6 @@ dist-ssr
 # Never commit runtime data files (Phase 1)
 db.json
 **/db.json
+
+# Vercel build output
+.vercel

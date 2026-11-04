@@ -1,7 +1,7 @@
 import type { Tournament } from "@/content/tournaments";
 
 /** What the site displays. Derived from editorial status + the current time. */
-export type TournamentPhase = "upcoming" | "live" | "ended" | "cancelled";
+export type TournamentPhase = "upcoming" | "live" | "ended" | "postponed" | "cancelled";
 
 /**
  * Africa/Dar_es_Salaam is UTC+3 all year (no daylight saving), so calendar-day
@@ -19,6 +19,8 @@ function dayEnd(date: string) {
 
 export function getTournamentPhase(t: Tournament, now: number): TournamentPhase {
   if (t.status === "cancelled") return "cancelled";
+  // Postponed with no new date yet: still the next event, honestly labelled.
+  if (t.status === "postponed") return "postponed";
   if (t.status === "completed") return "ended";
 
   // No verified start time: never claim "live". It stays upcoming through its
@@ -40,7 +42,7 @@ export function getFeaturedTournament(list: Tournament[], now: number): Tourname
   const active = list
     .filter((t) => {
       const phase = getTournamentPhase(t, now);
-      return phase === "upcoming" || phase === "live";
+      return phase === "upcoming" || phase === "live" || phase === "postponed";
     })
     .sort((a, b) => sortKey(a) - sortKey(b));
   return active[0] ?? null;

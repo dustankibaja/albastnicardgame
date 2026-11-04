@@ -16,6 +16,8 @@ import cardFan300Avif from "@/assets/optimized/cardFan-300.avif";
 import cardFan300Webp from "@/assets/optimized/cardFan-300.webp";
 import cardFan600Avif from "@/assets/optimized/cardFan-600.avif";
 import cardFan600Webp from "@/assets/optimized/cardFan-600.webp";
+import cardFan1120Avif from "@/assets/optimized/cardFan-1120.avif";
+import cardFan1120Webp from "@/assets/optimized/cardFan-1120.webp";
 import boxSafari300Avif from "@/assets/optimized/boxSafari-300.avif";
 import boxSafari300Webp from "@/assets/optimized/boxSafari-300.webp";
 import boxSafari600Avif from "@/assets/optimized/boxSafari-600.avif";
@@ -38,6 +40,18 @@ import cardFrontsOnWhite640Avif from "@/assets/optimized/cardFrontsOnWhite-640.a
 import cardFrontsOnWhite640Webp from "@/assets/optimized/cardFrontsOnWhite-640.webp";
 import cardFrontsOnWhite1180Avif from "@/assets/optimized/cardFrontsOnWhite-1180.avif";
 import cardFrontsOnWhite1180Webp from "@/assets/optimized/cardFrontsOnWhite-1180.webp";
+import brandMark96Avif from "@/assets/optimized/brandMark-96.avif";
+import brandMark96Webp from "@/assets/optimized/brandMark-96.webp";
+import brandMark192Avif from "@/assets/optimized/brandMark-192.avif";
+import brandMark192Webp from "@/assets/optimized/brandMark-192.webp";
+import bedadiPortrait480Avif from "@/assets/optimized/bedadiPortrait-480.avif";
+import bedadiPortrait480Webp from "@/assets/optimized/bedadiPortrait-480.webp";
+import bedadiPortrait768Avif from "@/assets/optimized/bedadiPortrait-768.avif";
+import bedadiPortrait768Webp from "@/assets/optimized/bedadiPortrait-768.webp";
+import jeshiPortrait480Avif from "@/assets/optimized/jeshiPortrait-480.avif";
+import jeshiPortrait480Webp from "@/assets/optimized/jeshiPortrait-480.webp";
+import jeshiPortrait830Avif from "@/assets/optimized/jeshiPortrait-830.avif";
+import jeshiPortrait830Webp from "@/assets/optimized/jeshiPortrait-830.webp";
 import appHome250Avif from "@/assets/optimized/appHome-250.avif";
 import appHome250Webp from "@/assets/optimized/appHome-250.webp";
 import appHome500Avif from "@/assets/optimized/appHome-500.avif";
@@ -89,14 +103,16 @@ export const images = {
   },
   cardFan: {
     ratio: 1,
-    width: 600,
+    width: 2048,
     avif: [
       [cardFan300Avif, 300],
       [cardFan600Avif, 600],
+      [cardFan1120Avif, 1120],
     ],
     webp: [
       [cardFan300Webp, 300],
       [cardFan600Webp, 600],
+      [cardFan1120Webp, 1120],
     ],
   },
   boxSafari: {
@@ -159,6 +175,42 @@ export const images = {
     webp: [
       [cardFrontsOnWhite640Webp, 640],
       [cardFrontsOnWhite1180Webp, 1180],
+    ],
+  },
+  brandMark: {
+    ratio: 1,
+    width: 2048,
+    avif: [
+      [brandMark96Avif, 96],
+      [brandMark192Avif, 192],
+    ],
+    webp: [
+      [brandMark96Webp, 96],
+      [brandMark192Webp, 192],
+    ],
+  },
+  bedadiPortrait: {
+    ratio: 1.333,
+    width: 768,
+    avif: [
+      [bedadiPortrait480Avif, 480],
+      [bedadiPortrait768Avif, 768],
+    ],
+    webp: [
+      [bedadiPortrait480Webp, 480],
+      [bedadiPortrait768Webp, 768],
+    ],
+  },
+  jeshiPortrait: {
+    ratio: 0.988,
+    width: 830,
+    avif: [
+      [jeshiPortrait480Avif, 480],
+      [jeshiPortrait830Avif, 830],
+    ],
+    webp: [
+      [jeshiPortrait480Webp, 480],
+      [jeshiPortrait830Webp, 830],
     ],
   },
   appHome: {

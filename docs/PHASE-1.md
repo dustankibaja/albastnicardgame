@@ -19,7 +19,7 @@ Branch: `phase-1-stabilization`. No visual redesign; that is Phase 2.
 | `players.jpg` | Provenance unverified; file deleted |
 | Personal account name, avatar and coin balance in the app screenshot | Privacy; screenshot cropped below the profile bar |
 | Typed "Albastini" wordmark next to the logo | Not the official wordmark |
-| "INGIA UWANJANI TIUCHEZE" | Typo, now "INGIA UWANJANI. TUCHEZE." |
+| "INGIA UWANJANI TIUCHEZE" | Typo; official phrase is "INGIA UWANJANI TUCHEZE." (punctuation corrected in the final handoff) |
 | Light/dark theme toggle | CEO: one cohesive theme |
 | Intro feature grid, Stats section, standalone App section | Unverified claims / CEO structure |
 

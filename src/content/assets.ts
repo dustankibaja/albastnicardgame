@@ -14,6 +14,10 @@ import { images, type ImageSet } from "./images.generated";
  *  - "approved_public"             cleared for public use (people, venues, events)
  *  - "temporary_reference"         provenance unconfirmed; replace with genuine source
  *  - "ai_reconstructed_reference"  reconstructed from a photo; never establishes card details
+ *
+ * Owner-approved temporary card pack (8 reconstructed fronts + 1 back) is kept
+ * in assets-source/temporary-cards/ as "ai_reconstructed_reference". It is not
+ * registered here because nothing uses it yet (registered images ship).
  */
 export type Provenance =
   | "official"
@@ -48,7 +52,22 @@ export const siteImages = {
   cardFan: {
     image: images.cardFan,
     provenance: "official",
-    note: "Card fan + crown mark; the same artwork appears in the official app's home screen logo.",
+    note: "Official Albastini brand mark source (2048 px, final handoff). Card fan + crown.",
+  },
+  brandMark: {
+    image: images.brandMark,
+    provenance: "official",
+    note: "Official Albastini brand mark source (final handoff); navbar, menu and footer mark.",
+  },
+  bedadiPortrait: {
+    image: images.bedadiPortrait,
+    provenance: "real_source_photo",
+    note: "Genuine photo of Bedadi (Tournament #26, 2nd). Used whole; framed by CSS (cover). No edits.",
+  },
+  jeshiPortrait: {
+    image: images.jeshiPortrait,
+    provenance: "real_source_photo",
+    note: "Genuine photo of Jeshi (Tournament #26, 3rd), separated from the official poster (the only source supplied) with an alpha matte; poster text/graphics excluded. No regeneration.",
   },
   boxSafari: {
     image: images.boxSafari,

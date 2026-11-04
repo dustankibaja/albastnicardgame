@@ -1,19 +1,10 @@
-import markAsset from "@/assets/albastini-logo.webp";
-
 /**
- * Brand mark used in the navbar and footer.
- *
- * Current asset: the authentic Albastini card-fan + crown mark (the same mark
- * that sits above the wordmark in the app's home screen). It is NOT the full
- * official logo: the official wordmark file has not been supplied yet.
- *
- * When the official logo arrives: add it to src/assets/ (SVG preferred), point
- * `src` at it, update `width`/`height` to its intrinsic ratio, and set
- * `includesWordmark: true` so the visually hidden name is no longer needed.
+ * Brand mark — the OFFICIAL Albastini mark (card fan + crown), supplied in the
+ * final handoff at 2048 px. Rendered through the asset registry ("brandMark").
+ * A full official wordmark has not been supplied; the mark is never paired
+ * with a typed-out wordmark.
  */
 export const brandMark = {
-  src: markAsset,
-  width: 256,
-  height: 256,
+  id: "brandMark" as const,
   includesWordmark: false,
-} as const;
+};

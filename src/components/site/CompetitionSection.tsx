@@ -3,7 +3,7 @@ import { AlbaButton } from "./AlbaButton";
 import { DownloadButton } from "./DownloadButton";
 import { Reveal } from "./Reveal";
 import { TournamentCountdown } from "./TournamentCountdown";
-import { WinnerFeature, WinnerSupport } from "./WinnerCard";
+import { ChampionsCarousel } from "./ChampionsCarousel";
 import { Wave } from "./Wave";
 import { tournaments, type Tournament } from "@/content/tournaments";
 import { winners } from "@/content/winners";
@@ -24,7 +24,7 @@ import {
  * clock ticks once a second, only while a countdown is actually visible.
  */
 export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [now, setNow] = useState(renderedAt);
 
   const featured = getFeaturedTournament(tournaments, now);
@@ -41,8 +41,17 @@ export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
     return () => window.clearInterval(id);
   }, [ticking]);
 
-  const ranked = [...winners].sort((a, b) => a.position - b.position);
-  const [feature, ...support] = ranked;
+  // Champions: the most recent tournament that has verified winners.
+  // (Older groups stay in the data; the carousel shows the latest.)
+  const champions = (() => {
+    const withWinners = tournaments
+      .filter((tr) => winners.some((w) => w.tournamentId === tr.id))
+      .sort((a, b) => b.date.localeCompare(a.date));
+    const latest = withWinners[0];
+    return latest
+      ? { tournament: latest, list: winners.filter((w) => w.tournamentId === latest.id) }
+      : null;
+  })();
 
   return (
     <section
@@ -57,7 +66,7 @@ export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
       {/* The white chapters give way to the arena along the card wave. */}
       <Wave fill="var(--alba-paper)" flip className="-mt-px" />
 
-      <div className="shell pb-[clamp(8rem,16vw,14rem)] pt-[clamp(2rem,5vw,4rem)]">
+      <div className="shell pb-[calc(clamp(9rem,20vw,18rem)+clamp(2.5rem,5vw,4rem))] pt-[clamp(2rem,5vw,4rem)]">
         <Reveal>
           <h2
             id="tournaments-title"
@@ -86,31 +95,25 @@ export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
           </Reveal>
         </div>
 
-        {/* Winners — verified records only; the block disappears if there are none. */}
-        {feature ? (
+        {/* Champions — verified records only; the block disappears if there are none.
+            Bottom padding = the Physical Cards product rise + air, so the rising
+            box can never cover the carousel controls. */}
+        {champions ? (
           <div className="mt-[clamp(5rem,9vw,8rem)] border-t border-alba-paper/15 pt-[clamp(3rem,6vw,5rem)]">
             <Reveal>
               <h3 className="display-xl type-editorial">
                 <span className="block sm:inline">{t("win.title1")}</span>{" "}
                 <span className="block sm:inline">{t("win.title2")}</span>
               </h3>
+              <p className="label mt-4 text-alba-paper/85">
+                {t("tour.numbered", { n: champions.tournament.number })}
+                {", "}
+                {formatTournamentDate(champions.tournament, lang)}
+              </p>
             </Reveal>
-            <ol className="mt-10 grid gap-12">
-              <Reveal as="li">
-                <WinnerFeature winner={feature} />
-              </Reveal>
-              {support.length > 0 ? (
-                <li>
-                  <ol className="grid gap-8 md:grid-cols-2">
-                    {support.map((w) => (
-                      <li key={w.id}>
-                        <WinnerSupport winner={w} />
-                      </li>
-                    ))}
-                  </ol>
-                </li>
-              ) : null}
-            </ol>
+            <div className="mt-10">
+              <ChampionsCarousel tournament={champions.tournament} winners={champions.list} />
+            </div>
           </div>
         ) : null}
       </div>
@@ -124,7 +127,7 @@ function TournamentPanel({
   now,
 }: {
   tournament: Tournament;
-  phase: "upcoming" | "live" | "ended" | "cancelled";
+  phase: "upcoming" | "live" | "ended" | "postponed" | "cancelled";
   now: number;
 }) {
   const { t, lang } = useI18n();
@@ -136,7 +139,6 @@ function TournamentPanel({
   const heading = named ?? date;
   const time = formatTournamentTime(tournament, lang);
   const modeKey = tournament.mode ? (`tour.mode.${tournament.mode}` as const) : null;
-  const detailsMissing = !tournament.startAt || !tournament.mode;
 
   return (
     <div className="overflow-hidden rounded-[1.75rem] bg-alba-ink">
@@ -148,14 +150,17 @@ function TournamentPanel({
           {named ? heading : <DateHeading text={heading} />}
         </h3>
         <ul className="mt-4 grid gap-1 text-xl">
-          {named ? <li>{date}</li> : null}
+          {/* While postponed with no new date, the old date must not read as current. */}
+          {named && phase !== "postponed" ? <li>{date}</li> : null}
           {time ? <li>{t("tour.timeTz", { time })}</li> : null}
           {modeKey ? <li>{t(modeKey)}</li> : null}
           {tournament.location ? <li>{tournament.location}</li> : null}
         </ul>
-        {detailsMissing ? (
-          <p className="mt-5 text-lg text-alba-paper/85">{t("tour.detailsSoon")}</p>
-        ) : null}
+        <ul className="mt-5 grid gap-1 text-lg text-alba-paper/85">
+          {tournament.registration === "app" ? <li>{t("tour.registerApp")}</li> : null}
+          {phase === "postponed" ? <li>{t("tour.postponed")}</li> : null}
+          {!tournament.startAt && phase !== "postponed" ? <li>{t("tour.timeTba")}</li> : null}
+        </ul>
       </div>
 
       {phase === "upcoming" && tournament.startAt ? (

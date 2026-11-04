@@ -3,15 +3,16 @@
 The official website for **Albastini**, the Tanzanian card game you can play two ways:
 with the physical cards around a table, or on the Albastini app.
 
-**INGIA UWANJANI. TUCHEZE.**
+**INGIA UWANJANI TUCHEZE.**
 
-## Status: Phase 5 complete — launch-ready pending verified inputs
+## Status: Final handoff complete — ready to deploy on Vercel
 
 - Phase 1 (`docs/PHASE-1.md`): truthful, safe, stable foundation.
 - Phase 2 (`docs/PHASE-2.md`): visual system, motion, hero and chapter redesign.
 - Phase 3 (`docs/PHASE-3.md`): art-direction refinement, asset slots, provenance.
 - Phase 4 (`docs/PHASE-4.md`): real David portrait, real table and card-front photography.
-- Phase 5 (`docs/PHASE-5.md`): launch QA. Launch checklist is at the end of that file.
+- Phase 5 (`docs/PHASE-5.md`): launch QA.
+- Final handoff (`docs/FINAL-HANDOFF.md`): verified #26 champions, #27 on 12 Dec, champions carousel, official brand mark, Vercel.
 
 Hand-offs: `docs/ASSET-SPECS.md`, `docs/CTA-AUDIT.md`, `docs/LANGUAGE-REVIEW.md`,
 `assets-source/README.md`.
@@ -79,3 +80,27 @@ Edit `src/content/tournaments.ts` or `src/content/winners.ts` and redeploy.
 - Set `status: "completed"` once an event is over. Even if you forget, an event stops
   being shown as upcoming/live after its calendar day ends in Tanzania.
 - Winners without a photo render as text-only cards. Never add a placeholder portrait.
+
+## Deploying on Vercel
+
+1. Import the GitHub repo in Vercel. `vercel.json` pins `npm ci` + `npm run build`
+   (the repo also contains `bun.lock`; the tested path is npm).
+2. No framework preset needed: the build emits Vercel Build Output API v3
+   (`.vercel/output`, Node 22 server function + static assets).
+3. After the first production deploy, set **`VITE_SITE_URL`** (Production) to the real
+   public URL (e.g. `https://<project>.vercel.app`, or a custom domain later) and
+   redeploy. That enables canonical, `og:url`, `sitemap.xml` and Organization/WebSite
+   JSON-LD. Never guess it. See `.env.example`.
+4. Preview deployments are not indexed by Vercel by default; canonical/sitemap only
+   ever point at `VITE_SITE_URL`.
+
+## Routine content updates (no UI code changes)
+
+| Change | File |
+|---|---|
+| Next tournament (number, date, start time, status, registration) | `src/content/tournaments.ts` |
+| Winners (display name, placement, location, photo, fit/position) | `src/content/winners.ts` |
+| Prize structure (1st/2nd/3rd, TSH) | `tournamentPrizeStructure` in `src/content/winners.ts` |
+| Store links | `src/content/links.ts` |
+| Brand mark / images | `src/content/assets.ts` + `scripts/optimize-images.mjs` |
+| Site copy (EN/SW) | `src/lib/i18n.tsx` |

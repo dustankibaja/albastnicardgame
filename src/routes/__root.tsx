@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Albastini" },
       {
         name: "description",
-        content: "Albastini — the Tanzanian card game. Ingia uwanjani. Tucheze.",
+        content: "Albastini — the Tanzanian card game. Ingia uwanjani tucheze.",
       },
       { name: "author", content: "Albastini" },
     ],
