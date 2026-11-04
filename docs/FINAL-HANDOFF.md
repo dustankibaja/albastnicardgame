@@ -8,7 +8,7 @@ Status: complete. Ready for Vercel. No further design phase started.
 - The former "#27 completed on 31 Oct" record is removed.
 - **Tournament #26** (26 September 2026, completed) added.
 - **Prize structure** centralised: `tournamentPrizeStructure` = 1st 130,000 · 2nd 65,000 · 3rd 26,000 TSH. Prizes derive from placement; never stored per winner.
-- **Winners** (Tournament #26, `displayName` = app/player name, never legal names): David Sanya (1st, Dar es Salaam), Bedadi (2nd, Kilimanjaro), Jeshi (3rd, Iringa).
+- **Winners** (Tournament #26, `displayName` = app/player name, never legal names): David Sanya (1st, Dar es Salaam), Bedadi (2nd, Kilimanjaro), **MJeshi** (3rd, Iringa) — display name confirmed by the owner.
 - **Store links** marked verified (owner-confirmed); still the only place URLs live.
 - **Official brand mark** (2048 px) replaces the 256 px mark in navbar/menu/footer, favicon, touch icon and the final-section card fan. Same artwork, higher resolution.
 - Postponed state: a `postponed` status shows *"Postponed — new date to be announced"* and hides the stale date.
@@ -16,13 +16,13 @@ Status: complete. Ready for Vercel. No further design phase started.
 ## ChampionFrame
 4:5 stage, night-blue mat, restrained yellow keyline, placement badge, quiet card-wave geometry, bottom grounding fade.
 Per-winner `imageFit` (`cover` / `contain`) and `imagePosition` absorb inconsistent photos without mutilating them; no photo → outlined placement numeral (never a placeholder person).
-Current: David = Phase 4 cut-out (`contain`, bottom-anchored) · Bedadi = full original photo (`cover`, 55% 30%) · Jeshi = cut-out separated from the official poster (`cover`, bottom-anchored).
+Current: David = Phase 4 cut-out (`contain`, bottom-anchored) · Bedadi = full original photo (`cover`, 55% 30%) · MJeshi = cut-out separated from the official poster (`cover`, bottom-anchored).
 
 ## ChampionsCarousel
 Native horizontal scroll-snap (one slide per gesture, never skips).
 - **Mobile:** native touch swipe (verified with real touch events at 320/375/430); 44 px+ targets.
 - **Desktop:** previous/next arrows (disabled at the ends) + per-champion indicators.
-- **Keyboard:** focusable viewport, ←/→ between champions, logical Tab order, Enter on indicators, polite live region ("3 of 3: Jeshi").
+- **Keyboard:** focusable viewport, ←/→ between champions, logical Tab order, Enter on indicators, polite live region ("3 of 3: MJeshi").
 - **Reduced motion:** instant jumps. **No autoplay** (optional in the brief; omitted to avoid motion/a11y risk).
 - **JS off:** all champions rendered and natively scrollable; controls not rendered (no dead buttons).
 - Supports 1 (no controls), 2, 3+ winners and newer tournament groups (latest group shown) — verified by data-only tests.
@@ -41,10 +41,15 @@ Build ✅ · TypeScript ✅ · Lint 0 errors (9 pre-existing warnings) · axe-co
 Firefox/WebKit cannot be installed in this environment (network policy); static CSS audit passed in Phase 5. Spot-check on a real iPhone and Firefox before announcing.
 
 ## Needs the Albastini team
-1. **Confirm the 3rd-place display name:** official poster prints **MJESHI**; handoff/README say **Jeshi** (site uses Jeshi; one-word change in `winners.ts`).
-2. **Production URL** → set `VITE_SITE_URL` after the first Vercel deploy.
-3. **Tournament #27 start time** (enables time + countdown automatically).
-4. **Kiswahili review** (`docs/LANGUAGE-REVIEW.md`, 110 strings).
-5. Optional, when available: official card scans (front + back), official wordmark, more app screenshots, cleared community photos, approved social-preview artwork, high-res product photos, card-interest backend.
+1. **Production URL** → set `VITE_SITE_URL` after the first Vercel deploy.
+2. **Tournament #27 start time** (enables time + countdown automatically).
+3. **Kiswahili review** (`docs/LANGUAGE-REVIEW.md`, 110 strings).
+4. Optional, when available: official wordmark, more app screenshots, cleared community photos, approved social-preview artwork, high-res product photos, card-interest backend.
 
 Note: the asset pack's poster filenames for 1st and 3rd place are swapped (see `assets-source/README.md`).
+
+## Owner update (after handoff)
+- **3rd-place display name confirmed: MJeshi** (Albastini app name). Applied in data, registry id, alt text (EN/SW), docs. No standalone "Jeshi" ships (production scan).
+- **Card pack promoted to OFFICIAL** for current production (owner decision, until further notice). Red/black/blue aces now drive the hero hand and the Two Ways card hand through the existing registry ids — no layout changes. Cards are full faces (1024×1536 source, cropped to the card edge), derivatives up to 640 px: sharp at 2×. Remaining fronts and the back are filed in `assets-source/official-cards/` for future use; card flips remain unimplemented (design freeze).
+- Superseded partial-crop ace files removed. The Physical Cards chapter keeps the genuine card-fronts photograph.
+- Robustness fix found in QA: the Physical Cards section now clips its own deliberate expansion-pack crop (document width now equals the viewport at every width instead of relying on the body clip).

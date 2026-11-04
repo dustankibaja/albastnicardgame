@@ -69,16 +69,14 @@ export const winners: Winner[] = [
     imagePosition: "55% 30%",
   },
   {
-    // NOTE: the official poster prints "MJESHI"; the owner's handoff and the
-    // asset README say "Jeshi". Using the written instruction; awaiting owner
-    // confirmation (one-word change here if the poster spelling is correct).
-    id: "t26-3-jeshi",
-    displayName: "Jeshi",
+    // Display name confirmed by the project owner (Albastini app name).
+    id: "t26-3-mjeshi",
+    displayName: "MJeshi",
     placement: 3,
     location: "Iringa, Tanzania",
     tournamentId: "tournament-26",
-    portrait: "jeshiPortrait",
-    portraitAltKey: "alt.jeshi",
+    portrait: "mjeshiPortrait",
+    portraitAltKey: "alt.mjeshi",
     // Near-square cut-out: "cover" (bottom-anchored) only trims jacket edges
     // and gives him the same presence as the other champions.
     imageFit: "cover",

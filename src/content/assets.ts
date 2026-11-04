@@ -15,9 +15,9 @@ import { images, type ImageSet } from "./images.generated";
  *  - "temporary_reference"         provenance unconfirmed; replace with genuine source
  *  - "ai_reconstructed_reference"  reconstructed from a photo; never establishes card details
  *
- * Owner-approved temporary card pack (8 reconstructed fronts + 1 back) is kept
- * in assets-source/temporary-cards/ as "ai_reconstructed_reference". It is not
- * registered here because nothing uses it yet (registered images ship).
+ * Official card pack (8 fronts + back, owner-approved for current production):
+ * assets-source/official-cards/. Only the aces in use are registered here
+ * (registered images ship).
  */
 export type Provenance =
   | "official"
@@ -36,18 +36,18 @@ export type SiteImage = {
 export const siteImages = {
   aceRed: {
     image: images.cardRed,
-    provenance: "temporary_reference",
-    note: "Isolated red ace (partial face crop). Paper texture suggests a photo crop, but whether it is a genuine scan or a reconstruction is unconfirmed. Replace with an official scan.",
+    provenance: "official",
+    note: "Official Albastini red ace (owner-approved current production card, full face, 1024×1536). See assets-source/official-cards/STATUS.md.",
   },
   aceBlack: {
     image: images.cardBlack,
-    provenance: "temporary_reference",
-    note: "Isolated black ace cut-out (partial face). Clean cut-out; possibly reconstructed. Unconfirmed. Replace with an official scan.",
+    provenance: "official",
+    note: "Official Albastini black ace (owner-approved current production card, full face, 1024×1536). See assets-source/official-cards/STATUS.md.",
   },
   aceBlue: {
     image: images.cardBlue,
-    provenance: "temporary_reference",
-    note: "Isolated blue ace (partial face crop). Unconfirmed provenance. Replace with an official scan.",
+    provenance: "official",
+    note: "Official Albastini blue ace (owner-approved current production card, full face, 1024×1536). See assets-source/official-cards/STATUS.md.",
   },
   cardFan: {
     image: images.cardFan,
@@ -64,10 +64,10 @@ export const siteImages = {
     provenance: "real_source_photo",
     note: "Genuine photo of Bedadi (Tournament #26, 2nd). Used whole; framed by CSS (cover). No edits.",
   },
-  jeshiPortrait: {
-    image: images.jeshiPortrait,
+  mjeshiPortrait: {
+    image: images.mjeshiPortrait,
     provenance: "real_source_photo",
-    note: "Genuine photo of Jeshi (Tournament #26, 3rd), separated from the official poster (the only source supplied) with an alpha matte; poster text/graphics excluded. No regeneration.",
+    note: "Genuine photo of MJeshi (Tournament #26, 3rd), separated from the official poster (the only source supplied) with an alpha matte; poster text/graphics excluded. No regeneration.",
   },
   boxSafari: {
     image: images.boxSafari,

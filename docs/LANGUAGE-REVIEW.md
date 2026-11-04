@@ -189,6 +189,6 @@ Dates/months (Jumamosi, Desemba…) and winner display names are not translated 
 | `alt.boxExpansion` | Albastini Safari Edition Expansion Pack box | Boksi la Albastini Safari Edition Expansion Pack | ⏳ Owner review |  |
 | `alt.david` | David Sanya, Albastini first-place winner | David Sanya, mshindi wa nafasi ya kwanza wa Albastini | ⏳ Owner review |  |
 | `alt.bedadi` | Bedadi, Albastini second-place winner | Bedadi, mshindi wa nafasi ya pili wa Albastini | ⏳ Owner review |  |
-| `alt.jeshi` | Jeshi, Albastini third-place winner | Jeshi, mshindi wa nafasi ya tatu wa Albastini | ⏳ Owner review |  |
+| `alt.mjeshi` | MJeshi, Albastini third-place winner | MJeshi, mshindi wa nafasi ya tatu wa Albastini | ⏳ Owner review |  |
 | `alt.table` | Albastini cards spread across a wooden table | Karata za Albastini zimetandazwa juu ya meza ya mbao | ⏳ Owner review |  |
 | `alt.fronts` | Nine Albastini card fronts in different colours, laid out on white | Sura tisa za karata za Albastini za rangi tofauti, zimepangwa juu ya rangi nyeupe | ⏳ Owner review |  |

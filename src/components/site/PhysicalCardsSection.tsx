@@ -26,7 +26,7 @@ export function PhysicalCardsSection() {
     <section
       id="cards"
       aria-labelledby="cards-title"
-      className="relative bg-alba-paper text-alba-ink"
+      className="relative overflow-x-clip bg-alba-paper text-alba-ink"
       // The product is pulled up into the arena by the stage offset, so the
       // anchor clears the navbar, that offset, and the box's rotation/parallax
       // overhang (+3.5rem): visitors land with the whole product in view.

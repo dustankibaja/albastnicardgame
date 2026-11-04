@@ -16,9 +16,9 @@ const OUT = "src/assets/optimized";
 
 // id → source file + target widths (CSS px × 1 and × 2 where the source allows)
 const jobs = {
-  cardRed: { file: "card-red-official.webp", widths: [240, 500] },
-  cardBlack: { file: "card-black-official-v2.webp", widths: [240, 500] },
-  cardBlue: { file: "card-blue-official.webp", widths: [240, 500] },
+  cardRed: { file: "cards/ace-red.png", widths: [260, 520, 640] },
+  cardBlack: { file: "cards/ace-black.png", widths: [260, 520, 640] },
+  cardBlue: { file: "cards/ace-blue.png", widths: [260, 520, 640] },
   cardFan: { file: "brand/albastini-mark-official.png", widths: [300, 600, 1120] },
   boxSafari: { file: "box-safari-retail.webp", widths: [300, 600] },
   boxExpansion: { file: "box-expansion.webp", widths: [300, 600] },
@@ -45,8 +45,8 @@ const jobs = {
     widths: [480, 768],
     q: { avif: 64, webp: 84 },
   },
-  jeshiPortrait: {
-    file: "photos/jeshi-portrait.png",
+  mjeshiPortrait: {
+    file: "photos/mjeshi-portrait.png",
     widths: [480, 830],
     q: { avif: 64, webp: 84 },
   },
