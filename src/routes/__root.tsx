@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -34,7 +35,10 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error: thrown, reset }: ErrorComponentProps) {
+  // The router types thrown values as `unknown` (anything can be thrown);
+  // normalise to an Error for logging/reporting. Rendering is unchanged.
+  const error = thrown instanceof Error ? thrown : new Error(String(thrown));
   console.error(error);
   const router = useRouter();
   useEffect(() => {
