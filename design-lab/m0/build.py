@@ -21,8 +21,9 @@ def card(name, cx, cy, vis_w, rot=0, z=1, extra=""):
     return (f'<img class="cd" alt="" src="@@{name}@@" style="left:{cx-w/2:.1f}px;top:{cy-h/2:.1f}px;width:{w:.1f}px;'
             f'transform:rotate({rot}deg);z-index:{z};{extra}">')
 def phone(cx, top, w, rot=0, z=5, extra=""):
+    # % padding resolves against the CONTAINING BLOCK's width, so the bezel lives on an inner element whose parent is the phone itself.
     return (f'<div class="ph" style="left:{cx-w/2:.1f}px;top:{top:.1f}px;width:{w:.1f}px;transform:rotate({rot}deg);z-index:{z};{extra}">'
-            f'<img alt="" src="@@phone@@"></div>')
+            f'<div class="phb"><img alt="" src="@@phone@@"></div></div>')
 def scaled(inner, w, h, s, cls=""):
     return (f'<div class="sc {cls}" style="width:{w*s:.1f}px;height:{h*s:.1f}px"><div class="scin" '
             f'style="width:{w}px;height:{h}px;transform:scale({s})">{inner}</div></div>')
@@ -46,17 +47,17 @@ CSS = r'''
 *{box-sizing:border-box}html{background:#000;color:#fff}
 body{margin:0;font-family:"Instrument Sans",system-ui,sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;min-width:1280px}
 img{display:block}
-.poster{font-family:"Archivo Display";font-weight:900;font-stretch:62%;text-transform:uppercase;line-height:.8;letter-spacing:-.005em;word-spacing:.06em}
-.edit{font-family:"Archivo Display";font-weight:800;font-stretch:76%;text-transform:uppercase;line-height:.88;word-spacing:.05em}
+.poster{font-family:"Archivo Display","Archivo";font-weight:900;font-stretch:62%;text-transform:uppercase;line-height:.8;letter-spacing:-.005em;word-spacing:.06em}
+.edit{font-family:"Archivo Display","Archivo";font-weight:800;font-stretch:76%;text-transform:uppercase;line-height:.88;word-spacing:.05em}
 .quiet{font-family:"Instrument Sans";font-weight:500;letter-spacing:-.01em;line-height:1.35;text-wrap:balance}
-.meta{font-family:"Archivo Display";font-weight:700;font-stretch:100%;text-transform:uppercase;letter-spacing:.09em;font-size:12px;line-height:1.2;font-variant-numeric:tabular-nums}
-.num{font-family:"Archivo Display";font-weight:900;font-stretch:70%;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.meta{font-family:"Archivo Display","Archivo";font-weight:700;font-stretch:100%;text-transform:uppercase;letter-spacing:.09em;font-size:12px;line-height:1.2;font-variant-numeric:tabular-nums}
+.num{font-family:"Archivo Display","Archivo";font-weight:900;font-stretch:70%;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
 .out{color:transparent;-webkit-text-stroke:2px var(--yellow)}
 .y{color:var(--yellow)}
 /* ---------- shell ---------- */
 .top{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:18px;height:64px;padding:0 30px;background:rgb(0 0 0/.92);border-bottom:1px solid #222}
 .top .mk-wrap{display:flex;gap:4px;position:relative;align-items:center;height:100%}
-.top a{white-space:nowrap;position:relative;color:#fff;text-decoration:none;font:700 11px/1 "Archivo Display";font-stretch:100%;letter-spacing:.07em;text-transform:uppercase;padding:8px 5px}
+.top a{white-space:nowrap;position:relative;color:#fff;text-decoration:none;font:700 11px/1 "Archivo Display","Archivo";font-stretch:100%;letter-spacing:.07em;text-transform:uppercase;padding:8px 5px}
 .top a:focus-visible,.btn:focus-visible,.lnk:focus-visible,button:focus-visible{outline:3px solid var(--focus,#fff);outline-offset:3px}
 .top .brand{display:flex;align-items:center;gap:10px;margin-right:6px;white-space:nowrap}.top .brand img{width:34px;height:34px}
 .mk{position:absolute;bottom:-3px;left:0;width:14px;height:14px;color:var(--yellow);--chip-ring:#000;pointer-events:none;transition:transform var(--d-slide) var(--e2)}
@@ -67,22 +68,23 @@ img{display:block}
 .bn i{display:inline-block;width:14px;height:14px}
 .bt{font-size:58px;margin:10px 0 0}
 .forms{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:560px}
-.forms span{font:700 11px/1 "Archivo Display";font-stretch:100%;letter-spacing:.08em;text-transform:uppercase;padding:7px 9px;border-radius:7px;border:1px solid #333;color:#777}
+.forms span{font:700 11px/1 "Archivo Display","Archivo";font-stretch:100%;letter-spacing:.08em;text-transform:uppercase;padding:7px 9px;border-radius:7px;border:1px solid #333;color:#777}
 .forms span.on{background:var(--yellow);color:#000;border-color:var(--yellow)}
 .panel{border-radius:18px;overflow:hidden;position:relative}
 .gate{margin-top:26px;display:grid;grid-template-columns:260px 1fr 1fr;gap:20px;padding:20px 22px;border:1px solid #2a2a2a;border-radius:14px;background:#080808}
-.gate b{font:800 13px/1.2 "Archivo Display";font-stretch:100%;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow)}
+.gate b{font:800 13px/1.2 "Archivo Display","Archivo";font-stretch:100%;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow)}
 .gate p{margin:6px 0 0;font-size:15px;color:#cfcfcf}
-.gate .v{font:900 26px/1 "Archivo Display";font-stretch:70%;text-transform:uppercase}
+.gate .v{font:900 26px/1 "Archivo Display","Archivo";font-stretch:70%;text-transform:uppercase}
 .note{font-size:14px;color:#aaa;max-width:70ch}
 .sc{position:relative;flex:none}.scin{transform-origin:0 0;position:absolute;left:0;top:0;overflow:hidden}
 .cd{position:absolute;height:auto;filter:drop-shadow(0 20px 22px rgb(0 0 0/.42))}
-.ph{position:absolute;background:#000;border-radius:13%/7%;padding:4.5%;box-shadow:0 40px 70px -30px rgb(0 0 0/.75)}
+.ph{position:absolute}
+.ph .phb{background:#000;border-radius:13%/7%;padding:4.5%;box-shadow:0 40px 70px -30px rgb(0 0 0/.75)}
 .ph img{width:100%;border-radius:10%/5.5%;height:auto}
 .row{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
 /* ---------- buttons: the card-edge family ---------- */
 .btn{--h:56px;--fs:18px;position:relative;display:inline-flex;align-items:center;gap:16px;height:var(--h);padding:0 6px 0 24px;border:0;border-radius:12px;
- font-family:"Archivo Display";font-weight:900;font-size:var(--fs);line-height:1;font-stretch:78%;letter-spacing:.02em;text-transform:uppercase;cursor:pointer;
+ font-family:"Archivo Display","Archivo";font-weight:900;font-size:var(--fs);line-height:1;font-stretch:78%;letter-spacing:.02em;text-transform:uppercase;cursor:pointer;
  overflow:hidden;isolation:isolate;white-space:nowrap;text-decoration:none;transition:transform var(--d-fast) var(--e),box-shadow var(--d-fast) var(--e)}
 .btn.sm{--h:44px;--fs:15px;padding-left:18px;gap:12px}
 .btn::before{content:"";position:absolute;inset:0;z-index:-1;transform:scaleX(0);transform-origin:0 50%;transition:transform 240ms var(--e)}
@@ -109,7 +111,7 @@ img{display:block}
 .btn[disabled]::before{display:none}
 .th-blue{background:var(--blue);--focus:#fff;color:#fff}.th-paper{background:#fff;--focus:var(--blue);color:#000}.th-night{background:var(--night);--focus:var(--yellow);color:#fff}
 .seg{display:inline-flex;border-radius:11px;box-shadow:inset 0 0 0 1.5px currentColor;padding:3px;gap:2px}
-.seg button{all:unset;cursor:pointer;min-width:44px;height:36px;display:grid;place-items:center;border-radius:8px;font:800 14px/1 "Archivo Display";font-stretch:90%;letter-spacing:.04em;color:inherit;opacity:.8}
+.seg button{all:unset;cursor:pointer;min-width:44px;height:36px;display:grid;place-items:center;border-radius:8px;font:800 14px/1 "Archivo Display","Archivo";font-stretch:90%;letter-spacing:.04em;color:inherit;opacity:.8}
 .seg button[aria-pressed=true]{background:currentColor;opacity:1}.seg button[aria-pressed=true] span{color:var(--seg-on,#000)}
 .mx .btn{--h:44px;--fs:14px;padding-left:16px;gap:10px}
 .sqbtn{all:unset;cursor:pointer;width:48px;height:48px;border-radius:11px;box-shadow:inset 0 0 0 1.5px currentColor;display:grid;place-items:center;color:inherit}
@@ -134,7 +136,7 @@ img{display:block}
 /* ---------- champion cover ---------- */
 .cover{position:relative;width:380px;height:540px;border-radius:20px;overflow:hidden;background:radial-gradient(120% 80% at 50% 12%,color-mix(in oklab,var(--blue) 82%,#fff) 0%,var(--blue) 40%,var(--night) 100%);flex:none}
 .cover .cv-key{position:absolute;inset:12px;border-radius:12px;box-shadow:inset 0 0 0 1.5px var(--yellow);z-index:6;pointer-events:none}
-.cover .cv-num{position:absolute;left:-22px;bottom:96px;font-family:"Archivo Display";font-weight:900;font-stretch:62%;line-height:.74;-webkit-text-stroke:2.5px var(--yellow);color:transparent;z-index:1;font-feature-settings:"tnum" 1}
+.cover .cv-num{position:absolute;left:-22px;bottom:96px;font-family:"Archivo Display","Archivo";font-weight:900;font-stretch:62%;line-height:.74;-webkit-text-stroke:2.5px var(--yellow);color:transparent;z-index:1;font-feature-settings:"tnum" 1}
 .cover .cv-photo{position:absolute;z-index:3;left:50%;transform:translateX(-50%);height:auto;filter:drop-shadow(0 16px 20px rgb(0 0 0/.35))}
 .cover .cv-win{position:absolute;z-index:2;left:12px;right:12px;top:12px;bottom:170px;border-radius:12px 12px 0 0;overflow:hidden}
 .cover .cv-win img{width:100%;height:100%;object-fit:cover;object-position:60% 18%}
@@ -147,7 +149,7 @@ img{display:block}
 .cover .cv-pl .row2{display:flex;justify-content:space-between;align-items:flex-end;gap:8px}
 .cover .cv-pl .loc{color:#d6dcff}
 .cover .cv-pl .pz{font-size:30px;color:var(--yellow);line-height:.9;margin-top:2px}
-.pl-chip{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;background:var(--yellow);color:#000;border-radius:8px;padding:6px 9px 6px 7px;font:900 12px/1 "Archivo Display";font-stretch:100%;letter-spacing:.09em}
+.pl-chip{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;background:var(--yellow);color:#000;border-radius:8px;padding:6px 9px 6px 7px;font:900 12px/1 "Archivo Display","Archivo";font-stretch:100%;letter-spacing:.09em}
 .pl-chip svg{width:14px;height:14px;color:#000;--chip-ring:var(--yellow)}
 /* ---------- arena / fixture / ladder ---------- */
 .arena{background:linear-gradient(to bottom,var(--blue) 0%,var(--blue) 24%,var(--night) 78%,var(--night) 100%);color:#fff}
@@ -162,7 +164,7 @@ img{display:block}
 /* ---------- storyboard frames ---------- */
 .fr{position:relative;overflow:hidden;background:var(--blue);color:#fff;font-family:"Instrument Sans"}
 .frame-cap{display:flex;gap:10px;align-items:baseline;margin-top:9px}
-.frame-cap b{font:900 22px/1 "Archivo Display";font-stretch:70%;color:var(--yellow)}
+.frame-cap b{font:900 22px/1 "Archivo Display","Archivo";font-stretch:70%;color:var(--yellow)}
 .frame-cap span{font-size:13px;color:#b9b9b9;line-height:1.35}
 .sb{display:grid;gap:22px}
 /* ---------- flip + motion demos ---------- */
@@ -174,9 +176,9 @@ img{display:block}
 .flip .back{transform:rotateY(180deg)}
 .guide{position:absolute;pointer-events:none;border:1.5px dashed var(--yellow);border-radius:14px}
 .demo{background:#0b0b0b;border:1px solid #262626;border-radius:16px;padding:22px;position:relative;overflow:hidden}
-.demo h4{margin:0 0 4px;font:900 40px/.9 "Archivo Display";font-stretch:62%;text-transform:uppercase}
+.demo h4{margin:0 0 4px;font:900 40px/.9 "Archivo Display","Archivo";font-stretch:62%;text-transform:uppercase}
 .demo .area{height:260px;margin:14px 0;position:relative;border-radius:12px;overflow:hidden}
-.tok{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px;color:#bbb}.tok b{color:#fff;font-family:"Archivo Display";font-stretch:100%;letter-spacing:.06em;text-transform:uppercase;font-size:11px}
+.tok{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px;color:#bbb}.tok b{color:#fff;font-family:"Archivo Display","Archivo";font-stretch:100%;letter-spacing:.06em;text-transform:uppercase;font-size:11px}
 .deal .dc{position:absolute;width:150px;left:calc(50% - 75px);top:44px;opacity:1}
 .deal.play .dc{animation:dealin 560ms var(--e) both;animation-delay:calc(var(--i)*85ms)}
 @keyframes dealin{from{transform:translate(260px,210px) rotate(34deg)}60%{}to{transform:translate(var(--tx),var(--ty)) rotate(var(--tr))}}
@@ -190,7 +192,7 @@ img{display:block}
 .tag-no{display:inline-flex;gap:8px;align-items:center;padding:9px 12px;border-radius:9px;border:1px solid #333;font-size:14px;margin:0 8px 8px 0;color:#d8d8d8}
 .tag-no s{color:#8a8a8a;text-decoration-color:var(--red);text-decoration-thickness:2px}
 table.t{border-collapse:collapse;width:100%;font-size:14px}table.t th,table.t td{padding:9px 10px;border-bottom:1px solid #222;text-align:left}
-table.t th{font:700 11px/1 "Archivo Display";font-stretch:100%;letter-spacing:.08em;text-transform:uppercase;color:#9a9a9a}
+table.t th{font:700 11px/1 "Archivo Display","Archivo";font-stretch:100%;letter-spacing:.08em;text-transform:uppercase;color:#9a9a9a}
 table.t td.n{font-variant-numeric:tabular-nums;text-align:right}
 '''
 
@@ -548,6 +550,17 @@ def b09_geometry():
     gw, gh = 300, 450
     gbw, gbh = gw * bw / 1024, gh * bh / 1536
     guide = f'<div class="guide" style="left:{(gw-gbw)/2:.1f}px;top:{(gh-gbh)/2:.1f}px;width:{gbw:.1f}px;height:{gbh:.1f}px"></div>'
+    # magnified top-left corner: the 3% differences become visible
+    zoom = (f'<svg viewBox="40 110 190 190" style="width:300px;height:300px;border-radius:10px;background:rgb(255 255 255/.04)" aria-label="Top-left corner of all nine silhouettes, magnified">'
+            f'<rect x="{(1024-bw)/2:.0f}" y="{(1536-bh)/2:.0f}" width="{bw}" height="{bh}" rx="52" fill="none" stroke="#fff" stroke-dasharray="10 8" stroke-width="2.4" opacity=".8"/>'
+            + outlines.replace('stroke-width="3"','stroke-width="2.2"').replace('stroke-width="5"','stroke-width="3.6"') + '</svg>')
+    def sil(w1, h1, w2, h2, lab):
+        sc = 150 / max(h1, h2)
+        return (f'<svg viewBox="0 0 170 160" style="width:170px;height:160px"><rect x="{85-w1*sc/2:.1f}" y="{80-h1*sc/2:.1f}" width="{w1*sc:.1f}" height="{h1*sc:.1f}" rx="6" fill="none" stroke="rgb(255 225 26)" stroke-width="2"/>'
+                f'<rect x="{85-w2*sc/2:.1f}" y="{80-h2*sc/2:.1f}" width="{w2*sc:.1f}" height="{h2*sc:.1f}" rx="6" fill="none" stroke="#ff6b5c" stroke-width="2"/></svg><div class="meta" style="opacity:.8;text-align:center">{lab}</div>')
+    cb = next(c for c in C if c["id"].endswith("02_blue_ace")); cba = next(c for c in C if c["kind"] == "back")
+    sil_before = sil(250, 250 * cb["source"]["ratio"], 250, 250 * cba["source"]["ratio"], "front vs back, as supplied")
+    sil_after = sil(cb["placed"]["w"], cb["placed"]["h"], cba["placed"]["w"], cba["placed"]["h"], "front vs back, normalised")
     flipn = f'<div class="flip" id="flipN" style="width:{gw}px;height:{gh}px" tabindex="0" role="button" aria-label="Turn card"><div class="fi"><div class="face front"><img src="@@blue@@" alt="Blue ace, front"></div><div class="face back"><img src="@@back@@" alt="Card back"></div></div>{guide}</div>'
     # raw demo: faces at their own aspect, same width, top-aligned on the front's box
     rw = 250; rfh = rw * 1.365; rbh = rw * 1.45
@@ -562,14 +575,16 @@ def b09_geometry():
     <svg viewBox="0 0 1024 1536" style="width:300px;height:450px;margin-top:18px;border-radius:10px;background:rgb(255 255 255/.04)"><rect x="{(1024-bw)/2:.0f}" y="{(1536-bh)/2:.0f}" width="{bw}" height="{bh}" rx="52" fill="none" stroke="#fff" stroke-dasharray="14 12" stroke-width="3" opacity=".7"/>{outlines}</svg>
     <p class="note" style="margin:10px 0 0">Dashed white = canonical box 920×1288 (1:1.4). Yellow = the 8 fronts, red = the back, after fitting. Nothing is cropped.</p></div>
   <div class="panel" style="background:#0d0d0d;border:1px solid #262626;padding:24px 26px"><table class="t"><thead><tr><th>Card</th><th>Side</th><th>Supplied</th><th>h/w</th><th>Scale</th><th>Placed</th><th>Cropped</th></tr></thead><tbody>{rows}</tbody></table>
-    <p class="note" style="margin:12px 0 0">↑ = scaled up: <b>orange +8.5%</b> (smallest source, 848 px) and red +2%. Everything else scales down by 0.4–3.9%.</p></div></div>
+    <p class="note" style="margin:12px 0 0">↑ = scaled up: <b>orange +8.5%</b> (smallest source, 848 px) and red +2%. Everything else scales down by 0.4–3.9%.</p>
+    <div style="display:flex;gap:26px;align-items:center;margin-top:16px"><div>{meta("Top-left corner, magnified ×5")}<div style="margin-top:8px">{zoom}</div></div>
+      <p class="note" style="margin:0;max-width:34ch">Yellow = the eight fronts, red = the back, dashed white = the canonical box. At true size they are one outline; magnified, the real spread is a few pixels, and the red back is the outlier.</p></div></div></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px">
   <div class="panel th-night" style="padding:28px 32px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center">
-    <div><div class="meta" style="margin-bottom:12px">After — normalised (click)</div>{flipn}<div style="margin-top:10px"><button class="btn btn-app sm" data-flip="#flipN" type="button"><span class="lab">Turn</span><span class="chip">{CHIP}<svg class="arr" viewBox="0 0 24 24"><use href="#arrow"/></svg></span></button></div></div>
+    <div><div class="meta" style="margin-bottom:12px">After — normalised (click)</div>{flipn}<div style="margin-top:10px">{sil_after}</div><div style="margin-top:10px"><button class="btn btn-app sm" data-flip="#flipN" type="button"><span class="lab">Turn</span><span class="chip">{CHIP}<svg class="arr" viewBox="0 0 24 24"><use href="#arrow"/></svg></span></button></div></div>
     <div class="note" style="color:#dfe5ff"><p style="margin:0 0 10px"><b style="color:#fff">Same canvas, same centre, same pivot.</b> Front and back share one 1024×1536 frame; the dashed box is the canonical card.</p>
     <p style="margin:0"><b style="color:#fff">Residual:</b> silhouettes now differ by at most <b style="color:var(--yellow)">{after_w:.1f}% in width</b> and <b style="color:var(--yellow)">{after_h:.1f}% in height</b> (the back is the narrow one) — down from {before_w:.1f}% width / {before_r:.1f}% ratio spread as supplied. At the flip's midpoint the card is edge-on, so this is invisible.</p></div></div>
   <div class="panel th-night" style="padding:28px 32px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;background:#1a0f12">
-    <div><div class="meta" style="margin-bottom:12px;color:#ff9a8f">Before — as supplied (click)</div>{flipr}<div style="margin-top:10px"><button class="btn btn-cards sm" data-flip="#flipR" type="button"><span class="lab">Turn</span><span class="chip">{CHIP}<svg class="arr" viewBox="0 0 24 24"><use href="#arrow"/></svg></span></button></div></div>
+    <div><div class="meta" style="margin-bottom:12px;color:#ff9a8f">Before — as supplied (click)</div>{flipr}<div style="margin-top:10px">{sil_before}</div><div style="margin-top:10px"><button class="btn btn-cards sm" data-flip="#flipR" type="button"><span class="lab">Turn</span><span class="chip">{CHIP}<svg class="arr" viewBox="0 0 24 24"><use href="#arrow"/></svg></span></button></div></div>
     <div class="note" style="color:#f0d4d0"><p style="margin:0 0 10px"><b style="color:#fff">The jump you'd have shipped.</b> Cropped to their own edges at equal width, the back is 6% taller than the front: the dashed line (front's edge) is overrun on every turn.</p>
     <p style="margin:0">Fixed without cropping, stretching or inventing pixels: originals untouched in <code>assets-source/</code>; normalised masters are generated by <code>scripts/normalize-cards.mjs</code>.</p></div></div>
 </div>'''
@@ -577,24 +592,24 @@ def b09_geometry():
 # ---------------- finale + footer ----------------
 def finale_d():
     rings = ('<svg style="position:absolute;inset:0;z-index:0" width="1440" height="900" viewBox="0 0 1440 900" aria-hidden="true">'
-             '<circle cx="1040" cy="430" r="500" fill="none" stroke="var(--yellow)" stroke-width="3" stroke-dasharray="7 15" opacity=".42"/>'
-             '<circle cx="1040" cy="430" r="580" fill="none" stroke="#fff" stroke-width="1.5" opacity=".14"/></svg>')
-    fan = "".join(card(nm, 1010 + (i - 2) * 178, 800 + abs(i - 2) * 50, 330, (i - 2) * 13, 10 - abs(i - 2)) for i, nm in enumerate(["teal", "red", "blue", "black", "green"]))
-    footer = (f'<div style="position:absolute;left:0;right:0;bottom:0;height:92px;z-index:12;background:rgb(0 0 0/.55);border-top:1px solid rgb(255 255 255/.18);display:flex;align-items:center;gap:22px;padding:0 60px">'
+             '<circle cx="1075" cy="430" r="500" fill="none" stroke="var(--yellow)" stroke-width="3" stroke-dasharray="7 15" opacity=".42"/>'
+             '<circle cx="1075" cy="430" r="580" fill="none" stroke="#fff" stroke-width="1.5" opacity=".14"/></svg>')
+    fan = "".join(card(nm, 1115 + (i - 2) * 160, 820 + abs(i - 2) * 46, 320, (i - 2) * 12, 10 - abs(i - 2)) for i, nm in enumerate(["teal", "red", "blue", "black", "green"]))
+    footer = (f'<div style="position:absolute;left:0;right:0;bottom:0;height:92px;z-index:20;background:#02061c;border-top:1px solid rgb(255 255 255/.18);display:flex;align-items:center;gap:22px;padding:0 60px">'
               f'<img src="@@mark@@" alt="" style="width:46px;height:46px"><div><div class="poster" style="font-size:26px;line-height:.9">INGIA UWANJANI TUCHEZE.</div><div style="font-size:14px;opacity:.75;margin-top:4px">The Tanzanian card game.</div></div>'
               f'<div style="margin-left:auto;display:flex;gap:30px;font:700 13px/1 Instrument Sans;opacity:.9"><span>Play</span><span>How to play</span><span>Tournaments</span><span>Physical cards</span></div>'
               f'<div class="seg" style="--seg-on:#000;color:#fff"><button aria-pressed="true" style="background:#fff"><span>EN</span></button><button aria-pressed="false"><span>SW</span></button></div></div>')
     return (f'<div class="fr" style="width:1440px;height:900px;background:radial-gradient(90% 90% at 70% 40%,color-mix(in oklab,var(--blue) 38%,#000) 0%,#02061c 70%)">{rings}'
-            f'<img src="@@crown@@" alt="" style="position:absolute;left:{1040-390}px;top:{430-378}px;width:780px;z-index:1;filter:drop-shadow(0 30px 60px rgb(0 0 0/.55))">{fan}'
+            f'<img src="@@crown@@" alt="" style="position:absolute;left:{1075-390}px;top:{430-378}px;width:780px;z-index:1;filter:drop-shadow(0 30px 60px rgb(0 0 0/.55))">{fan}'
             f'<div style="position:absolute;left:80px;top:96px;z-index:11"><div class="poster" style="font-size:272px">Ready to<br>play?</div>'
-            f'<div style="display:flex;align-items:center;gap:16px;margin-top:34px"><svg class="dot" viewBox="0 0 40 40" style="width:20px;height:20px"><use href="#chip"/></svg><div class="poster y" style="font-size:62px;line-height:.9">INGIA UWANJANI TUCHEZE.</div></div>'
+            f'<div style="display:flex;align-items:center;gap:16px;margin-top:34px"><svg class="dot" viewBox="0 0 40 40" style="width:20px;height:20px"><use href="#chip"/></svg><div class="poster y" style="font-size:54px;line-height:.9">INGIA UWANJANI TUCHEZE.</div></div>'
             f'<div style="display:flex;gap:14px;margin-top:36px">{btn("app","Download the app")}{btn("cards","Card availability")}</div></div>{footer}</div>')
 def finale_m():
     fan = "".join(card(nm, 187 + (i - 2) * 66, 735 + abs(i - 2) * 22, 124, (i - 2) * 13, 10 - abs(i - 2)) for i, nm in enumerate(["teal", "red", "blue", "black", "green"]))
     return (f'<div class="fr" style="width:375px;height:812px;background:radial-gradient(100% 70% at 80% 24%,color-mix(in oklab,var(--blue) 38%,#000),#02061c 72%)">'
             f'<svg style="position:absolute;inset:0" width="375" height="812" viewBox="0 0 375 812" aria-hidden="true"><circle cx="300" cy="190" r="200" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-dasharray="5 11" opacity=".42"/></svg>'
             f'<img src="@@crown@@" alt="" style="position:absolute;left:150px;top:40px;width:300px;z-index:1">{fan}'
-            f'<div style="position:absolute;left:24px;right:24px;top:96px;z-index:11"><div class="poster" style="font-size:138px">Ready to<br>play?</div>'
+            f'<div style="position:absolute;left:24px;right:24px;top:96px;z-index:11"><div class="poster" style="font-size:100px;white-space:nowrap">Ready to<br>play?</div>'
             f'<div style="display:flex;align-items:center;gap:10px;margin-top:22px"><svg class="dot" viewBox="0 0 40 40" style="width:14px;height:14px"><use href="#chip"/></svg><div class="poster y" style="font-size:33px;line-height:.9;white-space:nowrap">INGIA UWANJANI TUCHEZE.</div></div>'
             f'<div style="display:grid;gap:10px;margin-top:22px">{btn("app","Download the app").replace("class=\"btn btn-app \"","class=\"btn btn-app \" style=\"width:100%;justify-content:space-between\"")}{btn("cards","Card availability").replace("class=\"btn btn-cards \"","class=\"btn btn-cards \" style=\"width:100%;justify-content:space-between\"")}</div></div></div>')
 def b10_finale():
@@ -644,7 +659,7 @@ def b12_not_used():
              ("Letter-by-letter split text", "Delays reading; reads as a reel. Headlines settle as whole phrases."), ("Magnetic buttons, cursor-follow blobs", "Fast chase motion; no physical meaning at a card table."),
              ("Preloader / intro screen", "Content is the first paint; nothing makes anyone wait."), ("WebGL", "Nothing in the concept needs it; CSS 3D covers the one flip."),
              ("Bento grids / feature cards", "Reintroduces the generic section stack the CEO removed."), ("Stock or generated people", "Real photographs only (3 winners). Community slot stays empty."),
-             ("Auto-matted Bedadi cut-out", "Tried. The model kept his white throne chair and gold drape; a throne is off-brand. He is shown as the real scene instead."), ("Proportional numerals for prizes", "Columns drift; tabular numerals align (Board 01).")]
+             ("Auto-matted Bedadi cut-out", "Tried. The model kept his white throne chair and gold drape; a throne is off-brand. He is shown as the real scene instead."), ("Proportional numerals for prizes", "Digits stop stacking; tabular numerals align (Board 01).")]
     tags = "".join(f'<div class="tag-no"><s>{a}</s></div>' for a, _ in items)
     why = "".join(f'<div style="padding:14px 0;border-bottom:1px solid #222;display:grid;grid-template-columns:300px 1fr;gap:20px"><b style="font:700 13px/1.3 Archivo Display;font-stretch:100%;letter-spacing:.06em;text-transform:uppercase;color:#fff">{a}</b><span class="note" style="max-width:none">{b}</span></div>' for a, b in items)
     return f'''<div style="margin-bottom:22px">{tags}</div><div class="panel" style="background:#0d0d0d;border:1px solid #262626;padding:12px 30px">{why}</div>'''
@@ -688,7 +703,7 @@ def board(i, bid, short, title, fn, forms_on, gate):
 def scorecard():
     rows = "".join(f'<tr><td><a class="lnk" href="#{b[0]}" style="color:var(--yellow)">{i+1:02d} · {b[1]}</a></td><td>{", ".join(b[4]) or "—"}</td><td>{b[5][0]}</td><td>{b[5][2]}</td></tr>' for i, b in enumerate(BOARDS) if b[5][0] != "n/a")
     return f'''<section class="board" id="b13"><div class="wrap"><div class="bh"><div><div class="bn meta"><i><svg viewBox="0 0 40 40" width="14" height="14"><use href="#chip"/></svg></i>Board 13</div><h2 class="poster bt">The gate</h2></div></div>
-<p class="quiet" style="font-size:26px;max-width:34ch;margin:0 0 22px">Could these boards belong to any other brand? My honest read: <b>no for 8 of 11, “only in context” for 3.</b></p>
+<p class="quiet" style="font-size:26px;max-width:34ch;margin:0 0 22px">Could these boards belong to any other brand? My honest read: <b>7 of 11 are clearly Albastini (3 strongly); 4 pass only with a qualifier</b> — type, buttons, finale and motion each lean on something else to carry the identity.</p>
 <div class="panel" style="background:#0d0d0d;border:1px solid #262626;padding:14px 26px"><table class="t"><thead><tr><th>Board</th><th>Albastini forms</th><th>Verdict</th><th>Weakest point</th></tr></thead><tbody>{rows}</tbody></table></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px">
 <div class="panel th-blue" style="padding:28px 32px"><div class="meta">If you approve</div><p class="quiet" style="font-size:22px;margin:12px 0 0">M1 builds the foundations: tokens (edge, keyline, chip, four motion verbs), scene themes, focus system and the budget scripts — then nav and buttons (M2).</p></div>
@@ -724,7 +739,7 @@ def build():
    <div class="panel" style="background:#0d0d0d;border:1px solid #262626;padding:24px 28px"><div class="meta y">Your decisions, applied</div>
      <p class="note" style="margin:10px 0 0;line-height:1.7">D3 cards normalised, non-destructively · D4 deck → hand-off · D5 full-composition hero · D6 cursor only on actionable cards · D7 subtle rank tints · D8 current photos · D9 sound deferred · MJeshi canonical.</p></div></div>
 </header>'''
-    html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=1280"><title>Albastini — M0 design boards</title><style>{CSS}</style></head><body>{SPRITE}
+    html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=1280"><title>Albastini — M0 design boards</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Sans:wght@400..700&display=swap"><style>{CSS}</style></head><body>{SPRITE}
 <nav class="top" aria-label="Boards"><span class="brand"><img src="@@mark@@" alt=""><span class="meta">M0 boards</span></span><div class="mk-wrap" id="topLinks" data-x style="gap:2px">{toplinks}<svg class="mk" viewBox="0 0 40 40"><use href="#chip"/></svg></div></nav>
 {intro}{sections}{scorecard()}<footer class="wrap" style="padding:50px 30px 90px"><div class="poster y" style="font-size:44px">INGIA UWANJANI TUCHEZE.</div></footer><script>{JS}</script></body></html>'''
     html = html.replace("@@FONTA@@", FONT_A).replace("@@FONTI@@", FONT_I)
