@@ -1,0 +1,237 @@
+{
+  "canvas": {
+    "w": 1024,
+    "h": 1536
+  },
+  "box": {
+    "w": 920,
+    "h": 1288
+  },
+  "cards": [
+    {
+      "id": "01_black_ace_club_wildlife",
+      "kind": "front",
+      "source": {
+        "w": 933,
+        "h": 1308,
+        "ratio": 1.402
+      },
+      "scale": 0.9847,
+      "placed": {
+        "w": 919,
+        "h": 1288,
+        "ratio": 1.402
+      },
+      "padding": {
+        "x": 53,
+        "y": 124
+      },
+      "fills": {
+        "w": 0.999,
+        "h": 1
+      },
+      "cropPct": 0,
+      "upscaled": false
+    },
+    {
+      "id": "02_blue_ace",
+      "kind": "front",
+      "source": {
+        "w": 924,
+        "h": 1261,
+        "ratio": 1.365
+      },
+      "scale": 0.9957,
+      "placed": {
+        "w": 920,
+        "h": 1256,
+        "ratio": 1.365
+      },
+      "padding": {
+        "x": 52,
+        "y": 140
+      },
+      "fills": {
+        "w": 1,
+        "h": 0.975
+      },
+      "cropPct": 0,
+      "upscaled": false
+    },
+    {
+      "id": "03_green_ace_elephants",
+      "kind": "front",
+      "source": {
+        "w": 929,
+        "h": 1281,
+        "ratio": 1.379
+      },
+      "scale": 0.9903,
+      "placed": {
+        "w": 920,
+        "h": 1269,
+        "ratio": 1.379
+      },
+      "padding": {
+        "x": 52,
+        "y": 134
+      },
+      "fills": {
+        "w": 1,
+        "h": 0.985
+      },
+      "cropPct": 0,
+      "upscaled": false
+    },
+    {
+      "id": "04_purple_ace",
+      "kind": "front",
+      "source": {
+        "w": 934,
+        "h": 1278,
+        "ratio": 1.368
+      },
+      "scale": 0.985,
+      "placed": {
+        "w": 920,
+        "h": 1259,
+        "ratio": 1.368
+      },
+      "padding": {
+        "x": 52,
+        "y": 139
+      },
+      "fills": {
+        "w": 1,
+        "h": 0.977
+      },
+      "cropPct": 0,
+      "upscaled": false
+    },
+    {
+      "id": "05_red_ace_trefoil",
+      "kind": "front",
+      "source": {
+        "w": 902,
+        "h": 1243,
+        "ratio": 1.378
+      },
+      "scale": 1.02,
+      "placed": {
+        "w": 920,
+        "h": 1268,
+        "ratio": 1.378
+      },
+      "padding": {
+        "x": 52,
+        "y": 134
+      },
+      "fills": {
+        "w": 1,
+        "h": 0.984
+      },
+      "cropPct": 0,
+      "upscaled": true
+    },
+    {
+      "id": "06_teal_ace_dolphins",
+      "kind": "front",
+      "source": {
+        "w": 918,
+        "h": 1298,
+        "ratio": 1.414
+      },
+      "scale": 0.9923,
+      "placed": {
+        "w": 911,
+        "h": 1288,
+        "ratio": 1.414
+      },
+      "padding": {
+        "x": 57,
+        "y": 124
+      },
+      "fills": {
+        "w": 0.99,
+        "h": 1
+      },
+      "cropPct": 0,
+      "upscaled": false
+    },
+    {
+      "id": "07_orange_ace",
+      "kind": "front",
+      "source": {
+        "w": 848,
+        "h": 1170,
+        "ratio": 1.38
+      },
+      "scale": 1.0849,
+      "placed": {
+        "w": 920,
+        "h": 1269,
+        "ratio": 1.379
+      },
+      "padding": {
+        "x": 52,
+        "y": 134
+      },
+      "fills": {
+        "w": 1,
+        "h": 0.985
+      },
+      "cropPct": 0,
+      "upscaled": true
+    },
+    {
+      "id": "08_ace_giraffes",
+      "kind": "front",
+      "source": {
+        "w": 954,
+        "h": 1311,
+        "ratio": 1.374
+      },
+      "scale": 0.9644,
+      "placed": {
+        "w": 920,
+        "h": 1264,
+        "ratio": 1.374
+      },
+      "padding": {
+        "x": 52,
+        "y": 136
+      },
+      "fills": {
+        "w": 1,
+        "h": 0.981
+      },
+      "cropPct": 0,
+      "upscaled": false
+    },
+    {
+      "id": "01_albastini_card_back",
+      "kind": "back",
+      "source": {
+        "w": 925,
+        "h": 1341,
+        "ratio": 1.45
+      },
+      "scale": 0.9605,
+      "placed": {
+        "w": 888,
+        "h": 1288,
+        "ratio": 1.45
+      },
+      "padding": {
+        "x": 68,
+        "y": 124
+      },
+      "fills": {
+        "w": 0.965,
+        "h": 1
+      },
+      "cropPct": 0,
+      "upscaled": false
+    }
+  ]
+}
