@@ -425,3 +425,82 @@
   .btn-edge:active > .btn-chip,
   .btn-edge:active { transform: none; }
 }
+
+/* ============================================================
+ * M1 — SCENE-AWARE NAVIGATION (SceneNav.tsx) — step 1: theme + active
+ * One object; the theme is a data attribute, never a remount.
+ * ============================================================ */
+.scene-nav {
+  --nav-fg: var(--alba-paper);
+  --nav-bg: transparent;
+  --nav-edge: rgb(255 255 255 / 0.32);
+  color: var(--nav-fg);
+  background-color: var(--nav-bg);
+  box-shadow: inset 0 -1px 0 var(--nav-edge);
+  transition: background-color var(--dur-std) var(--ease-out), color var(--dur-std) var(--ease-out), box-shadow var(--dur-std) var(--ease-out);
+}
+.scene-nav[data-scene="paper"] {
+  --nav-fg: var(--alba-ink);
+  --nav-bg: var(--alba-paper);
+  --nav-edge: var(--alba-ink);
+}
+.scene-nav[data-scene="night"] {
+  --nav-fg: var(--alba-paper);
+  --nav-bg: color-mix(in oklab, var(--alba-blue) 42%, var(--alba-ink));
+  --nav-edge: rgb(255 255 255 / 0.28);
+}
+.scene-nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  height: 4rem;
+  margin-top: 0.75rem;
+}
+.scene-nav-logo img {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+}
+.scene-nav-links {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+.scene-nav-link {
+  padding: 0.5rem 0.75rem;
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+/* The active signal is scene-aware: yellow where it has contrast (blue, night),
+   brand blue on paper (yellow on white is 1.3:1 and unreadable). */
+.scene-nav-link[aria-current="true"] {
+  color: var(--nav-active, var(--alba-gold));
+}
+.scene-nav[data-scene="paper"] {
+  --nav-active: var(--alba-blue);
+}
+.scene-nav-link:focus-visible {
+  outline: 3px solid var(--focus, var(--alba-blue));
+  outline-offset: 3px;
+}
+.scene-nav-links {
+  position: relative;
+}
+/* 11-point marker: a 10px disc in the scene's active colour, SLIDE to the active link. */
+.scene-nav-marker {
+  position: absolute;
+  left: 0;
+  bottom: -0.2rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--nav-active, var(--alba-gold));
+  transition: transform var(--dur-std) var(--ease-std), opacity var(--dur-fast) var(--ease-std);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-nav-marker {
+    transition: none;
+  }
+}

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState, type ReactNode } from "react";
 import { CompetitionSection } from "@/components/site/CompetitionSection";
 import { DownloadProvider } from "@/components/site/DownloadModal";
 import { FinalCTA } from "@/components/site/FinalCTA";
@@ -6,6 +7,7 @@ import { Footer } from "@/components/site/Footer";
 import { Hero } from "@/components/site/Hero";
 import { HowToPlaySection } from "@/components/site/HowToPlaySection";
 import { Navbar } from "@/components/site/Navbar";
+import { SceneNav } from "@/components/nav/SceneNav";
 import { PhysicalCardsSection } from "@/components/site/PhysicalCardsSection";
 import { TwoWaysSection } from "@/components/site/TwoWaysSection";
 import { LanguageProvider } from "@/lib/i18n";
@@ -78,13 +80,31 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+/** Preview gate: decided AFTER mount so server and client render identically. */
+function PreviewGate({ children }: { children: ReactNode }) {
+  const [on, setOn] = useState(false);
+  useEffect(() => setOn(new URLSearchParams(window.location.search).has("scenenav")), []);
+  return on ? null : <>{children}</>;
+}
+
+function PreviewSceneNav() {
+  const [on, setOn] = useState(false);
+  useEffect(() => setOn(new URLSearchParams(window.location.search).has("scenenav")), []);
+  return on ? <SceneNav /> : null;
+}
+
 function Index() {
   const { renderedAt } = Route.useLoaderData();
   return (
     <LanguageProvider>
       <DownloadProvider>
         <div className="min-h-screen bg-alba-ink">
-          <Navbar />
+          {/* The preview replaces the old bar while ?scenenav is on, so the two never overlap. */}
+          <PreviewGate>
+            <Navbar />
+          </PreviewGate>
+          {/* M1 preview: the new scene-aware nav, mounted beside the old one until verified. */}
+          <PreviewSceneNav />
           {/* CEO-approved journey: Hero / Two Ways → How to Play → Competition → Physical Cards → Final CTA */}
           <main>
             <Hero />
