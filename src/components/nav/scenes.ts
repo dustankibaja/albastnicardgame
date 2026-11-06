@@ -1,21 +1,33 @@
 /**
- * NAVIGATION SCENES.
+ * NAVIGATION SCENES — the single source of truth for the navigation.
  *
- * Each page section that changes the navigation's surface declares its theme
- * explicitly. The theme is NEVER inferred from computed background colour:
- * #tournaments is a blue→night gradient, so a colour sample would misread it.
+ * Each entry is a page section that starts a new navigation chapter. A chapter
+ * begins when that section's top edge reaches the bottom of the navigation bar.
+ * Theme and active destination are resolved together from this table, so they
+ * can never disagree.
+ *
+ * Declared explicitly; never inferred from computed background colour
+ * (#tournaments is a blue→night gradient).
  */
 export type NavTheme = "hero" | "paper" | "night";
 
-/** Section id → theme. Sections not listed inherit the previous theme. */
-export const navSceneThemes: Record<string, NavTheme> = {
-  top: "hero",
-  play: "paper",
-  "how-to-play": "paper",
-  tournaments: "night",
-  cards: "paper",
-  "final-title": "night",
+export type NavScene = {
+  /** DOM id of the section that begins the chapter. */
+  section: string;
+  theme: NavTheme;
+  /** Navigation destination that is current in this chapter (null = none). */
+  active: string | null;
 };
+
+/** Ordered by document position. The LAST chapter whose section has reached the bar wins. */
+export const navScenes: NavScene[] = [
+  { section: "top", theme: "hero", active: null },
+  { section: "play", theme: "paper", active: "play" },
+  { section: "how-to-play", theme: "paper", active: "how-to-play" },
+  { section: "tournaments", theme: "night", active: "tournaments" },
+  { section: "cards", theme: "paper", active: "cards" },
+  { section: "finale", theme: "night", active: null },
+];
 
 /** Ordered anchors for the navigation (labels come from i18n). */
 export const navAnchors = [

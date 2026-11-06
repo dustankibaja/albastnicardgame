@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { navAnchors, navSceneThemes, type NavTheme } from "./scenes";
-import { useActiveSection } from "@/hooks/use-active-scene";
+import { navAnchors, navScenes, type NavScene, type NavTheme } from "./scenes";
 import { useI18n } from "@/lib/i18n";
 import { DownloadButton } from "@/components/site/DownloadButton";
 import { LanguageToggle } from "@/components/site/LanguageToggle";
@@ -10,41 +9,13 @@ import { LanguageToggle } from "@/components/site/LanguageToggle";
  * attribute; it is never unmounted or re-created per scene.
  * (M1 step 1: smallest version — theme + active section, no marker yet.)
  */
-/*
- * KNOWN TRADE-OFF (M1): "Physical cards" becomes active only once its section
- * reaches the top of the viewport. The Competition section is ~2000px tall, so
- * the cards section is a long way below the bar for most of the page; it is
- * active for the final stretch and at the end of the page (verified). The
- * alternative — activating early — would highlight a section the visitor has
- * not reached yet, which is worse. Revisit if the Competition scene is split.
- *
- * The scene changes when a section's TOP edge reaches the nav's bottom edge,
- * which is when a visitor perceives "I've arrived here". We take the LAST
- * section whose top has passed that line, so the boundary is crossed exactly
- * once, in document order, regardless of section heights or gaps between them.
- */
-function sceneAt(els: HTMLElement[]): string | null {
-  // A section counts as arrived once its top is within the navigation's own
-  // height of the viewport top. The page has an ~80px separator between
-  // sections; a threshold of the nav height absorbs it exactly, while a section
-  // still well below the bar (e.g. the next section, a full viewport away) cannot win.
-  const navH = document.querySelector(".scene-nav")?.getBoundingClientRect().height ?? 76;
-  const line = navH + 8;
-  let winner: string | null = null;
-  for (const e of els) {
-    if (e.getBoundingClientRect().top <= line) winner = e.id;
-  }
-  return winner;
-}
-
 export function SceneNav() {
   const { t } = useI18n();
   const [theme, setTheme] = useState<NavTheme>("hero");
   const navHeight = 64;
-  const active = useActiveSection(
-    navAnchors.map((a) => a.id),
-    navHeight,
-  );
+  // The active destination is resolved by the SAME sentinel event as the theme
+  // (see the scene effect below): one source, so the link and the scene can never disagree.
+  const [active, setActive] = useState<string | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const linksRef = useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -74,32 +45,39 @@ export function SceneNav() {
     return () => window.removeEventListener("resize", measure);
   }, [active, t]);
 
-  // The scene is decided by the section at the top of the viewport, not by the
-  // last nav link clicked. Scene sections are observed directly.
+  // Scene source of truth: the navigation scene table. One passive scroll listener
+  // schedules at most ONE measurement per frame, and only while scrolling. A chapter
+  // begins when its section's top edge reaches the bottom of the bar.
   useEffect(() => {
-    if (typeof IntersectionObserver === "undefined") return;
-    const ids = Object.keys(navSceneThemes);
-    const els = ids.map((id) => document.getElementById(id)).filter((e): e is HTMLElement => !!e);
-    const top = new Map<string, number>();
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) top.set(e.target.id, e.boundingClientRect.top);
-        // The scene is the section that spans the nav band (top ≤ band ≤ bottom).
-        const winner = sceneAt(els);
-        if (winner) setTheme(navSceneThemes[winner]!);
-      },
-      { rootMargin: "0px", threshold: [0, 1] },
-    );
-    els.forEach((e) => obs.observe(e));
+    const entries = navScenes
+      .map((sc) => ({ sc, el: document.getElementById(sc.section) }))
+      .filter((x): x is { sc: NavScene; el: HTMLElement } => x.el !== null);
+    if (entries.length === 0) return;
+    const navEl = navRef.current;
+    let pending = 0;
+    let lastKey = "";
+    const measure = () => {
+      pending = 0;
+      const line = navEl?.getBoundingClientRect().bottom ?? 76;
+      let hit: NavScene | null = null;
+      for (const { sc, el } of entries) {
+        if (el.getBoundingClientRect().top <= line) hit = sc;
+      }
+      if (!hit) return;
+      const key = `${hit.theme}|${hit.active ?? ""}`;
+      if (key === lastKey) return; // no state write unless the chapter changed
+      lastKey = key;
+      setTheme(hit.theme);
+      setActive(hit.active);
+    };
     const onScroll = () => {
-      const winner = sceneAt(els);
-      if (winner) setTheme(navSceneThemes[winner]!);
+      if (!pending) pending = requestAnimationFrame(measure);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    measure();
     return () => {
-      obs.disconnect();
       window.removeEventListener("scroll", onScroll);
+      if (pending) cancelAnimationFrame(pending);
     };
   }, []);
 

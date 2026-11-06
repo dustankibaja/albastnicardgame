@@ -695,3 +695,16 @@
     animation: none;
   }
 }
+
+/* Scene sentinels: zero-size markers for the navigation's handover points. */
+.scene-sentinel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  clip-path: inset(50%);
+}

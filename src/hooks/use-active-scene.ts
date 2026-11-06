@@ -15,9 +15,7 @@ export function useActiveSection(ids: readonly string[], navHeightPx: number) {
 
   useEffect(() => {
     if (typeof IntersectionObserver === "undefined") return;
-    const els = ids
-      .map((id) => document.getElementById(id))
-      .filter((e): e is HTMLElement => !!e);
+    const els = ids.map((id) => document.getElementById(id)).filter((e): e is HTMLElement => !!e);
     if (els.length === 0) return;
 
     // The band: from just under the nav bar to ~40% of the viewport height.

@@ -18,6 +18,7 @@ export function FinalCTA() {
   return (
     <section
       ref={ref}
+      id="finale"
       aria-labelledby="final-title"
       className="on-dark relative z-10 overflow-x-clip bg-alba-ink text-alba-paper"
     >
