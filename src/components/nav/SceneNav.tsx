@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { navAnchors, navSceneThemes, type NavTheme } from "./scenes";
 import { useActiveSection } from "@/hooks/use-active-scene";
 import { useI18n } from "@/lib/i18n";
+import { DownloadButton } from "@/components/site/DownloadButton";
+import { LanguageToggle } from "@/components/site/LanguageToggle";
 
 /*
  * ONE navigation object. It adapts to the scene by changing its theme
@@ -115,6 +117,12 @@ export function SceneNav() {
           {/* ONE 11-point marker, shared by every link. It SLIDEs to the active item. */}
           <span className="scene-nav-marker" aria-hidden="true" style={markerStyle} />
         </nav>
+        <div className="scene-nav-tools">
+          <LanguageToggle className="scene-nav-lang" />
+          <DownloadButton size="sm" className="scene-nav-cta">
+            {t("cta.app")}
+          </DownloadButton>
+        </div>
       </div>
     </header>
   );

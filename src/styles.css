@@ -504,3 +504,37 @@
     transition: none;
   }
 }
+.scene-nav-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: none;
+}
+
+/* Language control belongs to the navigation object. The ACTIVE option is a
+   solid pill whose text is the scene's background (always the opposite of
+   the scene foreground), so it is never same-colour-on-same-colour. */
+.scene-nav [role="group"][aria-label] {
+  border-color: color-mix(in oklab, var(--nav-fg) 40%, transparent);
+  color: var(--nav-fg);
+}
+.scene-nav [role="group"][aria-label] button {
+  color: var(--nav-fg);
+  opacity: 0.78;
+}
+.scene-nav [role="group"][aria-label] button[aria-pressed="true"] {
+  background-color: var(--nav-fg);
+  color: var(--nav-pill-ink);
+  opacity: 1;
+}
+/* hero: white pill, blue ink  |  paper: ink pill, white ink  |  night: white pill, ink ink */
+.scene-nav[data-scene="hero"]  { --nav-pill-ink: var(--alba-blue); }
+.scene-nav[data-scene="paper"] { --nav-pill-ink: var(--alba-paper); }
+.scene-nav[data-scene="night"] { --nav-pill-ink: var(--alba-ink); }
+.scene-nav [role="group"][aria-label] button[aria-pressed="false"]:hover {
+  opacity: 1;
+}
+.scene-nav [role="group"][aria-label] button:focus-visible {
+  outline: 3px solid var(--focus, var(--alba-blue));
+  outline-offset: 2px;
+}
