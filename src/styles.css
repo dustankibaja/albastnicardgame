@@ -538,3 +538,160 @@
   outline: 3px solid var(--focus, var(--alba-blue));
   outline-offset: 2px;
 }
+
+/* ============================================================
+ * M1 — MOBILE NAVIGATION (SceneNav) — compact bar trigger + full-screen menu.
+ * The menu is an Albastini scene: deep blue field, editorial links, one marker.
+ * Desktop never shows the trigger or the menu.
+ * ============================================================ */
+.scene-nav-trigger {
+  display: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.scene-nav-trigger svg,
+.scene-menu-close svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+.scene-nav-trigger:focus-visible,
+.scene-menu-close:focus-visible,
+.scene-menu-link:focus-visible,
+.scene-menu .btn-edge:focus-visible {
+  outline: 3px solid var(--focus, var(--alba-gold));
+  outline-offset: 3px;
+}
+@media (max-width: 1023px) {
+  .scene-nav-links { display: none; }
+  .scene-nav-trigger { display: inline-flex; }
+  .scene-nav-tools .scene-nav-lang { display: none; }
+  .scene-nav-tools .scene-nav-cta { display: none; }
+}
+
+/* The overlay: fixed full screen, Albastini blue, sits above the bar. */
+.scene-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  background: var(--alba-blue);
+  color: var(--alba-paper);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation: menu-in var(--dur-std) var(--ease-std) both;
+}
+.scene-menu-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4.5rem;
+}
+.scene-menu-top img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.scene-menu-close {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: inherit;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+.scene-menu-links {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(1rem, 4vh, 2.5rem);
+}
+.scene-menu-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(0.35rem, 1.6vh, 0.9rem) 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 62%;
+  /* scales with width AND height, so a short screen keeps the CTA on screen */
+  font-size: clamp(2rem, min(12vw, 8.5vh), 4.2rem);
+  line-height: 0.92;
+  text-transform: uppercase;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgb(255 255 255 / 0.2);
+  animation: menu-link-in var(--dur-settle) var(--ease-out) both;
+}
+.scene-menu-link[aria-current="true"] {
+  color: var(--alba-gold);
+}
+/* The 11-point marker: active item only (same object as the bar's marker). */
+.scene-menu-mark {
+  display: none;
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  color: var(--alba-gold);
+}
+.scene-menu-mark svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.scene-menu-link[aria-current="true"] .scene-menu-mark {
+  display: block;
+}
+.scene-menu-foot {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 2.2vh, 1.25rem);
+  margin-top: auto;
+  padding-top: clamp(1rem, 3vh, 2rem);
+  padding-bottom: calc(clamp(1rem, 3vh, 2.5rem) + env(safe-area-inset-bottom, 0px));
+}
+.scene-menu-lang {
+  align-self: flex-start;
+}
+.scene-menu-cta {
+  width: 100%;
+  justify-content: space-between;
+  overflow: visible;
+}
+.scene-menu-phrase {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  color: var(--alba-gold);
+}
+@keyframes menu-in {
+  from { opacity: 0; transform: translate3d(0, -10px, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes menu-link-in {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-menu,
+  .scene-menu-link {
+    animation: none;
+  }
+}

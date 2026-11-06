@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { navAnchors, navSceneThemes, type NavTheme } from "./scenes";
 import { useActiveSection } from "@/hooks/use-active-scene";
 import { useI18n } from "@/lib/i18n";
@@ -41,9 +41,19 @@ export function SceneNav() {
   const { t } = useI18n();
   const [theme, setTheme] = useState<NavTheme>("hero");
   const navHeight = 64;
-  const active = useActiveSection(navAnchors.map((a) => a.id), navHeight);
+  const active = useActiveSection(
+    navAnchors.map((a) => a.id),
+    navHeight,
+  );
   const navRef = useRef<HTMLElement>(null);
   const linksRef = useRef<HTMLElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeMenu = useCallback((restoreFocus: boolean) => {
+    setMenuOpen(false);
+    if (restoreFocus) requestAnimationFrame(() => triggerRef.current?.focus());
+  }, []);
   const [markerX, setMarkerX] = useState<number | null>(null);
   const markerStyle = markerX == null ? { opacity: 0 } : { transform: `translateX(${markerX}px)` };
 
@@ -93,6 +103,43 @@ export function SceneNav() {
     };
   }, []);
 
+  // While the menu is open: focus enters it, Tab/Shift+Tab stay inside it,
+  // Escape closes it, and the page behind does not scroll.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const panel = panelRef.current;
+    const items = () =>
+      Array.from(panel?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])") ?? []);
+    items()[0]?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeMenu(true);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const list = items();
+      const first = list[0];
+      const last = list[list.length - 1];
+      if (!first || !last) return;
+      const current = document.activeElement;
+      if (e.shiftKey && (current === first || !panel?.contains(current))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (current === last || !panel?.contains(current))) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen, closeMenu]);
+
   return (
     <header
       ref={navRef as never}
@@ -122,8 +169,72 @@ export function SceneNav() {
           <DownloadButton size="sm" className="scene-nav-cta">
             {t("cta.app")}
           </DownloadButton>
+          <button
+            ref={triggerRef}
+            type="button"
+            className="scene-nav-trigger"
+            aria-label={t("nav.menu")}
+            aria-expanded={menuOpen}
+            aria-controls="scene-menu"
+            onClick={() => setMenuOpen(true)}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 8h16M4 16h16" />
+            </svg>
+          </button>
         </div>
       </div>
+      {menuOpen ? (
+        <div
+          id="scene-menu"
+          ref={panelRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={t("nav.menuTitle")}
+          data-scene={theme}
+          className="scene-menu"
+        >
+          <div className="scene-menu-top shell">
+            <img src="/favicon.png" alt={t("nav.home")} width="40" height="40" />
+            <button
+              type="button"
+              className="scene-menu-close"
+              aria-label={t("nav.closeMenu")}
+              onClick={() => closeMenu(true)}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
+          <nav aria-label={t("nav.primary")} className="scene-menu-links shell">
+            {navAnchors.map((a) => (
+              <a
+                key={a.id}
+                href={`#${a.id}`}
+                aria-current={active === a.id ? "true" : undefined}
+                className="scene-menu-link"
+                onClick={() => closeMenu(false)}
+              >
+                <span className="scene-menu-mark" aria-hidden="true">
+                  <svg viewBox="0 0 40 40">
+                    <circle cx="20" cy="20" r="18.6" />
+                    <circle cx="20" cy="20" r="12.6" />
+                  </svg>
+                </span>
+                {t(a.key)}
+              </a>
+            ))}
+          </nav>
+          <div className="scene-menu-foot shell">
+            <LanguageToggle className="scene-menu-lang" onDark />
+            <DownloadButton size="lg" className="scene-menu-cta" onClick={() => closeMenu(false)}>
+              {t("cta.app")}
+            </DownloadButton>
+            <p className="scene-menu-phrase">{t("brand.tagline")}</p>
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 }
