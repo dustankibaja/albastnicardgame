@@ -312,3 +312,116 @@
     transition: none;
   }
 }
+
+/* ============================================================
+ * M1 — CARD-EDGE BUTTON (AlbaButton.tsx)
+ * One silhouette, drawn as a background SVG on the button itself:
+ *   - body: 12px card-edge corners, ONE index-corner cut (top-right)
+ *   - keyline: the SAME silhouette, drawn 1.5px inside, in ink/current colour
+ * No pseudo-element masks: the fill/keyline/cut are one path, rendered by the
+ * browser as a plain background image.
+ * ============================================================ */
+.btn-edge {
+  --k: 1.5px;
+  --cut: 16px;
+  position: relative;
+  isolation: isolate;
+  border-radius: 0;
+  overflow: visible; /* the label must never be clipped; the ring is drawn by background-image */
+  background-color: transparent;
+  /* outer keyline shape (ink) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill-rule='evenodd' fill='%23000' d='M12 0H84L100 16V88Q100 100 88 100H12Q0 100 0 88V12Q0 0 12 0ZM12 2.7H83.2L97.4 16.8V87.6Q97.4 97.3 88 97.3H12Q2.6 97.3 2.6 88V12Q2.6 2.7 12 2.7Z'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.btn-edge.btn-primary {
+  color: var(--alba-ink);
+  background-color: var(--alba-gold);
+}
+.btn-edge.btn-outline {
+  color: currentColor;
+  background-color: transparent;
+}
+/* body fill: the inner area of the ring (the keyline is the ring itself) */
+.btn-edge > .btn-fill {
+  position: absolute;
+  inset: var(--k);
+  z-index: 0;
+  pointer-events: none;
+  background: var(--btn-bg, var(--alba-gold));
+  transform-origin: 0 50%;
+  clip-path: polygon(
+    10.5px 0, calc(100% - var(--cut) + 1.5px) 0, 100% calc(var(--cut) - 1.5px),
+    100% calc(100% - 10.5px), calc(100% - 10.5px) 100%, 10.5px 100%, 0 calc(100% - 10.5px), 0 10.5px
+  );
+}
+.btn-edge.btn-primary { --btn-bg: var(--alba-gold); }
+.btn-edge.btn-outline { --btn-bg: transparent; }
+.btn-edge > .btn-label,
+.btn-edge > .btn-chip {
+  position: relative;
+  z-index: 1;
+}
+.btn-label {
+  transition: transform var(--dur-fast) var(--ease-std);
+}
+.btn-chip {
+  position: relative;
+  flex: none;
+  width: var(--chip, 2.4rem);
+  height: var(--chip, 2.4rem);
+  display: grid;
+  place-items: center;
+  transition: transform var(--dur-std) var(--ease-out);
+}
+.btn-chip-disc,
+.btn-chip-arrow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.btn-chip-disc circle:first-child { fill: var(--alba-ink); }
+.btn-chip-disc[data-on="outline"] circle:first-child { fill: var(--alba-gold); }
+.btn-chip-ring { fill: none; stroke: var(--alba-gold); stroke-width: 2.2; stroke-dasharray: 4.1 3.5; }
+.btn-chip-disc[data-on="outline"] .btn-chip-ring { stroke: var(--alba-ink); }
+.btn-chip-arrow {
+  fill: none;
+  stroke: var(--alba-gold);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  inset: 25%;
+  width: 50%;
+  height: 50%;
+}
+.btn-edge.btn-outline .btn-chip-arrow { stroke: var(--alba-ink); }
+
+/* The fill deals across the body on hover — fine pointers only. */
+.btn-edge > .btn-fill { transform: scaleX(0); transition: transform var(--dur-std) var(--ease-out); }
+.btn-edge.btn-primary > .btn-fill { background: var(--alba-gold); }
+@media (hover: hover) and (pointer: fine) {
+  .btn-edge:hover > .btn-fill { transform: scaleX(1); }
+  .btn-edge:hover > .btn-label { transform: translateX(3px); }
+  .btn-edge:hover > .btn-chip { transform: translateX(4px) rotate(-12deg); }
+}
+/* Pressed: 1px compression + inner shadow. */
+.btn-edge:active { transform: translateY(1px); }
+.btn-edge:active > .btn-chip { transform: translateX(2px) rotate(-6deg); }
+/* Disabled: dashed keyline, no fill. */
+.btn-edge:disabled { opacity: 0.45; }
+.btn-edge:disabled > .btn-fill { display: none; }
+/* Focus: scene-aware ring. */
+.btn-edge:focus-visible { outline: 3px solid var(--focus, var(--alba-blue)); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-edge > .btn-fill,
+  .btn-label,
+  .btn-chip { transition: none !important; }
+  .btn-edge:hover > .btn-fill { transform: scaleX(0); }
+  .btn-edge:hover > .btn-label,
+  .btn-edge:hover > .btn-chip,
+  .btn-edge:active > .btn-chip,
+  .btn-edge:active { transform: none; }
+}
