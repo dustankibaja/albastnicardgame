@@ -1943,3 +1943,22 @@
     font-size: clamp(1.4rem, 5.5vh, 2.4rem) !important;
   }
 }
+
+/* M5 — LARGE DESKTOP HERO (≥2200px only). The headline stops growing at 132px on
+   lg screens; on very wide displays it lost authority. This bounded step restores
+   its weight. 1440 and 1920 are unchanged. */
+@media (min-width: 2200px) {
+  .hero-title-lines {
+    font-size: 10.25rem !important;
+  }
+  .hero-title-sub {
+    font-size: 4.5rem !important;
+  }
+}
+
+/* M5 — TYPOGRAPHY. Running copy avoids single-word last lines (widows). Display
+   headlines keep their deliberate line breaks. */
+p,
+li {
+  text-wrap: pretty;
+}
