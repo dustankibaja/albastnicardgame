@@ -132,6 +132,15 @@
   --dur-enter: 650ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-std: cubic-bezier(0.2, 0, 0, 1);
+  /* M1 motion verbs. Each has a physically distinct character. */
+  --dur-deal: 560ms; /* DEAL   fast start, controlled deceleration */
+  --dur-turn: 620ms; /* TURN   weighted perspective rotation      */
+  --dur-slide: 340ms; /* SLIDE  controlled mechanical travel        */
+  --dur-settle: 260ms; /* SETTLE tiny physical correction           */
+  --ease-deal: cubic-bezier(0.12, 0.9, 0.2, 1); /* quick launch, long soft landing */
+  --ease-turn: cubic-bezier(0.3, 0.75, 0.15, 1); /* weight: slow lift, soft land    */
+  --ease-slide: cubic-bezier(0.25, 0.1, 0.25, 1); /* even, mechanical, no overshoot  */
+  --ease-settle: cubic-bezier(0.22, 0.61, 0.36, 1); /* gentle rest, no bounce          */
 }
 
 /*
@@ -311,4 +320,1645 @@
     transform: none;
     transition: none;
   }
+}
+
+/* ============================================================
+ * M1 — CARD-EDGE BUTTON (AlbaButton.tsx)
+ * One silhouette, drawn as a background SVG on the button itself:
+ *   - body: 12px card-edge corners, ONE index-corner cut (top-right)
+ *   - keyline: the SAME silhouette, drawn 1.5px inside, in ink/current colour
+ * No pseudo-element masks: the fill/keyline/cut are one path, rendered by the
+ * browser as a plain background image.
+ * ============================================================ */
+.btn-edge {
+  --k: 1.5px;
+  --cut: 16px;
+  position: relative;
+  isolation: isolate;
+  border-radius: 0;
+  overflow: visible; /* the label must never be clipped; the ring is drawn by background-image */
+  background-color: transparent;
+  /* outer keyline shape (ink) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill-rule='evenodd' fill='%23000' d='M12 0H84L100 16V88Q100 100 88 100H12Q0 100 0 88V12Q0 0 12 0ZM12 2.7H83.2L97.4 16.8V87.6Q97.4 97.3 88 97.3H12Q2.6 97.3 2.6 88V12Q2.6 2.7 12 2.7Z'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.btn-edge.btn-primary {
+  color: var(--alba-ink);
+  background-color: var(--alba-gold);
+}
+.btn-edge.btn-outline {
+  color: currentColor;
+  background-color: transparent;
+}
+/* body fill: the inner area of the ring (the keyline is the ring itself) */
+.btn-edge > .btn-fill {
+  position: absolute;
+  inset: var(--k);
+  z-index: 0;
+  pointer-events: none;
+  background: var(--btn-bg, var(--alba-gold));
+  transform-origin: 0 50%;
+  clip-path: polygon(
+    10.5px 0,
+    calc(100% - var(--cut) + 1.5px) 0,
+    100% calc(var(--cut) - 1.5px),
+    100% calc(100% - 10.5px),
+    calc(100% - 10.5px) 100%,
+    10.5px 100%,
+    0 calc(100% - 10.5px),
+    0 10.5px
+  );
+}
+.btn-edge.btn-primary {
+  --btn-bg: var(--alba-gold);
+}
+.btn-edge.btn-outline {
+  --btn-bg: transparent;
+}
+.btn-edge > .btn-label,
+.btn-edge > .btn-chip {
+  position: relative;
+  z-index: 1;
+}
+.btn-label {
+  transition: transform var(--dur-fast) var(--ease-std);
+}
+.btn-chip {
+  position: relative;
+  flex: none;
+  width: var(--chip, 2.4rem);
+  height: var(--chip, 2.4rem);
+  display: grid;
+  place-items: center;
+  transition: transform var(--dur-std) var(--ease-out);
+}
+.btn-chip-disc,
+.btn-chip-arrow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.btn-chip-disc circle:first-child {
+  fill: var(--alba-ink);
+}
+.btn-chip-disc[data-on="outline"] circle:first-child {
+  fill: var(--alba-gold);
+}
+.btn-chip-ring {
+  fill: none;
+  stroke: var(--alba-gold);
+  stroke-width: 2.2;
+  stroke-dasharray: 4.1 3.5;
+}
+.btn-chip-disc[data-on="outline"] .btn-chip-ring {
+  stroke: var(--alba-ink);
+}
+.btn-chip-arrow {
+  fill: none;
+  stroke: var(--alba-gold);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  inset: 25%;
+  width: 50%;
+  height: 50%;
+}
+.btn-edge.btn-outline .btn-chip-arrow {
+  stroke: var(--alba-ink);
+}
+
+/* The fill deals across the body on hover — fine pointers only. */
+.btn-edge > .btn-fill {
+  transform: scaleX(0);
+  transition: transform var(--dur-std) var(--ease-out);
+}
+.btn-edge.btn-primary > .btn-fill {
+  background: var(--alba-gold);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-edge:hover > .btn-fill {
+    transform: scaleX(1);
+  }
+  .btn-edge:hover > .btn-label {
+    transform: translateX(3px);
+  }
+  .btn-edge:hover > .btn-chip {
+    transform: translateX(4px) rotate(-12deg);
+  }
+}
+/* Pressed: 1px compression + inner shadow. */
+.btn-edge:active {
+  transform: translateY(1px);
+}
+.btn-edge:active > .btn-chip {
+  transform: translateX(2px) rotate(-6deg);
+}
+/* Disabled: dashed keyline, no fill. */
+.btn-edge:disabled {
+  opacity: 0.45;
+}
+.btn-edge:disabled > .btn-fill {
+  display: none;
+}
+/* Focus: scene-aware ring. */
+.btn-edge:focus-visible {
+  outline: 3px solid var(--focus, var(--alba-blue));
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-edge > .btn-fill,
+  .btn-label,
+  .btn-chip {
+    transition: none !important;
+  }
+  .btn-edge:hover > .btn-fill {
+    transform: scaleX(0);
+  }
+  .btn-edge:hover > .btn-label,
+  .btn-edge:hover > .btn-chip,
+  .btn-edge:active > .btn-chip,
+  .btn-edge:active {
+    transform: none;
+  }
+}
+
+/* ============================================================
+ * M1 — SCENE-AWARE NAVIGATION (SceneNav.tsx) — step 1: theme + active
+ * One object; the theme is a data attribute, never a remount.
+ * ============================================================ */
+.scene-nav {
+  --nav-fg: var(--alba-paper);
+  --nav-bg: transparent;
+  --nav-edge: rgb(255 255 255 / 0.32);
+  color: var(--nav-fg);
+  background-color: var(--nav-bg);
+  box-shadow: inset 0 -1px 0 var(--nav-edge);
+  transition:
+    background-color var(--dur-std) var(--ease-out),
+    color var(--dur-std) var(--ease-out),
+    box-shadow var(--dur-std) var(--ease-out);
+}
+.scene-nav[data-scene="paper"] {
+  --nav-fg: var(--alba-ink);
+  --nav-bg: var(--alba-paper);
+  --nav-edge: var(--alba-ink);
+}
+.scene-nav[data-scene="night"] {
+  --nav-fg: var(--alba-paper);
+  --nav-bg: color-mix(in oklab, var(--alba-blue) 42%, var(--alba-ink));
+  --nav-edge: rgb(255 255 255 / 0.28);
+}
+.scene-nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  height: 4rem;
+  margin-top: 0.75rem;
+}
+.scene-nav-logo img {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+}
+.scene-nav-links {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+.scene-nav-link {
+  padding: 0.5rem 0.75rem;
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+/* The active signal is scene-aware: yellow where it has contrast (blue, night),
+   brand blue on paper (yellow on white is 1.3:1 and unreadable). */
+.scene-nav-link[aria-current="true"] {
+  color: var(--nav-active, var(--alba-gold));
+}
+.scene-nav[data-scene="paper"] {
+  --nav-active: var(--alba-blue);
+}
+.scene-nav-link:focus-visible {
+  outline: 3px solid var(--focus, var(--alba-blue));
+  outline-offset: 3px;
+}
+.scene-nav-links {
+  position: relative;
+}
+/* 11-point marker: a 10px disc in the scene's active colour, SLIDE to the active link. */
+.scene-nav-marker {
+  position: absolute;
+  left: 0;
+  bottom: -0.2rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--nav-active, var(--alba-gold));
+  transition:
+    transform var(--dur-std) var(--ease-std),
+    opacity var(--dur-fast) var(--ease-std);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-nav-marker {
+    transition: none;
+  }
+}
+.scene-nav-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: none;
+}
+
+/* Language control belongs to the navigation object. The ACTIVE option is a
+   solid pill whose text is the scene's background (always the opposite of
+   the scene foreground), so it is never same-colour-on-same-colour. */
+.scene-nav [role="group"][aria-label] {
+  border-color: color-mix(in oklab, var(--nav-fg) 40%, transparent);
+  color: var(--nav-fg);
+}
+.scene-nav [role="group"][aria-label] button {
+  color: var(--nav-fg);
+  opacity: 0.78;
+}
+.scene-nav [role="group"][aria-label] button[aria-pressed="true"] {
+  background-color: var(--nav-fg);
+  color: var(--nav-pill-ink);
+  opacity: 1;
+}
+/* hero: white pill, blue ink  |  paper: ink pill, white ink  |  night: white pill, ink ink */
+.scene-nav[data-scene="hero"] {
+  --nav-pill-ink: var(--alba-blue);
+}
+.scene-nav[data-scene="paper"] {
+  --nav-pill-ink: var(--alba-paper);
+}
+.scene-nav[data-scene="night"] {
+  --nav-pill-ink: var(--alba-ink);
+}
+.scene-nav [role="group"][aria-label] button[aria-pressed="false"]:hover {
+  opacity: 1;
+}
+.scene-nav [role="group"][aria-label] button:focus-visible {
+  outline: 3px solid var(--focus, var(--alba-blue));
+  outline-offset: 2px;
+}
+
+/* ============================================================
+ * M1 — MOBILE NAVIGATION (SceneNav) — compact bar trigger + full-screen menu.
+ * The menu is an Albastini scene: deep blue field, editorial links, one marker.
+ * Desktop never shows the trigger or the menu.
+ * ============================================================ */
+.scene-nav-trigger {
+  display: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.scene-nav-trigger svg,
+.scene-menu-close svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+.scene-nav-trigger:focus-visible,
+.scene-menu-close:focus-visible,
+.scene-menu-link:focus-visible,
+.scene-menu .btn-edge:focus-visible {
+  outline: 3px solid var(--focus, var(--alba-gold));
+  outline-offset: 3px;
+}
+@media (max-width: 1023px) {
+  .scene-nav-links {
+    display: none;
+  }
+  .scene-nav-trigger {
+    display: inline-flex;
+  }
+  .scene-nav-tools .scene-nav-lang {
+    display: none;
+  }
+  .scene-nav-tools .scene-nav-cta {
+    display: none;
+  }
+}
+
+/* The overlay: fixed full screen, Albastini blue, sits above the bar. */
+.scene-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  background: var(--alba-blue);
+  color: var(--alba-paper);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation: menu-in var(--dur-std) var(--ease-std) both;
+}
+.scene-menu-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4.5rem;
+}
+.scene-menu-top img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.scene-menu-close {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: inherit;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+.scene-menu-links {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(1rem, 4vh, 2.5rem);
+}
+.scene-menu-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(0.35rem, 1.6vh, 0.9rem) 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 62%;
+  /* scales with width AND height, so a short screen keeps the CTA on screen */
+  font-size: clamp(2rem, min(12vw, 8.5vh), 4.2rem);
+  line-height: 0.92;
+  text-transform: uppercase;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgb(255 255 255 / 0.2);
+  animation: menu-link-in var(--dur-settle) var(--ease-settle) both;
+}
+.scene-menu-link[aria-current="true"] {
+  color: var(--alba-gold);
+}
+/* The 11-point marker: active item only (same object as the bar's marker). */
+.scene-menu-mark {
+  display: none;
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  color: var(--alba-gold);
+}
+.scene-menu-mark svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.scene-menu-link[aria-current="true"] .scene-menu-mark {
+  display: block;
+}
+.scene-menu-foot {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 2.2vh, 1.25rem);
+  margin-top: auto;
+  padding-top: clamp(1rem, 3vh, 2rem);
+  padding-bottom: calc(clamp(1rem, 3vh, 2.5rem) + env(safe-area-inset-bottom, 0px));
+}
+.scene-menu-lang {
+  align-self: flex-start;
+}
+.scene-menu-cta {
+  width: 100%;
+  justify-content: space-between;
+  overflow: visible;
+}
+.scene-menu-phrase {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  color: var(--alba-gold);
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes menu-link-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-menu,
+  .scene-menu-link {
+    animation: none;
+  }
+}
+
+/* Scene sentinels: zero-size markers for the navigation's handover points. */
+.scene-sentinel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  clip-path: inset(50%);
+}
+
+/* ============================================================
+ * M1 — NUMERIC GRAMMAR
+ * One family (Archivo Display, tabular figures). Roles, not sizes:
+ *   num-points   11  — points / token language (the chip's number)
+ *   num-event    27  — tournament / environmental number (outline)
+ *   num-rank     01  — placement / collector index (outline, condensed)
+ *   num-prize    130,000 — prize, tabular, TSH secondary
+ *   num-date     12 DEC 2026 — event date, separators are chips
+ * Outline = environment (large, decorative, aria-hidden by its parent).
+ * Filled   = information (the value a person reads).
+ * ============================================================ */
+@utility num-base {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 70%;
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings:
+    "tnum" 1,
+    "lnum" 1;
+}
+/* Filled (information): solid ink/paper, read as a value. */
+@utility num-filled {
+  color: currentColor;
+}
+/* Outlined (environment): the number is architecture, not text. */
+@utility num-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px currentColor;
+}
+@utility num-points {
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  line-height: 1;
+  font-stretch: 100%;
+}
+@utility num-event {
+  font-size: clamp(7rem, 22vw, 17rem);
+  line-height: 0.74;
+}
+@utility num-rank {
+  font-size: clamp(5rem, 14vw, 10rem);
+  line-height: 0.74;
+  font-stretch: 62%;
+}
+@utility num-prize {
+  font-size: clamp(2.25rem, 4.8vw, 3.75rem);
+  line-height: 0.95;
+  font-stretch: 78%;
+}
+/* TSH sits beside the figure, small, in the metadata voice. */
+@utility num-prize-unit {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-stretch: 100%;
+  font-size: 0.42em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-inline-start: 0.35em;
+  vertical-align: baseline;
+}
+@utility num-date {
+  font-size: clamp(1.4rem, 3.4vw, 2.6rem);
+  line-height: 1;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+/* Separators in a date are the 11-point chip, not a slash or a dot. */
+.num-sep {
+  display: inline-block;
+  width: 0.42em;
+  height: 0.42em;
+  margin-inline: 0.22em;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--alba-gold);
+  box-shadow: inset 0 0 0 0.08em var(--alba-ink);
+}
+
+/* ============================================================
+ * M1 — CHAMPION FRAME (ChampionFrame.tsx)
+ * Shared geometry for every champion. Only the photograph changes.
+ * ============================================================ */
+.champion {
+  container-type: inline-size;
+}
+.champion-rank {
+  position: absolute;
+  left: -0.06em;
+  bottom: 18%;
+  z-index: 1;
+  pointer-events: none;
+}
+.champion-rank .num-base {
+  -webkit-text-stroke-color: var(--alba-gold);
+  font-size: 62cqi;
+}
+.champion-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+/* Cut-out: the figure stands in the frame, shoulders past the lower edge. */
+.champion-photo--portrait-cutout {
+  inset: 9% 6% 0;
+}
+/* Editorial: the whole scene, keyed into the arena at its base. */
+.champion-photo--editorial-photo {
+  inset: 0 0 26% 0;
+  mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+}
+.champion-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 40%;
+  z-index: 3;
+}
+.champion-top {
+  position: absolute;
+  z-index: 4;
+  top: 1.1rem;
+  left: 1.3rem;
+  right: 1.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--alba-paper);
+}
+.champion-index {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+}
+.champion-index-num {
+  font-size: 1.15rem;
+  color: var(--alba-gold);
+}
+.champion-place {
+  position: absolute;
+  z-index: 5;
+  top: 4.2rem;
+  left: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.7rem 0.4rem 0.45rem;
+  border-radius: 8px;
+  background: var(--alba-gold);
+  color: var(--alba-ink);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 100%;
+  font-size: 0.78rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.champion-place-disc {
+  width: 0.95rem;
+  height: 0.95rem;
+  fill: var(--alba-ink);
+}
+.champion-plate {
+  position: absolute;
+  z-index: 6;
+  left: 1.3rem;
+  right: 1.3rem;
+  bottom: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0;
+}
+.champion-name {
+  font-size: clamp(2.2rem, 9.5cqi, 3.2rem);
+  line-height: 0.84;
+  color: var(--alba-paper);
+  white-space: nowrap;
+  /* No box change: a soft dark shadow keeps the lettering legible over light photo pixels. */
+  text-shadow:
+    0 1px 0 rgb(0 0 0 / 0.55),
+    0 0 14px rgb(0 0 0 / 0.55);
+}
+.champion-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+.champion-loc {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-stretch: 100%;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d6dcff;
+  max-width: 17ch;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.champion-meta .num-prize {
+  color: var(--alba-gold);
+  font-size: clamp(1.8rem, 9cqi, 2.4rem);
+}
+.champion-meta .num-prize-unit {
+  color: var(--alba-paper);
+}
+
+/* ============================================================
+ * M1 — MOTION PRIMITIVES
+ * Four reusable verbs. Each is a token pair (duration + easing)
+ * and a keyframe. Scene choreography will tune the values later.
+ * No overshoot, no spring, no bounce anywhere in the set.
+ * ============================================================ */
+@keyframes verb-deal {
+  from {
+    transform: translate3d(var(--deal-x, 0), var(--deal-y, 0), 0) rotate(var(--deal-r, 0deg));
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes verb-slide {
+  from {
+    transform: translate3d(var(--slide-from, -12px), 0, 0);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes verb-settle {
+  from {
+    transform: translate3d(0, var(--settle-from, 3px), 0);
+  }
+  to {
+    transform: none;
+  }
+}
+.verb-deal {
+  animation: verb-deal var(--dur-deal) var(--ease-deal) both;
+}
+.verb-slide {
+  animation: verb-slide var(--dur-slide) var(--ease-slide) both;
+}
+/* SETTLE runs AFTER another verb: delay it so it lands once the main move ends. */
+.verb-settle {
+  animation: verb-settle var(--dur-settle) var(--ease-settle) both;
+  animation-delay: var(--settle-delay, var(--dur-slide));
+}
+/* TURN is a property of a flip container, see the card primitive. */
+
+@media (prefers-reduced-motion: reduce) {
+  .verb-deal,
+  .verb-slide,
+  .verb-settle {
+    animation: none;
+  }
+}
+
+/* ============================================================
+ * M1 — CARD PRIMITIVE + TURN (Card.tsx)
+ * One box for both faces. The turn is rotateY inside it; neither face
+ * changes its own dimensions, so the card never changes apparent size.
+ * ============================================================ */
+.card-button {
+  --card-lift: 0px;
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transform: translate3d(0, var(--card-lift), 0);
+  transition: transform var(--dur-std) var(--ease-std);
+  -webkit-tap-highlight-color: transparent;
+}
+/* selection: a restrained lift and an ink keyline on the card edge */
+.card-button.card-selected {
+  --card-lift: -10px;
+}
+.card-button:focus-visible {
+  outline: 3px solid var(--alba-blue);
+  outline-offset: 4px;
+  border-radius: 10px;
+}
+/* The shared box: 2:3, the flip canvas. */
+.card-turn {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  transform-style: preserve-3d;
+  transition: transform var(--dur-turn) var(--ease-turn);
+}
+.card-turn--flipped {
+  transform: rotateY(180deg);
+}
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: block;
+}
+.card-face--back {
+  transform: rotateY(180deg);
+}
+.card-face .card-img,
+.card-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* A real perspective, not a flat cheat: set on the parent, not each card. */
+.card-button {
+  perspective: 1400px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-button,
+  .card-turn {
+    transition: none;
+  }
+  /* state still changes: the face swaps instantly, nothing travels */
+  .card-turn--flipped {
+    transform: none;
+  }
+  .card-face--back {
+    display: none;
+  }
+  .card-turn--flipped .card-face--front {
+    display: none;
+  }
+  .card-turn--flipped .card-face--back {
+    display: block;
+    transform: none;
+  }
+}
+
+/* ============================================================
+ * M2 — HERO DEAL. Each card leaves the deck at its own path and angle,
+ * then SETTLEs. Transform + opacity only. The outer .depth element keeps
+ * the parallax transform, so the two never fight.
+ * ============================================================ */
+@keyframes hero-deal {
+  /* The card is solid from its first frame: it moves into place, it does not materialise. */
+  0% {
+    opacity: 1;
+    transform: translate3d(var(--from-x), var(--from-y), 0) rotate(var(--from-r));
+  }
+  86% {
+    /* arrival: a little past rest while still travelling */
+    transform: translate3d(0, -2.5px, 0) rotate(0deg);
+  }
+  100% {
+    /* SETTLE: a tiny correction to rest, then still */
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 1;
+  }
+}
+.verb-deal-card {
+  animation: hero-deal 720ms var(--ease-deal) both;
+  animation-delay: var(--delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .verb-deal-card {
+    animation: none;
+  }
+}
+
+/* ============================================================
+ * M2 — HERO PHONE. The phone rises from behind the hand (SLIDE), then
+ * SETTLEs. It starts low and under the cards (lower z is set on the
+ * wrapper), so the cards are physically in front of it as it arrives.
+ * ============================================================ */
+@keyframes hero-phone {
+  /* Solid from the first frame. It starts a restrained distance from rest
+     (a slight shift down and in, the same scale), so it reads as one object
+     travelling into place, not one that changes size. */
+  0% {
+    opacity: 1;
+    transform: translate3d(8px, 18%, 0) rotate(5deg);
+  }
+  84% {
+    transform: translate3d(0, -1.5%, 0) rotate(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+.hero-phone-enter {
+  animation: hero-phone 820ms var(--ease-slide) both;
+  animation-delay: var(--delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-phone-enter {
+    animation: none;
+  }
+}
+
+/* ============================================================
+ * M2 — TABLE → SCREEN (TableToScreen.tsx)
+ * Progress --p (0…1) comes from scroll. Each rule maps a phase onto it.
+ * Transform and opacity only. Reverse scroll is exact: nothing is stateful.
+ *
+ * Phase windows (see TableToScreen.tsx): TABLE 0–.2 · ALIGN .2–.45 ·
+ * REVEAL .45–.6 · HAND-OFF .6–.8 · SCREEN .8–1.
+ * ============================================================ */
+.tts {
+  /* The scroll distance the chapter takes: about 1.6 screens of travel, not a long pin. */
+  height: 260svh;
+  --ease-tts: cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.tts--static {
+  height: auto;
+}
+.tts--static .tts-stage {
+  position: relative;
+  height: auto;
+  min-height: 90svh;
+}
+/* Phase helpers: a value ramps from 0 to 1 across a window of p. */
+.tts {
+  --w-align: clamp(0, (var(--p) - 0.2) / 0.25, 1);
+  --w-reveal: clamp(0, (var(--p) - 0.45) / 0.15, 1);
+  --w-handoff: clamp(0, (var(--p) - 0.6) / 0.2, 1);
+  --w-screen: clamp(0, (var(--p) - 0.8) / 0.2, 1);
+}
+.tts-table {
+  transform: scale(calc(1.04 - 0.02 * var(--p)));
+  transition: none;
+}
+.tts-shade {
+  background: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.86) 0%,
+    rgb(0 0 0 / 0.72) 55%,
+    rgb(0 0 0 / 0.42) 100%
+  );
+}
+
+/* TITLE: holds "FROM THE TABLE." first; the emphasis transfers to "TO THE SCREEN." */
+.tts-title {
+  top: calc(76px + 3vh);
+  z-index: 3;
+  text-shadow: 0 2px 18px rgb(0 0 0 / 0.5);
+}
+.tts-line--table {
+  opacity: calc(1 - 0.6 * var(--w-screen));
+  transform: translate3d(0, calc(-6px * var(--w-screen)), 0);
+}
+.tts-line--screen {
+  /* starts as a readable secondary line (never below ~0.7), and rises to full as the screen takes over */
+  opacity: calc(0.72 + 0.28 * clamp(0, (var(--p) - 0.35) / 0.35, 1));
+}
+
+/* CARDS: a fan on the table (TABLE), then closing into one deck (ALIGN), then
+   resting back/down as the phone takes over (HAND-OFF). --k is the card index (0…2). */
+.tts-deck {
+  left: 50%;
+  top: 56%;
+  width: 0;
+  height: 0;
+}
+.tts-card {
+  position: absolute;
+  width: min(30vw, 260px);
+  left: 0;
+  top: 0;
+  --fan-x: calc((var(--k) - 1) * 0.5 * min(30vw, 260px) * 1.25);
+  --fan-r: calc((var(--k) - 1) * 12deg);
+  --fan-y: calc(abs(var(--k) - 1) * 26px);
+  /* the deck: cards stack with a visible step (each card 9px up and 5px across
+     from the one below), so the lower edges read as a physical deck, not a pile */
+  /* Each card steps 14px across and 16px up from the one below. The step is
+     held (it does not shrink during REVEAL), so the deck keeps its thickness. */
+  --deck-x: calc(var(--k) * 14px - 14px);
+  --deck-y: calc(var(--k) * -16px + 16px);
+  transform: translate3d(
+      calc(
+        var(--fan-x) * (1 - var(--w-align)) + var(--deck-x) * var(--w-align) - 50% - 60px *
+          var(--w-screen)
+      ),
+      calc(
+        var(--fan-y) * (1 - var(--w-align)) + var(--deck-y) * var(--w-align) - 50% + 40px *
+          var(--w-handoff)
+      ),
+      0
+    )
+    rotate(calc(var(--fan-r) * (1 - var(--w-align)) + 1.4deg * var(--k) * var(--w-align)));
+  transition: none;
+  will-change: transform;
+}
+.tts-card-face {
+  box-shadow: 0 22px 36px -18px rgb(0 0 0 / 0.6);
+  border-radius: 7%;
+}
+
+/* PHONE: hidden behind the deck, rises (REVEAL), then slides forward (HAND-OFF)
+   and dominates (SCREEN). It is never removed from the stage. */
+.tts-phone {
+  left: 50%;
+  top: 56%;
+  width: min(34vw, 290px);
+  /* REVEAL: the phone rises from low behind the deck, so its upper screen shows
+     above and beside the top card. HAND-OFF: it comes forward and settles
+     centred in the scene (raised slightly from the previous resting height). */
+  transform: translate3d(
+    calc(-50% + 30% * (1 - var(--w-reveal)) + 14% * var(--w-handoff) + 10% * var(--w-screen)),
+    calc(-50% + 14% * (1 - var(--w-reveal)) - 22% * var(--w-handoff)),
+    0
+  );
+  /* Behind the deck while REVEAL is in progress; in front once the hand-off begins. */
+  z-index: 0;
+  opacity: clamp(0, (var(--p) - 0.35) / 0.15, 1);
+}
+.tts-card {
+  z-index: 1;
+}
+
+@media (min-width: 1024px) {
+  .tts-phone {
+    width: min(20vw, 300px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tts {
+    height: auto;
+  }
+  .tts-stage {
+    position: relative;
+    height: auto;
+    min-height: 90svh;
+  }
+  .tts-card,
+  .tts-phone,
+  .tts-table,
+  .tts-line {
+    transform: none !important;
+  }
+  .tts-phone {
+    opacity: 1;
+  }
+}
+
+/* REVEAL: the phone is behind the deck (z 0 vs cards z 1). At HAND-OFF it moves
+   in front, so the stacking changes once, with the motion, not before it. */
+/* The phone's stacking follows the chapter's layer state (set from --p). */
+.tts[data-layer="behind"] .tts-phone {
+  z-index: 0;
+}
+.tts[data-layer="front"] .tts-phone {
+  z-index: 2;
+}
+
+/* ============================================================
+ * M2 — TABLE → SCREEN, MOBILE (simplified, not the desktop choreography)
+ * fan → compact deck → phone slides up → deck stays below.
+ * Fewer phases, a shorter travel, no per-card rotation beyond the fan.
+ * ============================================================ */
+@media (max-width: 1023px) {
+  .tts {
+    height: 200svh;
+  }
+  .tts-card {
+    width: min(42vw, 180px);
+    --fan-x: calc((var(--k) - 1) * 0.5 * min(42vw, 180px) * 0.9);
+  }
+  .tts-title {
+    top: calc(72px + 2vh);
+  }
+  .tts-line--table,
+  .tts-line--screen {
+    font-size: clamp(2.2rem, 11vw, 3.2rem);
+  }
+  .tts-deck {
+    top: 66%;
+  }
+  .tts-phone {
+    width: min(50vw, 210px);
+    /* the phone's resting centre sits below the title band, never under the nav */
+    top: 58%;
+    transform: translate3d(
+      calc(-50% + 0px),
+      calc(-50% + 90px * (1 - var(--w-reveal)) - 80px * var(--w-screen)),
+      0
+    );
+  }
+  .tts-card {
+    /* the deck stays visible below the phone on small screens */
+    --fan-y: calc(abs(var(--k) - 1) * 12px);
+  }
+}
+
+/* ============================================================
+ * M2.1 — CHAMPION DESKTOP SCALE. The frame's geometry is untouched; only the
+ * size the slide allows it on large screens changes. The cover becomes the
+ * dominant object in its chapter (a collectible poster), not a thumbnail.
+ * ============================================================ */
+/* Desktop only: the cover becomes a collectible poster. Mobile keeps its full width. */
+@media (min-width: 1024px) {
+  .champion-scale {
+    max-width: min(560px, 36vw, calc((100svh - 230px) * 0.8));
+  }
+}
+@media (min-width: 1024px) {
+  /* the slide gives the cover its own column: cover left, nameplate-led text right */
+  [aria-roledescription="slide"] > article {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (min-width: 1440px) {
+  .champion-scale {
+    max-width: min(600px, 34vw, calc((100svh - 230px) * 0.8));
+  }
+}
+
+/* ============================================================
+ * M3 — COMPETITION / THE ARENA
+ * No box: the arena is the container. Motion: SLIDE + SETTLE only.
+ * ============================================================ */
+.arena-fixture {
+  min-height: 22rem;
+  padding-top: 1rem;
+}
+.arena-fixture .num-date {
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  line-height: 1;
+}
+/* The giant 27: an outlined environmental numeral, partly clipped by the viewport edge. */
+.arena-27 {
+  position: absolute;
+  right: -18%;
+  top: -16%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  animation: arena-27-enter 520ms var(--ease-slide) both;
+}
+.arena-27 .num-base {
+  font-size: clamp(14rem, 30vw, 27rem);
+  line-height: 0.74;
+  -webkit-text-stroke: 2px var(--alba-gold);
+  color: transparent;
+}
+/* The prize ladder: rank line extends, the value lands, a small correction. */
+.prize-ladder {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(1rem, 2.4vw, 1.75rem);
+}
+.prize-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+}
+.prize-rank .num-base {
+  font-size: clamp(3.25rem, 7vw, 5.5rem);
+  -webkit-text-stroke-color: var(--alba-gold);
+}
+.prize-line {
+  display: block;
+  height: clamp(0.45rem, 1vw, 0.7rem);
+  width: var(--pct);
+  max-width: 100%;
+  border-radius: 999px;
+  background: var(--alba-gold);
+  transform-origin: 0 50%;
+  animation: prize-slide var(--dur-slide) var(--ease-slide) both;
+  animation-delay: calc(var(--i, 0) * 110ms);
+}
+/* ranking is read from the step down: 01 gold and full-length, 02 paper, 03 dimmed paper */
+.prize-row--2 .prize-line {
+  background: var(--alba-paper);
+}
+.prize-row--3 .prize-line {
+  background: rgb(255 255 255 / 0.55);
+}
+.prize-row--2 .prize-rank .num-base {
+  -webkit-text-stroke-color: var(--alba-paper);
+}
+.prize-row--3 .prize-rank .num-base {
+  -webkit-text-stroke-color: rgb(255 255 255 / 0.55);
+}
+.prize-value {
+  animation: prize-settle var(--dur-settle) var(--ease-settle) both;
+  animation-delay: calc(var(--i, 0) * 110ms + var(--dur-slide));
+}
+.prize-value .num-base {
+  font-size: clamp(1.9rem, 4.2vw, 3.1rem);
+  color: var(--alba-paper);
+}
+.prize-row--1 .prize-value .num-base {
+  color: var(--alba-gold);
+}
+@keyframes prize-slide {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes prize-settle {
+  from {
+    transform: translate3d(0, 3px, 0);
+    opacity: 0.6;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prize-line,
+  .prize-value {
+    animation: none;
+  }
+}
+@media (max-width: 1023px) {
+  .arena-27 {
+    right: -30%;
+    top: -40%;
+    opacity: 0.5;
+  }
+  .arena-27 .num-base {
+    font-size: clamp(9rem, 62vw, 17rem);
+  }
+}
+/* the 27 enters with the atmosphere: a short SLIDE from the right, then it stays still */
+@keyframes arena-27-enter {
+  from {
+    transform: translate3d(48px, 0, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arena-27 {
+    animation: none;
+  }
+}
+.arena-fixture .num-date.keep {
+  white-space: nowrap;
+  /* the date always fits the column: sized from the viewport width, never wrapped or clipped */
+  font-size: clamp(1.25rem, 5.4vw, 2.9rem);
+}
+
+/* ============================================================
+ * M3 — CHAMPION NAVIGATION. The collector index is the primary state; the
+ * arrows use the card-edge family from M1; dots remain the secondary indicator.
+ * ============================================================ */
+.champ-index {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
+  margin: 0;
+}
+.champ-index-cur {
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  color: var(--alba-gold);
+}
+.champ-index-sep {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: rgb(255 255 255 / 0.6);
+}
+.champ-index-tot {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 70%;
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  font-variant-numeric: tabular-nums;
+  color: rgb(255 255 255 / 0.6);
+}
+/* arrows: a 44px card-edge keyline with the chip's directional mark, no generic circle */
+.champ-arrow {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  color: var(--alba-paper);
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  border-radius: 10px;
+  transition:
+    transform var(--dur-fast) var(--ease-std),
+    box-shadow var(--dur-fast) var(--ease-std);
+}
+.champ-arrow:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1.5px var(--alba-gold);
+  color: var(--alba-gold);
+}
+.champ-arrow:focus-visible {
+  outline: 3px solid var(--alba-gold);
+  outline-offset: 3px;
+}
+.champ-arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+/* the control row: index and arrows read as one centred unit on every screen */
+.champ-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+/* ============================================================
+ * M3 — CHAMPION ENVIRONMENT. The place of the ranks sits behind the cover:
+ * an outlined 123 at poster scale, clipped by the chapter, never covering the
+ * cover, never repeating the cover's printed rank as text.
+ * ============================================================ */
+.champ-stage {
+  isolation: isolate;
+}
+.champ-env {
+  position: absolute;
+  left: 50%;
+  top: -2%;
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.champ-env .num-base {
+  font-size: clamp(14rem, 34vw, 30rem);
+  line-height: 0.74;
+  -webkit-text-stroke: 2px rgb(255 225 26 / 0.85);
+  color: transparent;
+}
+@media (max-width: 1023px) {
+  .champ-env .num-base {
+    font-size: clamp(8rem, 46vw, 14rem);
+  }
+}
+
+/* CAROUSEL MOTION: the cover that becomes current SETTLEs into place (a 3px
+   correction, no bounce). The native scroll-snap travel is unchanged. */
+@keyframes champ-settle {
+  from {
+    transform: translate3d(0, 3px, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+.champ-slide--active {
+  animation: champ-settle var(--dur-settle) var(--ease-settle) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .champ-slide--active {
+    animation: none;
+  }
+}
+
+/* M3.1 — EDITORIAL COVER LABEL. A local shade behind the top metadata of editorial-photo covers
+   only, so 'Tournament #26' and the index stay legible over the busy scene. Frame geometry unchanged. */
+.champion[data-photo-mode="editorial-photo"] .champion-top {
+  isolation: isolate;
+}
+.champion[data-photo-mode="editorial-photo"] .champion-top::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -1.2rem -1.3rem -2.6rem -1.3rem;
+  background: linear-gradient(
+    to bottom,
+    rgb(0 12 60 / 0.78) 0%,
+    rgb(0 12 60 / 0.45) 55%,
+    rgb(0 12 60 / 0) 100%
+  );
+  pointer-events: none;
+}
+
+/* ============================================================
+ * M4 — PRODUCT FAN. The official cards live beside the boxes. Each card is a
+ * fixed 2:3 box (the Card primitive); the fan only places them. Selection lifts
+ * a card forward; a turn is requested, never automatic.
+ * ============================================================ */
+.product-fan {
+  position: absolute;
+  left: 2%;
+  bottom: 0%;
+  width: 42%;
+  aspect-ratio: 1 / 0.9;
+  /* the cards escape in front of the pack, so they are reachable and read as the product */
+  z-index: 25;
+}
+.product-fan-card {
+  position: absolute;
+  width: 46%;
+  transition: transform var(--dur-std) var(--ease-std);
+}
+.product-fan-card--0 {
+  left: 0%;
+  top: 14%;
+  transform: rotate(-9deg);
+  z-index: 1;
+}
+.product-fan-card--1 {
+  left: 26%;
+  top: 4%;
+  transform: rotate(-1deg);
+  z-index: 2;
+}
+.product-fan-card--2 {
+  left: 52%;
+  top: 12%;
+  transform: rotate(8deg);
+  z-index: 3;
+}
+/* the card the visitor is using comes forward and stands straighter */
+.product-fan-card.is-selected {
+  z-index: 9;
+  /* lift only: no scale, so a selected card never changes its dimensions */
+  transform: translateY(-6%) rotate(0deg);
+}
+/* the Card primitive sizes itself in rem; inside the fan it fills its slot */
+.product-fan .card-button {
+  width: 100% !important;
+}
+@media (max-width: 1023px) {
+  .product-fan {
+    left: 4%;
+    bottom: 0;
+    width: 52%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-fan-card {
+    transition: none;
+  }
+}
+
+/* ============================================================
+ * M4 — FINALE (FinalCTA.tsx). A poster: READY TO PLAY? leads, the phrase and
+ * the actions follow, and the three official aces are the authority.
+ * Desktop: copy left, fan right. Mobile: copy, then actions, then the fan.
+ * ============================================================ */
+.finale {
+  padding-top: clamp(6rem, 12vw, 10rem);
+  padding-bottom: clamp(5rem, 9vw, 8rem);
+  background: linear-gradient(
+    to bottom,
+    var(--alba-night) 0%,
+    var(--alba-ink) 45%,
+    var(--alba-ink) 100%
+  );
+}
+.finale-grid {
+  display: grid;
+  gap: clamp(3rem, 6vw, 5rem);
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .finale-grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  }
+}
+.finale-copy .type-poster {
+  font-size: clamp(4.5rem, 14vw, 11.5rem);
+  line-height: 0.8;
+}
+.finale-phrase {
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: clamp(1.75rem, 4.6vw, 3.25rem);
+  line-height: 0.95;
+}
+.finale-actions {
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+@media (min-width: 640px) {
+  .finale-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+/* the three aces: a fan with the blue ace in front, asymmetric and tactile */
+.finale-fan-inner {
+  position: relative;
+  width: min(92%, 440px);
+  aspect-ratio: 1 / 0.92;
+  margin-inline: auto;
+}
+.finale-card {
+  position: absolute;
+  width: 46%;
+  filter: drop-shadow(0 22px 26px rgb(0 0 0 / 0.5));
+}
+.finale-card--red {
+  left: 2%;
+  top: 16%;
+  transform: rotate(-14deg);
+  z-index: 1;
+}
+.finale-card--black {
+  left: 26%;
+  top: 6%;
+  transform: rotate(-3deg);
+  z-index: 2;
+}
+.finale-card--blue {
+  left: 44%;
+  top: 20%;
+  transform: rotate(9deg);
+  z-index: 3;
+}
+@media (max-width: 1023px) {
+  .finale-fan-inner {
+    width: min(84%, 340px);
+  }
+}
+
+/* ============================================================
+ * M4 — FORM FIELDS. Albastini field language: a printed keyline, the card's
+ * corner, ink on paper. Clearly a field, never a button. Closed = dashed.
+ * ============================================================ */
+.alba-field {
+  display: block;
+  width: 100%;
+  height: 3rem;
+  padding: 0 1rem;
+  border-radius: 10px 4px 10px 10px;
+  background: var(--alba-paper);
+  color: var(--alba-ink);
+  font-size: 1rem;
+  box-shadow: inset 0 0 0 1.5px rgb(0 0 0 / 0.55);
+  transition: box-shadow var(--dur-fast) var(--ease-std);
+}
+.alba-field:hover:not(:disabled) {
+  box-shadow: inset 0 0 0 2px rgb(0 0 0 / 0.85);
+}
+.alba-field:focus-visible {
+  outline: 3px solid var(--alba-blue);
+  outline-offset: 3px;
+  box-shadow: inset 0 0 0 2px var(--alba-ink);
+}
+.alba-field[aria-invalid="true"] {
+  box-shadow: inset 0 0 0 2px var(--destructive, #b00020);
+}
+.alba-field:disabled {
+  background: transparent;
+  color: rgb(0 0 0 / 0.55);
+  cursor: not-allowed;
+  box-shadow: inset 0 0 0 1.5px rgb(0 0 0 / 0.35);
+  outline: none;
+}
+@media (max-width: 640px) {
+  .alba-field {
+    height: 3.25rem; /* comfortable touch target, and the keyboard keeps the CTA visible */
+    font-size: 16px; /* prevents iOS zoom on focus */
+  }
+}
+
+/* PACK ENTRANCE: the Safari box settles once into place (a short slide, a 3px
+   correction). It then stays still: no float, no loop. */
+@keyframes pack-settle {
+  0% {
+    transform: translate3d(-16px, 22px, 0);
+  }
+  70% {
+    transform: translate3d(0, -3px, 0);
+  }
+  100% {
+    transform: none;
+  }
+}
+.pack-settle {
+  animation: pack-settle 720ms var(--ease-slide) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pack-settle {
+    animation: none;
+  }
+}
+
+/* M5 — TOUCH TARGETS. On coarse pointers, the controls that are small on screen
+   get a 44px hit area (the visual size is unchanged on desktop). */
+@media (pointer: coarse) {
+  .scene-nav [role="group"][aria-label] button,
+  footer [role="group"][aria-label] button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .scene-nav a[href="#top"],
+  .scene-nav .scene-nav-link,
+  footer a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* M5 — SHORT LANDSCAPE HERO. A phone turned sideways (or a short laptop) gets a
+   two-column first viewport: the headline is sized by height, so the action and
+   the product are visible without scrolling. Portrait and desktop are unchanged. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .hero-shell {
+    /* the copy column is wide enough for both actions; the product takes the rest */
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) !important;
+    padding-top: 3.6rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  .hero-shell .mt-8 {
+    margin-top: 0.9rem !important;
+  }
+  /* the product column starts clear of the copy's actions */
+  .hero-shell > div:last-child {
+    padding-left: 6%;
+  }
+  .hero-shell .mt-6 {
+    margin-top: 0.75rem !important;
+  }
+  .hero-title-lines {
+    font-size: clamp(2.4rem, 11vh, 4.25rem) !important;
+  }
+  .hero-title-sub {
+    font-size: clamp(1.4rem, 5.5vh, 2.4rem) !important;
+  }
+}
+
+/* M5 — LARGE DESKTOP HERO (≥2200px only). The headline stops growing at 132px on
+   lg screens; on very wide displays it lost authority. This bounded step restores
+   its weight. 1440 and 1920 are unchanged. */
+@media (min-width: 2200px) {
+  .hero-title-lines {
+    font-size: 10.25rem !important;
+  }
+  .hero-title-sub {
+    font-size: 4.5rem !important;
+  }
+}
+
+/* M5 — TYPOGRAPHY. Running copy avoids single-word last lines (widows). Display
+   headlines keep their deliberate line breaks. */
+p,
+li {
+  text-wrap: pretty;
 }

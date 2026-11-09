@@ -5,9 +5,9 @@ import { FinalCTA } from "@/components/site/FinalCTA";
 import { Footer } from "@/components/site/Footer";
 import { Hero } from "@/components/site/Hero";
 import { HowToPlaySection } from "@/components/site/HowToPlaySection";
-import { Navbar } from "@/components/site/Navbar";
+import { SceneNav } from "@/components/nav/SceneNav";
 import { PhysicalCardsSection } from "@/components/site/PhysicalCardsSection";
-import { TwoWaysSection } from "@/components/site/TwoWaysSection";
+import { TableToScreen } from "@/components/site/TableToScreen";
 import { LanguageProvider } from "@/lib/i18n";
 import { site } from "@/content/site";
 
@@ -84,11 +84,11 @@ function Index() {
     <LanguageProvider>
       <DownloadProvider>
         <div className="min-h-screen bg-alba-ink">
-          <Navbar />
+          <SceneNav />
           {/* CEO-approved journey: Hero / Two Ways → How to Play → Competition → Physical Cards → Final CTA */}
           <main>
             <Hero />
-            <TwoWaysSection />
+            <TableToScreen />
             <HowToPlaySection />
             <CompetitionSection renderedAt={renderedAt} />
             <PhysicalCardsSection />

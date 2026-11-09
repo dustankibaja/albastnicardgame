@@ -34,6 +34,11 @@ export type SiteImage = {
 };
 
 export const siteImages = {
+  cardBack: {
+    image: images.cardBack,
+    provenance: "official",
+    note: "Official Albastini card back (owner-approved current production). Normalised master (1024x1536) downscaled to the flip canvas (512x768). Used by the card flip.",
+  },
   aceRed: {
     image: images.cardRed,
     provenance: "official",

@@ -71,7 +71,7 @@ export function CardNotifyForm({ onSubmit }: { onSubmit?: (data: CardInterest) =
             [error ? errorId : null, open ? null : ids.status].filter(Boolean).join(" ") ||
             undefined
           }
-          className="mt-2 h-12 w-full rounded-xl border-2 border-alba-ink/40 bg-alba-paper px-4 text-base outline-none focus:border-alba-blue disabled:cursor-not-allowed disabled:border-alba-ink/20 disabled:bg-alba-ink/[0.04]"
+          className="alba-field mt-2"
         />
         {error ? (
           <p id={errorId} className="mt-1.5 text-sm font-semibold text-destructive">
