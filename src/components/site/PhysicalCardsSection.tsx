@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import { useRef } from "react";
 import { CardNotifyForm } from "./CardNotifyForm";
+import { ProductFan } from "./ProductFan";
 import { Wave } from "./Wave";
 import { Picture } from "./Picture";
 import { Reveal } from "./Reveal";
@@ -65,6 +66,7 @@ export function PhysicalCardsSection() {
                   sizes="(min-width: 1024px) 590px, 78vw"
                 />
               </div>
+              <ProductFan />
               <div
                 className="depth absolute -right-[9%] top-[22%] z-10 w-[34%] lg:right-[0%] lg:top-[14%] lg:w-[44%]"
                 style={{ ["--dy" as string]: 20 }}
@@ -90,7 +92,8 @@ export function PhysicalCardsSection() {
             </div>
           </div>
 
-          <Reveal className="self-end lg:col-span-5 lg:pb-6">
+          {/* top padding = the night wave's depth, so the headline always sits on paper */}
+          <Reveal className="self-end pt-[clamp(44px,7vw,120px)] lg:col-span-5 lg:pb-6">
             <h2
               id="cards-title"
               className="display-xl type-headline lg:text-[clamp(3.25rem,5.2vw,5.5rem)]"

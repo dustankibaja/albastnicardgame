@@ -1693,3 +1693,63 @@
   );
   pointer-events: none;
 }
+
+/* ============================================================
+ * M4 — PRODUCT FAN. The official cards live beside the boxes. Each card is a
+ * fixed 2:3 box (the Card primitive); the fan only places them. Selection lifts
+ * a card forward; a turn is requested, never automatic.
+ * ============================================================ */
+.product-fan {
+  position: absolute;
+  left: 6%;
+  bottom: 4%;
+  width: 46%;
+  aspect-ratio: 1 / 0.9;
+  /* the cards escape in front of the pack, so they are reachable and read as the product */
+  z-index: 25;
+}
+.product-fan-card {
+  position: absolute;
+  width: 46%;
+  transition: transform var(--dur-std) var(--ease-std);
+}
+.product-fan-card--0 {
+  left: 0%;
+  top: 14%;
+  transform: rotate(-9deg);
+  z-index: 1;
+}
+.product-fan-card--1 {
+  left: 26%;
+  top: 4%;
+  transform: rotate(-1deg);
+  z-index: 2;
+}
+.product-fan-card--2 {
+  left: 52%;
+  top: 12%;
+  transform: rotate(8deg);
+  z-index: 3;
+}
+/* the card the visitor is using comes forward and stands straighter */
+.product-fan-card.is-selected {
+  z-index: 9;
+  /* lift only: no scale, so a selected card never changes its dimensions */
+  transform: translateY(-6%) rotate(0deg);
+}
+/* the Card primitive sizes itself in rem; inside the fan it fills its slot */
+.product-fan .card-button {
+  width: 100% !important;
+}
+@media (max-width: 1023px) {
+  .product-fan {
+    left: 4%;
+    bottom: 0;
+    width: 52%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-fan-card {
+    transition: none;
+  }
+}
