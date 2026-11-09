@@ -109,7 +109,7 @@ export function ChampionsCarousel({
                   placeLabel={place}
                   tournamentLabel={t("tour.numbered", { n: tournament.number })}
                   priority={false}
-                  className="lg:col-span-5"
+                  className="champion-scale"
                 />
               </article>
             </div>

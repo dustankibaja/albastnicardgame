@@ -981,6 +981,10 @@
   line-height: 0.84;
   color: var(--alba-paper);
   white-space: nowrap;
+  /* No box change: a soft dark shadow keeps the lettering legible over light photo pixels. */
+  text-shadow:
+    0 1px 0 rgb(0 0 0 / 0.55),
+    0 0 14px rgb(0 0 0 / 0.55);
 }
 .champion-meta {
   display: flex;
@@ -1152,15 +1156,13 @@
  * the parallax transform, so the two never fight.
  * ============================================================ */
 @keyframes hero-deal {
+  /* The card is solid from its first frame: it moves into place, it does not materialise. */
   0% {
-    opacity: 0;
+    opacity: 1;
     transform: translate3d(var(--from-x), var(--from-y), 0) rotate(var(--from-r));
   }
-  55% {
-    opacity: 1;
-  }
   86% {
-    /* arrival: a little past rest (the card is still travelling) */
+    /* arrival: a little past rest while still travelling */
     transform: translate3d(0, -2.5px, 0) rotate(0deg);
   }
   100% {
@@ -1185,12 +1187,10 @@
  * wrapper), so the cards are physically in front of it as it arrives.
  * ============================================================ */
 @keyframes hero-phone {
+  /* Solid from the first frame: the phone is carried in by position, not faded in. */
   0% {
-    opacity: 0;
-    transform: translate3d(14px, 46%, 0) rotate(8deg);
-  }
-  60% {
     opacity: 1;
+    transform: translate3d(14px, 46%, 0) rotate(8deg);
   }
   84% {
     transform: translate3d(0, -1.5%, 0) rotate(0deg);
@@ -1262,7 +1262,8 @@
   transform: translate3d(0, calc(-6px * var(--w-screen)), 0);
 }
 .tts-line--screen {
-  opacity: calc(0.35 + 0.65 * clamp(0, (var(--p) - 0.35) / 0.35, 1));
+  /* starts as a readable secondary line (never below ~0.7), and rises to full as the screen takes over */
+  opacity: calc(0.72 + 0.28 * clamp(0, (var(--p) - 0.35) / 0.35, 1));
 }
 
 /* CARDS: a fan on the table (TABLE), then closing into one deck (ALIGN), then
@@ -1283,8 +1284,10 @@
   --fan-y: calc(abs(var(--k) - 1) * 26px);
   /* the deck: cards stack with a visible step (each card 9px up and 5px across
      from the one below), so the lower edges read as a physical deck, not a pile */
-  --deck-x: calc(var(--k) * 5px - 5px);
-  --deck-y: calc(var(--k) * -9px + 9px);
+  /* Each card steps 14px across and 16px up from the one below. The step is
+     held (it does not shrink during REVEAL), so the deck keeps its thickness. */
+  --deck-x: calc(var(--k) * 14px - 14px);
+  --deck-y: calc(var(--k) * -16px + 16px);
   transform: translate3d(
       calc(
         var(--fan-x) * (1 - var(--w-align)) + var(--deck-x) * var(--w-align) - 50% - 60px *
@@ -1296,7 +1299,7 @@
       ),
       0
     )
-    rotate(calc(var(--fan-r) * (1 - var(--w-align)) + 0.6deg * var(--k) * var(--w-align)));
+    rotate(calc(var(--fan-r) * (1 - var(--w-align)) + 1.4deg * var(--k) * var(--w-align)));
   transition: none;
   will-change: transform;
 }
@@ -1395,5 +1398,29 @@
   .tts-card {
     /* the deck stays visible below the phone on small screens */
     --fan-y: calc(abs(var(--k) - 1) * 12px);
+  }
+}
+
+/* ============================================================
+ * M2.1 — CHAMPION DESKTOP SCALE. The frame's geometry is untouched; only the
+ * size the slide allows it on large screens changes. The cover becomes the
+ * dominant object in its chapter (a collectible poster), not a thumbnail.
+ * ============================================================ */
+/* Desktop only: the cover becomes a collectible poster. Mobile keeps its full width. */
+@media (min-width: 1024px) {
+  .champion-scale {
+    max-width: min(560px, 36vw, calc((100svh - 230px) * 0.8));
+  }
+}
+@media (min-width: 1024px) {
+  /* the slide gives the cover its own column: cover left, nameplate-led text right */
+  [aria-roledescription="slide"] > article {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (min-width: 1440px) {
+  .champion-scale {
+    max-width: min(600px, 34vw, calc((100svh - 230px) * 0.8));
   }
 }
