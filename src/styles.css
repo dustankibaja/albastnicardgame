@@ -1187,10 +1187,12 @@
  * wrapper), so the cards are physically in front of it as it arrives.
  * ============================================================ */
 @keyframes hero-phone {
-  /* Solid from the first frame: the phone is carried in by position, not faded in. */
+  /* Solid from the first frame. It starts a restrained distance from rest
+     (a slight shift down and in, the same scale), so it reads as one object
+     travelling into place, not one that changes size. */
   0% {
     opacity: 1;
-    transform: translate3d(14px, 46%, 0) rotate(8deg);
+    transform: translate3d(8px, 18%, 0) rotate(5deg);
   }
   84% {
     transform: translate3d(0, -1.5%, 0) rotate(0deg);
@@ -1314,9 +1316,12 @@
   left: 50%;
   top: 56%;
   width: min(34vw, 290px);
+  /* REVEAL: the phone rises from low behind the deck, so its upper screen shows
+     above and beside the top card. HAND-OFF: it comes forward and settles
+     centred in the scene (raised slightly from the previous resting height). */
   transform: translate3d(
-    calc(-50% + 28% * (1 - var(--w-reveal)) + 16% * var(--w-handoff) + 12% * var(--w-screen)),
-    calc(-50% + 50% * (1 - var(--w-reveal)) - 12% * var(--w-handoff)),
+    calc(-50% + 30% * (1 - var(--w-reveal)) + 14% * var(--w-handoff) + 10% * var(--w-screen)),
+    calc(-50% + 14% * (1 - var(--w-reveal)) - 22% * var(--w-handoff)),
     0
   );
   /* Behind the deck while REVEAL is in progress; in front once the hand-off begins. */
