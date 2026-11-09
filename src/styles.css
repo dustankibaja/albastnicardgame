@@ -1898,3 +1898,48 @@
     animation: none;
   }
 }
+
+/* M5 — TOUCH TARGETS. On coarse pointers, the controls that are small on screen
+   get a 44px hit area (the visual size is unchanged on desktop). */
+@media (pointer: coarse) {
+  .scene-nav [role="group"][aria-label] button,
+  footer [role="group"][aria-label] button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .scene-nav a[href="#top"],
+  .scene-nav .scene-nav-link,
+  footer a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* M5 — SHORT LANDSCAPE HERO. A phone turned sideways (or a short laptop) gets a
+   two-column first viewport: the headline is sized by height, so the action and
+   the product are visible without scrolling. Portrait and desktop are unchanged. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .hero-shell {
+    /* the copy column is wide enough for both actions; the product takes the rest */
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) !important;
+    padding-top: 3.6rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  .hero-shell .mt-8 {
+    margin-top: 0.9rem !important;
+  }
+  /* the product column starts clear of the copy's actions */
+  .hero-shell > div:last-child {
+    padding-left: 6%;
+  }
+  .hero-shell .mt-6 {
+    margin-top: 0.75rem !important;
+  }
+  .hero-title-lines {
+    font-size: clamp(2.4rem, 11vh, 4.25rem) !important;
+  }
+  .hero-title-sub {
+    font-size: clamp(1.4rem, 5.5vh, 2.4rem) !important;
+  }
+}

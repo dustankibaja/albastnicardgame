@@ -93,7 +93,7 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="on-dark relative isolate overflow-hidden bg-alba-blue text-alba-paper"
     >
-      <div className="shell relative z-10 grid items-center gap-4 pb-[clamp(0.75rem,1.5vw,1.5rem)] lg:gap-6 pt-24 sm:pt-28 lg:grid-cols-12 lg:pt-32">
+      <div className="hero-shell shell relative z-10 grid items-center gap-4 pb-[clamp(0.75rem,1.5vw,1.5rem)] lg:gap-6 pt-24 sm:pt-28 lg:grid-cols-12 lg:pt-32">
         <div className="lg:col-span-5">
           <h1
             id="hero-title"
@@ -101,14 +101,14 @@ export function Hero() {
             aria-label={`${t("hero.title1")} ${t("hero.title2")} ${t("hero.one")}`}
           >
             <span
-              className="block text-[clamp(4.25rem,19vw,10rem)] lg:text-[clamp(5.5rem,8.6vw,8.25rem)]"
+              className="hero-title-lines block text-[clamp(4.25rem,19vw,10rem)] lg:text-[clamp(5.5rem,8.6vw,8.25rem)]"
               aria-hidden="true"
             >
               <span className="block whitespace-nowrap">{t("hero.title1")}</span>
               <span className="block whitespace-nowrap">{t("hero.title2")}</span>
             </span>
             <span
-              className="mt-3 block keep text-[clamp(2.4rem,10.5vw,5.75rem)] text-alba-gold lg:text-[clamp(3rem,5.6vw,5rem)]"
+              className="hero-title-sub mt-3 block keep text-[clamp(2.4rem,10.5vw,5.75rem)] text-alba-gold lg:text-[clamp(3rem,5.6vw,5rem)]"
               aria-hidden="true"
             >
               {t("hero.one")}
