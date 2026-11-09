@@ -1445,11 +1445,12 @@
 /* The giant 27: an outlined environmental numeral, partly clipped by the viewport edge. */
 .arena-27 {
   position: absolute;
-  right: -6%;
-  top: -10%;
+  right: -18%;
+  top: -16%;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.9;
+  opacity: 0.55;
+  animation: arena-27-enter 520ms var(--ease-slide) both;
 }
 .arena-27 .num-base {
   font-size: clamp(14rem, 30vw, 27rem);
@@ -1536,12 +1537,26 @@
 }
 @media (max-width: 1023px) {
   .arena-27 {
-    right: -10%;
-    /* sits above the fixture on small screens, clear of the date line */
-    top: -58%;
+    right: -30%;
+    top: -40%;
+    opacity: 0.5;
   }
   .arena-27 .num-base {
-    font-size: clamp(9rem, 52vw, 15rem);
+    font-size: clamp(9rem, 62vw, 17rem);
+  }
+}
+/* the 27 enters with the atmosphere: a short SLIDE from the right, then it stays still */
+@keyframes arena-27-enter {
+  from {
+    transform: translate3d(48px, 0, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arena-27 {
+    animation: none;
   }
 }
 .arena-fixture .num-date.keep {
@@ -1658,4 +1673,23 @@
   .champ-slide--active {
     animation: none;
   }
+}
+
+/* M3.1 — EDITORIAL COVER LABEL. A local shade behind the top metadata of editorial-photo covers
+   only, so 'Tournament #26' and the index stay legible over the busy scene. Frame geometry unchanged. */
+.champion[data-photo-mode="editorial-photo"] .champion-top {
+  isolation: isolate;
+}
+.champion[data-photo-mode="editorial-photo"] .champion-top::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -1.2rem -1.3rem -2.6rem -1.3rem;
+  background: linear-gradient(
+    to bottom,
+    rgb(0 12 60 / 0.78) 0%,
+    rgb(0 12 60 / 0.45) 55%,
+    rgb(0 12 60 / 0) 100%
+  );
+  pointer-events: none;
 }

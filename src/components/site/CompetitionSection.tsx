@@ -56,7 +56,7 @@ export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
         background:
           // A deliberate step into the arena: blue holds briefly, the night closes in
           // over a short band, then the lower chapter is the arena. Not a slow drift.
-          "linear-gradient(to bottom, var(--alba-blue) 0%, var(--alba-blue) 14%, var(--alba-night) 26%, var(--alba-night) 100%)",
+          "linear-gradient(to bottom, var(--alba-blue) 0%, var(--alba-blue) 3%, var(--alba-night) 13%, var(--alba-night) 100%)",
       }}
     >
       {/* The white chapters give way to the arena along the card wave. */}
