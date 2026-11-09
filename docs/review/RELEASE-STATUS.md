@@ -11,12 +11,12 @@ without owner approval.
 |---|---|---|---|
 | phys.fanLabel | Albastini cards | Karata za Albastini | Medium: product-name usage; confirm capitalisation |
 | alt.cardBack | Albastini card back | Upande wa nyuma wa karata ya Albastini | High |
-| arena.prizeLabel | Prize ladder | **Zawadi** | **Low: "zawadi" means gift/prize generally; "tuzo" means award. Owner to choose** |
+| arena.prizeLabel | Prize ladder | **Zawadi** | **APPROVED by owner.** Preferred public wording for the cash prize. Do not use "Tuzo" |
 | arena.startTbc | Start time to be announced | Muda wa kuanza utatangazwa | High |
 | arena.nextLabel | Tournament #27 | Mashindano #27 | High |
-| arena.proof | These people already did. | **Hawa tayari wameshinda.** | **Low: literal "they have already won" rather than "they already did"; tone and wording need a native speaker** |
+| arena.proof | These people already did. | **Hawa tayari wameshinda.** | **APPROVED by owner.** Natural marketing translation conveying that these players have already won |
 
-No existing Kiswahili string was changed during the revamp.
+No existing Kiswahili string was changed during the revamp. Both uncertain strings above are now approved; no other translation was altered.
 
 ## BLOCKERS (must fix before a public launch)
 
