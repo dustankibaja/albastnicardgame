@@ -48,6 +48,19 @@ Repeat the same eight checks. Record actual defects only.
 Not automated in this environment (browser installation blocked). Check the hero,
 Table → Screen, the menu, the carousel and the card turn.
 
+### Issue report format (required for every defect)
+
+```
+Device:
+OS:
+Browser:
+Orientation:
+Section:
+Observed problem:
+```
+
+Record only actual visible or functional defects.
+
 ## POST-LAUNCH (does not affect visitors)
 
 - Remove the unused shadcn scaffolding in `src/components/ui/` and prune its Radix
