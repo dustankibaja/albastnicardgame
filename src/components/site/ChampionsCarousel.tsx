@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { ChampionFrame } from "./ChampionFrame";
+import { Numeral } from "./Numeral";
 import type { Tournament } from "@/content/tournaments";
 import { formatPrize, prizeFor, type Winner } from "@/content/winners";
 import { useI18n, type TKey } from "@/lib/i18n";
@@ -100,7 +101,12 @@ export function ChampionsCarousel({
               aria-label={t("car.slide", { i: i + 1, n: count })}
               className="w-full shrink-0 snap-start snap-always px-1 pt-4"
             >
-              <article className="grid items-center">
+              <article
+                className={cn(
+                  "grid items-center champ-slide",
+                  i === index && "champ-slide--active",
+                )}
+              >
                 <ChampionFrame
                   winner={w}
                   index={i + 1}
@@ -118,14 +124,22 @@ export function ChampionsCarousel({
       </div>
 
       {ready && count > 1 ? (
-        <div className="mt-8 flex items-center justify-center gap-4 lg:justify-start">
+        <div className="champ-controls mt-8">
+          {/* primary state: the collector index, in the numeric grammar */}
+          <p className="champ-index" aria-hidden="true">
+            <Numeral role="points" className="champ-index-cur">
+              {String(index + 1).padStart(2, "0")}
+            </Numeral>
+            <span className="champ-index-sep">/</span>
+            <span className="champ-index-tot">{String(count).padStart(2, "0")}</span>
+          </p>
           <button
             type="button"
             onClick={() => goTo(index - 1)}
             disabled={index === 0}
             aria-controls={`${uid}-viewport`}
             aria-label={t("car.prev")}
-            className="grid size-12 place-items-center rounded-full border-2 border-alba-paper/40 transition-colors duration-[var(--dur-fast)] hover:border-alba-paper disabled:opacity-35"
+            className="champ-arrow"
           >
             <ChevronLeft aria-hidden className="size-6" />
           </button>
@@ -159,7 +173,7 @@ export function ChampionsCarousel({
             disabled={index === count - 1}
             aria-controls={`${uid}-viewport`}
             aria-label={t("car.next")}
-            className="grid size-12 place-items-center rounded-full border-2 border-alba-paper/40 transition-colors duration-[var(--dur-fast)] hover:border-alba-paper disabled:opacity-35"
+            className="champ-arrow"
           >
             <ChevronRight aria-hidden className="size-6" />
           </button>

@@ -1429,3 +1429,233 @@
     max-width: min(600px, 34vw, calc((100svh - 230px) * 0.8));
   }
 }
+
+/* ============================================================
+ * M3 — COMPETITION / THE ARENA
+ * No box: the arena is the container. Motion: SLIDE + SETTLE only.
+ * ============================================================ */
+.arena-fixture {
+  min-height: 22rem;
+  padding-top: 1rem;
+}
+.arena-fixture .num-date {
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  line-height: 1;
+}
+/* The giant 27: an outlined environmental numeral, partly clipped by the viewport edge. */
+.arena-27 {
+  position: absolute;
+  right: -6%;
+  top: -10%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.9;
+}
+.arena-27 .num-base {
+  font-size: clamp(14rem, 30vw, 27rem);
+  line-height: 0.74;
+  -webkit-text-stroke: 2px var(--alba-gold);
+  color: transparent;
+}
+/* The prize ladder: rank line extends, the value lands, a small correction. */
+.prize-ladder {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(1rem, 2.4vw, 1.75rem);
+}
+.prize-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+}
+.prize-rank .num-base {
+  font-size: clamp(3.25rem, 7vw, 5.5rem);
+  -webkit-text-stroke-color: var(--alba-gold);
+}
+.prize-line {
+  display: block;
+  height: clamp(0.45rem, 1vw, 0.7rem);
+  width: var(--pct);
+  max-width: 100%;
+  border-radius: 999px;
+  background: var(--alba-gold);
+  transform-origin: 0 50%;
+  animation: prize-slide var(--dur-slide) var(--ease-slide) both;
+  animation-delay: calc(var(--i, 0) * 110ms);
+}
+/* ranking is read from the step down: 01 gold and full-length, 02 paper, 03 dimmed paper */
+.prize-row--2 .prize-line {
+  background: var(--alba-paper);
+}
+.prize-row--3 .prize-line {
+  background: rgb(255 255 255 / 0.55);
+}
+.prize-row--2 .prize-rank .num-base {
+  -webkit-text-stroke-color: var(--alba-paper);
+}
+.prize-row--3 .prize-rank .num-base {
+  -webkit-text-stroke-color: rgb(255 255 255 / 0.55);
+}
+.prize-value {
+  animation: prize-settle var(--dur-settle) var(--ease-settle) both;
+  animation-delay: calc(var(--i, 0) * 110ms + var(--dur-slide));
+}
+.prize-value .num-base {
+  font-size: clamp(1.9rem, 4.2vw, 3.1rem);
+  color: var(--alba-paper);
+}
+.prize-row--1 .prize-value .num-base {
+  color: var(--alba-gold);
+}
+@keyframes prize-slide {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes prize-settle {
+  from {
+    transform: translate3d(0, 3px, 0);
+    opacity: 0.6;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prize-line,
+  .prize-value {
+    animation: none;
+  }
+}
+@media (max-width: 1023px) {
+  .arena-27 {
+    right: -10%;
+    /* sits above the fixture on small screens, clear of the date line */
+    top: -58%;
+  }
+  .arena-27 .num-base {
+    font-size: clamp(9rem, 52vw, 15rem);
+  }
+}
+.arena-fixture .num-date.keep {
+  white-space: nowrap;
+  /* the date always fits the column: sized from the viewport width, never wrapped or clipped */
+  font-size: clamp(1.25rem, 5.4vw, 2.9rem);
+}
+
+/* ============================================================
+ * M3 — CHAMPION NAVIGATION. The collector index is the primary state; the
+ * arrows use the card-edge family from M1; dots remain the secondary indicator.
+ * ============================================================ */
+.champ-index {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
+  margin: 0;
+}
+.champ-index-cur {
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  color: var(--alba-gold);
+}
+.champ-index-sep {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: rgb(255 255 255 / 0.6);
+}
+.champ-index-tot {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 70%;
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  font-variant-numeric: tabular-nums;
+  color: rgb(255 255 255 / 0.6);
+}
+/* arrows: a 44px card-edge keyline with the chip's directional mark, no generic circle */
+.champ-arrow {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  color: var(--alba-paper);
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  border-radius: 10px;
+  transition:
+    transform var(--dur-fast) var(--ease-std),
+    box-shadow var(--dur-fast) var(--ease-std);
+}
+.champ-arrow:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1.5px var(--alba-gold);
+  color: var(--alba-gold);
+}
+.champ-arrow:focus-visible {
+  outline: 3px solid var(--alba-gold);
+  outline-offset: 3px;
+}
+.champ-arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+/* the control row: index and arrows read as one centred unit on every screen */
+.champ-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+/* ============================================================
+ * M3 — CHAMPION ENVIRONMENT. The place of the ranks sits behind the cover:
+ * an outlined 123 at poster scale, clipped by the chapter, never covering the
+ * cover, never repeating the cover's printed rank as text.
+ * ============================================================ */
+.champ-stage {
+  isolation: isolate;
+}
+.champ-env {
+  position: absolute;
+  left: 50%;
+  top: -2%;
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.champ-env .num-base {
+  font-size: clamp(14rem, 34vw, 30rem);
+  line-height: 0.74;
+  -webkit-text-stroke: 2px rgb(255 225 26 / 0.85);
+  color: transparent;
+}
+@media (max-width: 1023px) {
+  .champ-env .num-base {
+    font-size: clamp(8rem, 46vw, 14rem);
+  }
+}
+
+/* CAROUSEL MOTION: the cover that becomes current SETTLEs into place (a 3px
+   correction, no bounce). The native scroll-snap travel is unchanged. */
+@keyframes champ-settle {
+  from {
+    transform: translate3d(0, 3px, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+.champ-slide--active {
+  animation: champ-settle var(--dur-settle) var(--ease-settle) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .champ-slide--active {
+    animation: none;
+  }
+}
