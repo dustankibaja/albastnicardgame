@@ -86,7 +86,7 @@ export function PhysicalCardsSection() {
                   id="boxSafari"
                   alt={t("alt.boxSafari")}
                   sizes="(min-width: 1024px) 420px, 54vw"
-                  className="-rotate-[3deg] drop-shadow-[0_50px_60px_rgb(0_0_0/0.45)]"
+                  className="pack-settle -rotate-[3deg] drop-shadow-[0_50px_60px_rgb(0_0_0/0.45)]"
                 />
               </div>
             </div>

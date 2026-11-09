@@ -1701,9 +1701,9 @@
  * ============================================================ */
 .product-fan {
   position: absolute;
-  left: 6%;
-  bottom: 4%;
-  width: 46%;
+  left: 2%;
+  bottom: 0%;
+  width: 42%;
   aspect-ratio: 1 / 0.9;
   /* the cards escape in front of the pack, so they are reachable and read as the product */
   z-index: 25;
@@ -1751,5 +1751,150 @@
 @media (prefers-reduced-motion: reduce) {
   .product-fan-card {
     transition: none;
+  }
+}
+
+/* ============================================================
+ * M4 — FINALE (FinalCTA.tsx). A poster: READY TO PLAY? leads, the phrase and
+ * the actions follow, and the three official aces are the authority.
+ * Desktop: copy left, fan right. Mobile: copy, then actions, then the fan.
+ * ============================================================ */
+.finale {
+  padding-top: clamp(6rem, 12vw, 10rem);
+  padding-bottom: clamp(5rem, 9vw, 8rem);
+  background: linear-gradient(
+    to bottom,
+    var(--alba-night) 0%,
+    var(--alba-ink) 45%,
+    var(--alba-ink) 100%
+  );
+}
+.finale-grid {
+  display: grid;
+  gap: clamp(3rem, 6vw, 5rem);
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .finale-grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  }
+}
+.finale-copy .type-poster {
+  font-size: clamp(4.5rem, 14vw, 11.5rem);
+  line-height: 0.8;
+}
+.finale-phrase {
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: clamp(1.75rem, 4.6vw, 3.25rem);
+  line-height: 0.95;
+}
+.finale-actions {
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+@media (min-width: 640px) {
+  .finale-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+/* the three aces: a fan with the blue ace in front, asymmetric and tactile */
+.finale-fan-inner {
+  position: relative;
+  width: min(92%, 440px);
+  aspect-ratio: 1 / 0.92;
+  margin-inline: auto;
+}
+.finale-card {
+  position: absolute;
+  width: 46%;
+  filter: drop-shadow(0 22px 26px rgb(0 0 0 / 0.5));
+}
+.finale-card--red {
+  left: 2%;
+  top: 16%;
+  transform: rotate(-14deg);
+  z-index: 1;
+}
+.finale-card--black {
+  left: 26%;
+  top: 6%;
+  transform: rotate(-3deg);
+  z-index: 2;
+}
+.finale-card--blue {
+  left: 44%;
+  top: 20%;
+  transform: rotate(9deg);
+  z-index: 3;
+}
+@media (max-width: 1023px) {
+  .finale-fan-inner {
+    width: min(84%, 340px);
+  }
+}
+
+/* ============================================================
+ * M4 — FORM FIELDS. Albastini field language: a printed keyline, the card's
+ * corner, ink on paper. Clearly a field, never a button. Closed = dashed.
+ * ============================================================ */
+.alba-field {
+  display: block;
+  width: 100%;
+  height: 3rem;
+  padding: 0 1rem;
+  border-radius: 10px 4px 10px 10px;
+  background: var(--alba-paper);
+  color: var(--alba-ink);
+  font-size: 1rem;
+  box-shadow: inset 0 0 0 1.5px rgb(0 0 0 / 0.55);
+  transition: box-shadow var(--dur-fast) var(--ease-std);
+}
+.alba-field:hover:not(:disabled) {
+  box-shadow: inset 0 0 0 2px rgb(0 0 0 / 0.85);
+}
+.alba-field:focus-visible {
+  outline: 3px solid var(--alba-blue);
+  outline-offset: 3px;
+  box-shadow: inset 0 0 0 2px var(--alba-ink);
+}
+.alba-field[aria-invalid="true"] {
+  box-shadow: inset 0 0 0 2px var(--destructive, #b00020);
+}
+.alba-field:disabled {
+  background: transparent;
+  color: rgb(0 0 0 / 0.55);
+  cursor: not-allowed;
+  box-shadow: inset 0 0 0 1.5px rgb(0 0 0 / 0.35);
+  outline: none;
+}
+@media (max-width: 640px) {
+  .alba-field {
+    height: 3.25rem; /* comfortable touch target, and the keyboard keeps the CTA visible */
+    font-size: 16px; /* prevents iOS zoom on focus */
+  }
+}
+
+/* PACK ENTRANCE: the Safari box settles once into place (a short slide, a 3px
+   correction). It then stays still: no float, no loop. */
+@keyframes pack-settle {
+  0% {
+    transform: translate3d(-16px, 22px, 0);
+  }
+  70% {
+    transform: translate3d(0, -3px, 0);
+  }
+  100% {
+    transform: none;
+  }
+}
+.pack-settle {
+  animation: pack-settle 720ms var(--ease-slide) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pack-settle {
+    animation: none;
   }
 }
