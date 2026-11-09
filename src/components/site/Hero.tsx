@@ -92,7 +92,7 @@ export function Hero() {
         <div className="lg:col-span-5">
           <h1 id="hero-title" className="display-xl">
             <span className="enter block text-[clamp(4.25rem,19vw,10rem)] lg:text-[clamp(5.5rem,8.6vw,8.25rem)]">
-              <span className="block whitespace-nowrap">{t("hero.title1")}</span>
+              <span className="block whitespace-nowrap">{t("hero.title1")}</span>{" "}
               <span className="block whitespace-nowrap">{t("hero.title2")}</span>
             </span>
             <span

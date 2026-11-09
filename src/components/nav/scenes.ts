@@ -17,6 +17,13 @@ export type NavScene = {
   theme: NavTheme;
   /** Navigation destination that is current in this chapter (null = none). */
   active: string | null;
+  /**
+   * Where the chapter begins, as a fraction of the viewport height measured from
+   * the top. Default 0 = the section top reaches the bar. A full-bleed dark
+   * chapter (the finale) begins when its section reaches the middle of the screen,
+   * because that is when it becomes the dominant scene.
+   */
+  at?: number;
 };
 
 /** Ordered by document position. The LAST chapter whose section has reached the bar wins. */
@@ -26,7 +33,7 @@ export const navScenes: NavScene[] = [
   { section: "how-to-play", theme: "paper", active: "how-to-play" },
   { section: "tournaments", theme: "night", active: "tournaments" },
   { section: "cards", theme: "paper", active: "cards" },
-  { section: "finale", theme: "night", active: null },
+  { section: "finale", theme: "night", active: null, at: 0.5 },
 ];
 
 /** Ordered anchors for the navigation (labels come from i18n). */

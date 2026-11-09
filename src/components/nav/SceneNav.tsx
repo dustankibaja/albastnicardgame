@@ -58,9 +58,11 @@ export function SceneNav() {
     let lastKey = "";
     const measure = () => {
       pending = 0;
-      const line = navEl?.getBoundingClientRect().bottom ?? 76;
+      const bar = navEl?.getBoundingClientRect().bottom ?? 76;
+      const vh = window.innerHeight;
       let hit: NavScene | null = null;
       for (const { sc, el } of entries) {
+        const line = sc.at != null ? Math.max(bar, vh * sc.at) : bar;
         if (el.getBoundingClientRect().top <= line) hit = sc;
       }
       if (!hit) return;

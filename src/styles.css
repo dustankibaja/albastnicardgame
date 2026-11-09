@@ -132,6 +132,15 @@
   --dur-enter: 650ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-std: cubic-bezier(0.2, 0, 0, 1);
+  /* M1 motion verbs. Each has a physically distinct character. */
+  --dur-deal: 560ms; /* DEAL   fast start, controlled deceleration */
+  --dur-turn: 620ms; /* TURN   weighted perspective rotation      */
+  --dur-slide: 340ms; /* SLIDE  controlled mechanical travel        */
+  --dur-settle: 260ms; /* SETTLE tiny physical correction           */
+  --ease-deal: cubic-bezier(0.12, 0.9, 0.2, 1); /* quick launch, long soft landing */
+  --ease-turn: cubic-bezier(0.3, 0.75, 0.15, 1); /* weight: slow lift, soft land    */
+  --ease-slide: cubic-bezier(0.25, 0.1, 0.25, 1); /* even, mechanical, no overshoot  */
+  --ease-settle: cubic-bezier(0.22, 0.61, 0.36, 1); /* gentle rest, no bounce          */
 }
 
 /*
@@ -351,12 +360,22 @@
   background: var(--btn-bg, var(--alba-gold));
   transform-origin: 0 50%;
   clip-path: polygon(
-    10.5px 0, calc(100% - var(--cut) + 1.5px) 0, 100% calc(var(--cut) - 1.5px),
-    100% calc(100% - 10.5px), calc(100% - 10.5px) 100%, 10.5px 100%, 0 calc(100% - 10.5px), 0 10.5px
+    10.5px 0,
+    calc(100% - var(--cut) + 1.5px) 0,
+    100% calc(var(--cut) - 1.5px),
+    100% calc(100% - 10.5px),
+    calc(100% - 10.5px) 100%,
+    10.5px 100%,
+    0 calc(100% - 10.5px),
+    0 10.5px
   );
 }
-.btn-edge.btn-primary { --btn-bg: var(--alba-gold); }
-.btn-edge.btn-outline { --btn-bg: transparent; }
+.btn-edge.btn-primary {
+  --btn-bg: var(--alba-gold);
+}
+.btn-edge.btn-outline {
+  --btn-bg: transparent;
+}
 .btn-edge > .btn-label,
 .btn-edge > .btn-chip {
   position: relative;
@@ -382,10 +401,21 @@
   height: 100%;
   overflow: visible;
 }
-.btn-chip-disc circle:first-child { fill: var(--alba-ink); }
-.btn-chip-disc[data-on="outline"] circle:first-child { fill: var(--alba-gold); }
-.btn-chip-ring { fill: none; stroke: var(--alba-gold); stroke-width: 2.2; stroke-dasharray: 4.1 3.5; }
-.btn-chip-disc[data-on="outline"] .btn-chip-ring { stroke: var(--alba-ink); }
+.btn-chip-disc circle:first-child {
+  fill: var(--alba-ink);
+}
+.btn-chip-disc[data-on="outline"] circle:first-child {
+  fill: var(--alba-gold);
+}
+.btn-chip-ring {
+  fill: none;
+  stroke: var(--alba-gold);
+  stroke-width: 2.2;
+  stroke-dasharray: 4.1 3.5;
+}
+.btn-chip-disc[data-on="outline"] .btn-chip-ring {
+  stroke: var(--alba-ink);
+}
 .btn-chip-arrow {
   fill: none;
   stroke: var(--alba-gold);
@@ -396,34 +426,64 @@
   width: 50%;
   height: 50%;
 }
-.btn-edge.btn-outline .btn-chip-arrow { stroke: var(--alba-ink); }
+.btn-edge.btn-outline .btn-chip-arrow {
+  stroke: var(--alba-ink);
+}
 
 /* The fill deals across the body on hover — fine pointers only. */
-.btn-edge > .btn-fill { transform: scaleX(0); transition: transform var(--dur-std) var(--ease-out); }
-.btn-edge.btn-primary > .btn-fill { background: var(--alba-gold); }
+.btn-edge > .btn-fill {
+  transform: scaleX(0);
+  transition: transform var(--dur-std) var(--ease-out);
+}
+.btn-edge.btn-primary > .btn-fill {
+  background: var(--alba-gold);
+}
 @media (hover: hover) and (pointer: fine) {
-  .btn-edge:hover > .btn-fill { transform: scaleX(1); }
-  .btn-edge:hover > .btn-label { transform: translateX(3px); }
-  .btn-edge:hover > .btn-chip { transform: translateX(4px) rotate(-12deg); }
+  .btn-edge:hover > .btn-fill {
+    transform: scaleX(1);
+  }
+  .btn-edge:hover > .btn-label {
+    transform: translateX(3px);
+  }
+  .btn-edge:hover > .btn-chip {
+    transform: translateX(4px) rotate(-12deg);
+  }
 }
 /* Pressed: 1px compression + inner shadow. */
-.btn-edge:active { transform: translateY(1px); }
-.btn-edge:active > .btn-chip { transform: translateX(2px) rotate(-6deg); }
+.btn-edge:active {
+  transform: translateY(1px);
+}
+.btn-edge:active > .btn-chip {
+  transform: translateX(2px) rotate(-6deg);
+}
 /* Disabled: dashed keyline, no fill. */
-.btn-edge:disabled { opacity: 0.45; }
-.btn-edge:disabled > .btn-fill { display: none; }
+.btn-edge:disabled {
+  opacity: 0.45;
+}
+.btn-edge:disabled > .btn-fill {
+  display: none;
+}
 /* Focus: scene-aware ring. */
-.btn-edge:focus-visible { outline: 3px solid var(--focus, var(--alba-blue)); outline-offset: 3px; }
+.btn-edge:focus-visible {
+  outline: 3px solid var(--focus, var(--alba-blue));
+  outline-offset: 3px;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .btn-edge > .btn-fill,
   .btn-label,
-  .btn-chip { transition: none !important; }
-  .btn-edge:hover > .btn-fill { transform: scaleX(0); }
+  .btn-chip {
+    transition: none !important;
+  }
+  .btn-edge:hover > .btn-fill {
+    transform: scaleX(0);
+  }
   .btn-edge:hover > .btn-label,
   .btn-edge:hover > .btn-chip,
   .btn-edge:active > .btn-chip,
-  .btn-edge:active { transform: none; }
+  .btn-edge:active {
+    transform: none;
+  }
 }
 
 /* ============================================================
@@ -437,7 +497,10 @@
   color: var(--nav-fg);
   background-color: var(--nav-bg);
   box-shadow: inset 0 -1px 0 var(--nav-edge);
-  transition: background-color var(--dur-std) var(--ease-out), color var(--dur-std) var(--ease-out), box-shadow var(--dur-std) var(--ease-out);
+  transition:
+    background-color var(--dur-std) var(--ease-out),
+    color var(--dur-std) var(--ease-out),
+    box-shadow var(--dur-std) var(--ease-out);
 }
 .scene-nav[data-scene="paper"] {
   --nav-fg: var(--alba-ink);
@@ -496,7 +559,9 @@
   height: 10px;
   border-radius: 50%;
   background: var(--nav-active, var(--alba-gold));
-  transition: transform var(--dur-std) var(--ease-std), opacity var(--dur-fast) var(--ease-std);
+  transition:
+    transform var(--dur-std) var(--ease-std),
+    opacity var(--dur-fast) var(--ease-std);
   pointer-events: none;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -528,9 +593,15 @@
   opacity: 1;
 }
 /* hero: white pill, blue ink  |  paper: ink pill, white ink  |  night: white pill, ink ink */
-.scene-nav[data-scene="hero"]  { --nav-pill-ink: var(--alba-blue); }
-.scene-nav[data-scene="paper"] { --nav-pill-ink: var(--alba-paper); }
-.scene-nav[data-scene="night"] { --nav-pill-ink: var(--alba-ink); }
+.scene-nav[data-scene="hero"] {
+  --nav-pill-ink: var(--alba-blue);
+}
+.scene-nav[data-scene="paper"] {
+  --nav-pill-ink: var(--alba-paper);
+}
+.scene-nav[data-scene="night"] {
+  --nav-pill-ink: var(--alba-ink);
+}
 .scene-nav [role="group"][aria-label] button[aria-pressed="false"]:hover {
   opacity: 1;
 }
@@ -573,10 +644,18 @@
   outline-offset: 3px;
 }
 @media (max-width: 1023px) {
-  .scene-nav-links { display: none; }
-  .scene-nav-trigger { display: inline-flex; }
-  .scene-nav-tools .scene-nav-lang { display: none; }
-  .scene-nav-tools .scene-nav-cta { display: none; }
+  .scene-nav-links {
+    display: none;
+  }
+  .scene-nav-trigger {
+    display: inline-flex;
+  }
+  .scene-nav-tools .scene-nav-lang {
+    display: none;
+  }
+  .scene-nav-tools .scene-nav-cta {
+    display: none;
+  }
 }
 
 /* The overlay: fixed full screen, Albastini blue, sits above the bar. */
@@ -634,7 +713,7 @@
   color: inherit;
   text-decoration: none;
   border-bottom: 1px solid rgb(255 255 255 / 0.2);
-  animation: menu-link-in var(--dur-settle) var(--ease-out) both;
+  animation: menu-link-in var(--dur-settle) var(--ease-settle) both;
 }
 .scene-menu-link[aria-current="true"] {
   color: var(--alba-gold);
@@ -682,12 +761,24 @@
   color: var(--alba-gold);
 }
 @keyframes menu-in {
-  from { opacity: 0; transform: translate3d(0, -10px, 0); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 @keyframes menu-link-in {
-  from { opacity: 0; transform: translate3d(0, 10px, 0); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .scene-menu,
@@ -707,4 +798,350 @@
   pointer-events: none;
   opacity: 0;
   clip-path: inset(50%);
+}
+
+/* ============================================================
+ * M1 — NUMERIC GRAMMAR
+ * One family (Archivo Display, tabular figures). Roles, not sizes:
+ *   num-points   11  — points / token language (the chip's number)
+ *   num-event    27  — tournament / environmental number (outline)
+ *   num-rank     01  — placement / collector index (outline, condensed)
+ *   num-prize    130,000 — prize, tabular, TSH secondary
+ *   num-date     12 DEC 2026 — event date, separators are chips
+ * Outline = environment (large, decorative, aria-hidden by its parent).
+ * Filled   = information (the value a person reads).
+ * ============================================================ */
+@utility num-base {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 70%;
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings:
+    "tnum" 1,
+    "lnum" 1;
+}
+/* Filled (information): solid ink/paper, read as a value. */
+@utility num-filled {
+  color: currentColor;
+}
+/* Outlined (environment): the number is architecture, not text. */
+@utility num-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px currentColor;
+}
+@utility num-points {
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  line-height: 1;
+  font-stretch: 100%;
+}
+@utility num-event {
+  font-size: clamp(7rem, 22vw, 17rem);
+  line-height: 0.74;
+}
+@utility num-rank {
+  font-size: clamp(5rem, 14vw, 10rem);
+  line-height: 0.74;
+  font-stretch: 62%;
+}
+@utility num-prize {
+  font-size: clamp(2.25rem, 4.8vw, 3.75rem);
+  line-height: 0.95;
+  font-stretch: 78%;
+}
+/* TSH sits beside the figure, small, in the metadata voice. */
+@utility num-prize-unit {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-stretch: 100%;
+  font-size: 0.42em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-inline-start: 0.35em;
+  vertical-align: baseline;
+}
+@utility num-date {
+  font-size: clamp(1.4rem, 3.4vw, 2.6rem);
+  line-height: 1;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+/* Separators in a date are the 11-point chip, not a slash or a dot. */
+.num-sep {
+  display: inline-block;
+  width: 0.42em;
+  height: 0.42em;
+  margin-inline: 0.22em;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--alba-gold);
+  box-shadow: inset 0 0 0 0.08em var(--alba-ink);
+}
+
+/* ============================================================
+ * M1 — CHAMPION FRAME (ChampionFrame.tsx)
+ * Shared geometry for every champion. Only the photograph changes.
+ * ============================================================ */
+.champion {
+  container-type: inline-size;
+}
+.champion-rank {
+  position: absolute;
+  left: -0.06em;
+  bottom: 18%;
+  z-index: 1;
+  pointer-events: none;
+}
+.champion-rank .num-base {
+  -webkit-text-stroke-color: var(--alba-gold);
+  font-size: 62cqi;
+}
+.champion-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+/* Cut-out: the figure stands in the frame, shoulders past the lower edge. */
+.champion-photo--portrait-cutout {
+  inset: 9% 6% 0;
+}
+/* Editorial: the whole scene, keyed into the arena at its base. */
+.champion-photo--editorial-photo {
+  inset: 0 0 26% 0;
+  mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+}
+.champion-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 40%;
+  z-index: 3;
+}
+.champion-top {
+  position: absolute;
+  z-index: 4;
+  top: 1.1rem;
+  left: 1.3rem;
+  right: 1.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--alba-paper);
+}
+.champion-index {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+}
+.champion-index-num {
+  font-size: 1.15rem;
+  color: var(--alba-gold);
+}
+.champion-place {
+  position: absolute;
+  z-index: 5;
+  top: 4.2rem;
+  left: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.7rem 0.4rem 0.45rem;
+  border-radius: 8px;
+  background: var(--alba-gold);
+  color: var(--alba-ink);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 100%;
+  font-size: 0.78rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.champion-place-disc {
+  width: 0.95rem;
+  height: 0.95rem;
+  fill: var(--alba-ink);
+}
+.champion-plate {
+  position: absolute;
+  z-index: 6;
+  left: 1.3rem;
+  right: 1.3rem;
+  bottom: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0;
+}
+.champion-name {
+  font-size: clamp(2.2rem, 9.5cqi, 3.2rem);
+  line-height: 0.84;
+  color: var(--alba-paper);
+  white-space: nowrap;
+}
+.champion-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+.champion-loc {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-stretch: 100%;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d6dcff;
+  max-width: 17ch;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.champion-meta .num-prize {
+  color: var(--alba-gold);
+  font-size: clamp(1.8rem, 9cqi, 2.4rem);
+}
+.champion-meta .num-prize-unit {
+  color: var(--alba-paper);
+}
+
+/* ============================================================
+ * M1 — MOTION PRIMITIVES
+ * Four reusable verbs. Each is a token pair (duration + easing)
+ * and a keyframe. Scene choreography will tune the values later.
+ * No overshoot, no spring, no bounce anywhere in the set.
+ * ============================================================ */
+@keyframes verb-deal {
+  from {
+    transform: translate3d(var(--deal-x, 0), var(--deal-y, 0), 0) rotate(var(--deal-r, 0deg));
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes verb-slide {
+  from {
+    transform: translate3d(var(--slide-from, -12px), 0, 0);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes verb-settle {
+  from {
+    transform: translate3d(0, var(--settle-from, 3px), 0);
+  }
+  to {
+    transform: none;
+  }
+}
+.verb-deal {
+  animation: verb-deal var(--dur-deal) var(--ease-deal) both;
+}
+.verb-slide {
+  animation: verb-slide var(--dur-slide) var(--ease-slide) both;
+}
+/* SETTLE runs AFTER another verb: delay it so it lands once the main move ends. */
+.verb-settle {
+  animation: verb-settle var(--dur-settle) var(--ease-settle) both;
+  animation-delay: var(--settle-delay, var(--dur-slide));
+}
+/* TURN is a property of a flip container, see the card primitive. */
+
+@media (prefers-reduced-motion: reduce) {
+  .verb-deal,
+  .verb-slide,
+  .verb-settle {
+    animation: none;
+  }
+}
+
+/* ============================================================
+ * M1 — CARD PRIMITIVE + TURN (Card.tsx)
+ * One box for both faces. The turn is rotateY inside it; neither face
+ * changes its own dimensions, so the card never changes apparent size.
+ * ============================================================ */
+.card-button {
+  --card-lift: 0px;
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transform: translate3d(0, var(--card-lift), 0);
+  transition: transform var(--dur-std) var(--ease-std);
+  -webkit-tap-highlight-color: transparent;
+}
+/* selection: a restrained lift and an ink keyline on the card edge */
+.card-button.card-selected {
+  --card-lift: -10px;
+}
+.card-button:focus-visible {
+  outline: 3px solid var(--alba-blue);
+  outline-offset: 4px;
+  border-radius: 10px;
+}
+/* The shared box: 2:3, the flip canvas. */
+.card-turn {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  transform-style: preserve-3d;
+  transition: transform var(--dur-turn) var(--ease-turn);
+}
+.card-turn--flipped {
+  transform: rotateY(180deg);
+}
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: block;
+}
+.card-face--back {
+  transform: rotateY(180deg);
+}
+.card-face .card-img,
+.card-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* A real perspective, not a flat cheat: set on the parent, not each card. */
+.card-button {
+  perspective: 1400px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-button,
+  .card-turn {
+    transition: none;
+  }
+  /* state still changes: the face swaps instantly, nothing travels */
+  .card-turn--flipped {
+    transform: none;
+  }
+  .card-face--back {
+    display: none;
+  }
+  .card-turn--flipped .card-face--front {
+    display: none;
+  }
+  .card-turn--flipped .card-face--back {
+    display: block;
+    transform: none;
+  }
 }
