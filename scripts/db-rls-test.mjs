@@ -75,7 +75,9 @@ async function main() {
   await db.exec(
     fs.readFileSync("supabase/migrations/20261110090000_secure_admin_core.sql", "utf8"),
   );
-  await db.exec(fs.readFileSync("supabase/migrations/20261110100000_admin_audit_triggers.sql", "utf8"));
+  await db.exec(
+    fs.readFileSync("supabase/migrations/20261110100000_admin_audit_triggers.sql", "utf8"),
+  );
   await db.exec(fs.readFileSync("supabase/seed.sql", "utf8"));
   // Two real auth users. Only ADMIN is provisioned, by trusted (superuser) access.
   await db.exec(`insert into auth.users (id) values ('${ADMIN}'), ('${USER}')`);
@@ -146,20 +148,60 @@ async function main() {
   );
 
   // ---- Corrected policy architecture (no anon access to membership) ----
-  await denied("anon cannot SELECT admin_users at all", () => as("anon", null, () => db.query("select count(*)::int as n from public.admin_users")));
-  await expectCount("anon reads the active published English tutorial (1)",
-    () => as("anon", null, () => db.query("select count(*)::int as n from public.how_to_play_videos where active and published and language = 'en'")), 1);
-  await expectCount("admin sees their own membership row (1)",
-    () => as("authenticated", ADMIN, () => db.query("select count(*)::int as n from public.admin_users where user_id = auth.uid()")), 1);
-  await expectCount("ordinary user sees only their own membership (0)",
-    () => as("authenticated", USER, () => db.query("select count(*)::int as n from public.admin_users")), 0);
-  await expectCount("admin reads unpublished tournament via the admin policy",
-    () => as("authenticated", ADMIN, () => db.query("select count(*)::int as n from public.tournaments where published = false")), 0);
+  await denied("anon cannot SELECT admin_users at all", () =>
+    as("anon", null, () => db.query("select count(*)::int as n from public.admin_users")),
+  );
+  await expectCount(
+    "anon reads the active published English tutorial (1)",
+    () =>
+      as("anon", null, () =>
+        db.query(
+          "select count(*)::int as n from public.how_to_play_videos where active and published and language = 'en'",
+        ),
+      ),
+    1,
+  );
+  await expectCount(
+    "admin sees their own membership row (1)",
+    () =>
+      as("authenticated", ADMIN, () =>
+        db.query("select count(*)::int as n from public.admin_users where user_id = auth.uid()"),
+      ),
+    1,
+  );
+  await expectCount(
+    "ordinary user sees only their own membership (0)",
+    () =>
+      as("authenticated", USER, () =>
+        db.query("select count(*)::int as n from public.admin_users"),
+      ),
+    0,
+  );
+  await expectCount(
+    "admin reads unpublished tournament via the admin policy",
+    () =>
+      as("authenticated", ADMIN, () =>
+        db.query("select count(*)::int as n from public.tournaments where published = false"),
+      ),
+    0,
+  );
   await db.exec("update public.tournaments set published = false where tournament_number = 26");
-  await expectCount("admin reads the unpublished tournament via the admin policy (1)",
-    () => as("authenticated", ADMIN, () => db.query("select count(*)::int as n from public.tournaments where tournament_number = 26")), 1);
-  await expectCount("ordinary user cannot read the unpublished tournament (0)",
-    () => as("authenticated", USER, () => db.query("select count(*)::int as n from public.tournaments where tournament_number = 26")), 0);
+  await expectCount(
+    "admin reads the unpublished tournament via the admin policy (1)",
+    () =>
+      as("authenticated", ADMIN, () =>
+        db.query("select count(*)::int as n from public.tournaments where tournament_number = 26"),
+      ),
+    1,
+  );
+  await expectCount(
+    "ordinary user cannot read the unpublished tournament (0)",
+    () =>
+      as("authenticated", USER, () =>
+        db.query("select count(*)::int as n from public.tournaments where tournament_number = 26"),
+      ),
+    0,
+  );
   await db.exec("update public.tournaments set published = true where tournament_number = 26");
 
   // ---- Anonymous mutations: all must fail ----
@@ -317,14 +359,36 @@ async function main() {
 
   // ---- Database-level audit (triggers, invoker) ----
   await db.exec("delete from public.admin_audit_log");
-  await as("authenticated", ADMIN, () => db.query("update public.tournaments set title = 'Tournament #27' where tournament_number = 27"));
-  await expectCount("admin UPDATE to a tournament writes exactly one audit row",
-    () => db.query("select count(*)::int as n from public.admin_audit_log where action = 'update' and entity_type = 'tournaments' and actor_id = '" + ADMIN + "'"), 1);
-  await as("authenticated", USER, () => db.query("update public.tournaments set title = 'Hacked' where tournament_number = 27"));
-  await expectCount("ordinary user's denied update writes NO audit row",
-    () => db.query("select count(*)::int as n from public.admin_audit_log where actor_id = '" + USER + "'"), 0);
-  await expectCount("the tournament title was not changed by the ordinary user",
-    () => db.query("select count(*)::int as n from public.tournaments where title = 'Tournament #27'"), 1);
+  await as("authenticated", ADMIN, () =>
+    db.query("update public.tournaments set title = 'Tournament #27' where tournament_number = 27"),
+  );
+  await expectCount(
+    "admin UPDATE to a tournament writes exactly one audit row",
+    () =>
+      db.query(
+        "select count(*)::int as n from public.admin_audit_log where action = 'update' and entity_type = 'tournaments' and actor_id = '" +
+          ADMIN +
+          "'",
+      ),
+    1,
+  );
+  await as("authenticated", USER, () =>
+    db.query("update public.tournaments set title = 'Hacked' where tournament_number = 27"),
+  );
+  await expectCount(
+    "ordinary user's denied update writes NO audit row",
+    () =>
+      db.query(
+        "select count(*)::int as n from public.admin_audit_log where actor_id = '" + USER + "'",
+      ),
+    0,
+  );
+  await expectCount(
+    "the tournament title was not changed by the ordinary user",
+    () =>
+      db.query("select count(*)::int as n from public.tournaments where title = 'Tournament #27'"),
+    1,
+  );
 
   // ---- Storage ----
   await allowed("admin can upload to site-media", () =>
