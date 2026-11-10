@@ -172,14 +172,6 @@ export function Hero() {
               </div>
             </div>
           </div>
-          <div className="mx-auto mt-2 flex max-w-[560px] justify-between lg:max-w-none lg:px-[2%]">
-            <p className="label">
-              <span className="text-alba-gold">01</span> {t("hero.physical")}
-            </p>
-            <p className="label lg:mr-[4%]">
-              <span className="text-alba-gold">02</span> {t("hero.digital")}
-            </p>
-          </div>
         </div>
       </div>
       {/* The wave edge now belongs to the next chapter: the hero blue flows

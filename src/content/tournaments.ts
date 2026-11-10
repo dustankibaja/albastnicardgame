@@ -44,13 +44,12 @@ export const tournaments: Tournament[] = [
     timezone: TOURNAMENT_TIMEZONE,
   },
   {
-    // Verified: postponed from 31 Oct 2026; now 12 Dec 2026; registration in the app.
-    // Start time NOT verified for the new date (the 8:00 PM in old app/promo
-    // material belonged to 31 Oct) — so no time and no countdown.
+    // Verified (owner-confirmed): Saturday 12 Dec 2026, 8:00 PM EAT (UTC+3).
     id: "tournament-27",
     number: 27,
     status: "upcoming",
     date: "2026-12-12",
+    startAt: "2026-12-12T20:00:00+03:00",
     timezone: TOURNAMENT_TIMEZONE,
     registration: "app",
     previousScheduledDate: "2026-10-31",

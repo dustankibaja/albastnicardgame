@@ -2,7 +2,11 @@
 
 Status: **not ready to publish** until the BLOCKERS below are closed.
 
-## Swahili review (owner decision required)
+## Swahili review
+
+Prize (Zawadi) and "These people already did." (Hawa tayari wameshinda.) are approved.
+The rows marked pending below were added in the post-QA corrections and need approval.
+Time format: "8:00 PM EAT" is shown the same way in both languages.
 
 Translations stay centralised in `src/lib/i18n.tsx`. Nothing below has been changed
 without owner approval.
@@ -15,6 +19,13 @@ without owner approval.
 | arena.startTbc | Start time to be announced | Muda wa kuanza utatangazwa | High |
 | arena.nextLabel | Tournament #27 | Mashindano #27 | High |
 | arena.proof | These people already did. | **Hawa tayari wameshinda.** | **APPROVED by owner.** Natural marketing translation conveying that these players have already won |
+
+| nav.shop | Shop | **Duka** | **Pending owner approval.** New header/footer label |
+| shop.title | Shop | **Duka** | **Pending owner approval.** Shop page heading |
+| shop.explore | Explore shop | **Chunguza duka** | **Pending owner approval.** Homepage button |
+| how.title1 / how.title2 | How to play / Albastini. | **Jinsi ya kucheza / Albastini.** | **Pending owner approval.** Replaces the app-guide heading |
+| how.videoTitle | How to Play Albastini — official tutorial in English | **Jinsi ya kucheza Albastini — mafunzo rasmi kwa Kiingereza** | **Pending owner approval.** Accessible title of the video |
+| how.videoCaption | Official tutorial · English | **Mafunzo rasmi · Kiingereza** | **Pending owner approval.** Caption under the video |
 
 No existing Kiswahili string was changed during the revamp. Both uncertain strings above are now approved; no other translation was altered.
 

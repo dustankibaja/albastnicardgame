@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Reveal } from "./Reveal";
 import { ChampionsCarousel } from "./ChampionsCarousel";
+import { ChampionsBeats } from "./ChampionsBeats";
 import { ArenaFixture, PrizeLadder } from "./Arena";
 import { Numeral } from "./Numeral";
 import { Wave } from "./Wave";
@@ -20,6 +21,14 @@ import { formatTournamentDate, getFeaturedTournament, getTournamentPhase } from 
 export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
   const { t, lang } = useI18n();
   const [now, setNow] = useState(renderedAt);
+  const [beatsMode, setBeatsMode] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px) and (prefers-reduced-motion: no-preference)");
+    const sync = () => setBeatsMode(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   const featured = getFeaturedTournament(tournaments, now);
   const phase = featured ? getTournamentPhase(featured, now) : null;
@@ -107,19 +116,11 @@ export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
               </p>
             </Reveal>
             <div className="champ-stage relative mt-10">
-              {/* environment: the place of the ranks, behind the cover (decorative; the rank is also
-                  printed on the cover and in the index, so it is not repeated as text) */}
-              <div className="champ-env" aria-hidden="true">
-                <Numeral role="rank" outline>
-                  {champions.list
-                    .map((w) => w.placement)
-                    .sort((a, b) => a - b)
-                    .join("")}
-                </Numeral>
-              </div>
-              <div className="relative z-10">
+              {beatsMode ? (
+                <ChampionsBeats tournament={champions.tournament} winners={champions.list} />
+              ) : (
                 <ChampionsCarousel tournament={champions.tournament} winners={champions.list} />
-              </div>
+              )}
             </div>
           </div>
         ) : null}

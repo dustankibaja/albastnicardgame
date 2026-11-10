@@ -17,6 +17,16 @@ import { cn } from "@/lib/utils";
  * Only verified data is used. The start time is never invented: the line
  * reads "to be announced" until a time is verified in the content.
  */
+/** "8:00 PM EAT" from the verified start instant, in Dar es Salaam time. */
+function startLabel(startAt: string): string {
+  const time = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "Africa/Dar_es_Salaam",
+  }).format(new Date(startAt));
+  return `${time} EAT`;
+}
+
 export function ArenaFixture({ tournament, now }: { tournament: Tournament; now: number }) {
   const { t, lang } = useI18n();
   const phase = getTournamentPhase(tournament, now);
@@ -39,8 +49,8 @@ export function ArenaFixture({ tournament, now }: { tournament: Tournament; now:
         <p className="num-date keep mt-3 text-alba-paper">
           {postponed ? t("tour.postponed") : date}
         </p>
-        {!postponed && !tournament.startAt ? (
-          <p className="mt-2 text-lg text-alba-paper/85">{t("arena.startTbc")}</p>
+        {!postponed && tournament.startAt ? (
+          <p className="mt-2 text-lg font-bold text-alba-gold">{startLabel(tournament.startAt)}</p>
         ) : null}
         <p className="mt-4 text-lg text-alba-paper/90">{t("tour.registerApp")}</p>
         {showCountdown && tournament.startAt ? (

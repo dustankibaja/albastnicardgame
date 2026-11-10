@@ -29,7 +29,6 @@ export type NavScene = {
 /** Ordered by document position. The LAST chapter whose section has reached the bar wins. */
 export const navScenes: NavScene[] = [
   { section: "top", theme: "hero", active: null },
-  { section: "play", theme: "paper", active: "play" },
   { section: "how-to-play", theme: "paper", active: "how-to-play" },
   { section: "tournaments", theme: "night", active: "tournaments" },
   { section: "cards", theme: "paper", active: "cards" },
@@ -38,8 +37,7 @@ export const navScenes: NavScene[] = [
 
 /** Ordered anchors for the navigation (labels come from i18n). */
 export const navAnchors = [
-  { id: "play", key: "nav.play" },
-  { id: "how-to-play", key: "nav.howto" },
-  { id: "tournaments", key: "nav.tournaments" },
-  { id: "cards", key: "nav.cards" },
+  { id: "how-to-play", key: "nav.howto", href: "#how-to-play" },
+  { id: "tournaments", key: "nav.tournaments", href: "#tournaments" },
+  { id: "cards", key: "nav.shop", href: "/shop" },
 ] as const;
