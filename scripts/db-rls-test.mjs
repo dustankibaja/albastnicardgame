@@ -144,6 +144,23 @@ async function main() {
     0,
   );
 
+  // ---- Corrected policy architecture (no anon access to membership) ----
+  await denied("anon cannot SELECT admin_users at all", () => as("anon", null, () => db.query("select count(*)::int as n from public.admin_users")));
+  await expectCount("anon reads the active published English tutorial (1)",
+    () => as("anon", null, () => db.query("select count(*)::int as n from public.how_to_play_videos where active and published and language = 'en'")), 1);
+  await expectCount("admin sees their own membership row (1)",
+    () => as("authenticated", ADMIN, () => db.query("select count(*)::int as n from public.admin_users where user_id = auth.uid()")), 1);
+  await expectCount("ordinary user sees only their own membership (0)",
+    () => as("authenticated", USER, () => db.query("select count(*)::int as n from public.admin_users")), 0);
+  await expectCount("admin reads unpublished tournament via the admin policy",
+    () => as("authenticated", ADMIN, () => db.query("select count(*)::int as n from public.tournaments where published = false")), 0);
+  await db.exec("update public.tournaments set published = false where tournament_number = 26");
+  await expectCount("admin reads the unpublished tournament via the admin policy (1)",
+    () => as("authenticated", ADMIN, () => db.query("select count(*)::int as n from public.tournaments where tournament_number = 26")), 1);
+  await expectCount("ordinary user cannot read the unpublished tournament (0)",
+    () => as("authenticated", USER, () => db.query("select count(*)::int as n from public.tournaments where tournament_number = 26")), 0);
+  await db.exec("update public.tournaments set published = true where tournament_number = 26");
+
   // ---- Anonymous mutations: all must fail ----
   await denied("anon INSERT into tournaments", () =>
     as("anon", null, () =>

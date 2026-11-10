@@ -38,10 +38,8 @@ create policy admin_users_read_own on public.admin_users
 -- Deliberately NO insert, update or delete policy for any client role.
 
 revoke all on public.admin_users from anon, authenticated;
--- anon needs SELECT so that policies which evaluate is_albastini_admin() return
--- "not an admin" (zero rows) instead of a permission error. The only read policy
--- above is for authenticated, so anon still sees no rows.
-grant select on public.admin_users to anon, authenticated;
+-- No anonymous access to membership at all. Authenticated users may read only their own row.
+grant select on public.admin_users to authenticated;
 
 -- The single authorization predicate used by every admin policy.
 -- SECURITY INVOKER: it reads admin_users under the caller's own RLS, and admin_users
@@ -89,9 +87,16 @@ create trigger tournaments_touch before update on public.tournaments
 
 alter table public.tournaments enable row level security;
 
+-- Public: anonymous and signed-in visitors see only the safe public rows.
+-- This policy never calls is_albastini_admin().
 create policy tournaments_public_read on public.tournaments
   for select to anon, authenticated
-  using (published = true or public.is_albastini_admin());
+  using (published = true);
+
+-- Admin: separate PERMISSIVE policy for verified administrators only.
+create policy tournaments_admin_read on public.tournaments
+  for select to authenticated
+  using (public.is_albastini_admin());
 
 create policy tournaments_admin_insert on public.tournaments
   for insert to authenticated
@@ -136,9 +141,16 @@ create trigger winners_touch before update on public.winners
 
 alter table public.winners enable row level security;
 
+-- Public: anonymous and signed-in visitors see only the safe public rows.
+-- This policy never calls is_albastini_admin().
 create policy winners_public_read on public.winners
   for select to anon, authenticated
-  using (published = true or public.is_albastini_admin());
+  using (published = true);
+
+-- Admin: separate PERMISSIVE policy for verified administrators only.
+create policy winners_admin_read on public.winners
+  for select to authenticated
+  using (public.is_albastini_admin());
 
 create policy winners_admin_insert on public.winners
   for insert to authenticated
@@ -187,9 +199,16 @@ create trigger products_touch before update on public.products
 
 alter table public.products enable row level security;
 
+-- Public: anonymous and signed-in visitors see only the safe public rows.
+-- This policy never calls is_albastini_admin().
 create policy products_public_read on public.products
   for select to anon, authenticated
-  using (published = true or public.is_albastini_admin());
+  using (published = true);
+
+-- Admin: separate PERMISSIVE policy for verified administrators only.
+create policy products_admin_read on public.products
+  for select to authenticated
+  using (public.is_albastini_admin());
 
 create policy products_admin_insert on public.products
   for insert to authenticated
@@ -232,9 +251,16 @@ create trigger how_to_play_touch before update on public.how_to_play_videos
 
 alter table public.how_to_play_videos enable row level security;
 
+-- Public: anonymous and signed-in visitors see only the safe public rows.
+-- This policy never calls is_albastini_admin().
 create policy how_to_play_public_read on public.how_to_play_videos
   for select to anon, authenticated
-  using (published = true or public.is_albastini_admin());
+  using (published = true);
+
+-- Admin: separate PERMISSIVE policy for verified administrators only.
+create policy how_to_play_admin_read on public.how_to_play_videos
+  for select to authenticated
+  using (public.is_albastini_admin());
 
 create policy how_to_play_admin_insert on public.how_to_play_videos
   for insert to authenticated
@@ -271,9 +297,16 @@ create trigger site_settings_touch before update on public.site_settings
 
 alter table public.site_settings enable row level security;
 
+-- Public: anonymous and signed-in visitors see only the safe public rows.
+-- This policy never calls is_albastini_admin().
 create policy site_settings_public_read on public.site_settings
   for select to anon, authenticated
-  using (is_public = true or public.is_albastini_admin());
+  using (is_public = true);
+
+-- Admin: separate PERMISSIVE policy for verified administrators only.
+create policy site_settings_admin_read on public.site_settings
+  for select to authenticated
+  using (public.is_albastini_admin());
 
 create policy site_settings_admin_insert on public.site_settings
   for insert to authenticated
