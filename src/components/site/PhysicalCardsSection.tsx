@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import { useRef } from "react";
+import { AlbaButton } from "./AlbaButton";
 import { CardNotifyForm } from "./CardNotifyForm";
 import { ProductFan } from "./ProductFan";
 import { Wave } from "./Wave";
@@ -19,7 +20,7 @@ import { useI18n } from "@/lib/i18n";
  * edge) so the Safari box clearly leads on small screens (Phase 5 A/B test).
  * No specs, prices, stock or purchase claims.
  */
-export function PhysicalCardsSection() {
+export function PhysicalCardsSection({ variant = "home" }: { variant?: "home" | "shop" } = {}) {
   const { t } = useI18n();
   const stage = useRef<HTMLDivElement>(null);
   useScrollProgress(stage);
@@ -36,11 +37,20 @@ export function PhysicalCardsSection() {
     >
       {/* The night arena hands back to the product along the card-wave: the arena's colour
           hangs into the top of this section, as the blue does at the top of the arena. */}
-      <Wave fill="var(--alba-night)" flip className="absolute inset-x-0 top-0 -mt-px z-0" />
+      {variant === "home" ? (
+        <Wave fill="var(--alba-night)" flip className="absolute inset-x-0 top-0 -mt-px z-0" />
+      ) : null}
       <div className="relative z-[1]">
         <div className="shell grid gap-10 pb-[clamp(5rem,10vw,9rem)] lg:grid-cols-12 lg:gap-8">
           {/* Product stage — pulled up across the arena edge. */}
-          <div ref={stage} className="relative z-10 -mt-[clamp(9rem,20vw,18rem)] lg:col-span-7">
+          <div
+            ref={stage}
+            className={
+              variant === "home"
+                ? "relative z-10 -mt-[clamp(9rem,20vw,18rem)] lg:col-span-7"
+                : "relative z-10 lg:col-span-7"
+            }
+          >
             <div className="relative mx-auto aspect-[1/1.34] w-full max-w-[760px] sm:aspect-[1/1.12] lg:aspect-[1/1]">
               {/* Stage is taller below 1024px so the anchored photo (top fixed to the
                 arena edge) always ends inside it and never covers the headline.
@@ -93,7 +103,13 @@ export function PhysicalCardsSection() {
           </div>
 
           {/* top padding = the night wave's depth, so the headline always sits on paper */}
-          <Reveal className="self-end pt-[clamp(44px,7vw,120px)] lg:col-span-5 lg:pb-6">
+          <Reveal
+            className={
+              variant === "home"
+                ? "self-end pt-[clamp(44px,7vw,120px)] lg:col-span-5 lg:pb-6"
+                : "self-end lg:col-span-5 lg:pb-6"
+            }
+          >
             <h2
               id="cards-title"
               className="display-xl type-headline lg:text-[clamp(3.25rem,5.2vw,5.5rem)]"
@@ -107,6 +123,13 @@ export function PhysicalCardsSection() {
             </p>
 
             {/* Form second: folded away, honest about being closed. */}
+            {variant === "home" ? (
+              <div className="mt-8">
+                <AlbaButton asChildHref="/shop" size="lg">
+                  {t("shop.explore")}
+                </AlbaButton>
+              </div>
+            ) : null}
             <details className="group mt-10 max-w-md border-y-2 border-alba-ink">
               <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-3 font-display text-xl font-extrabold uppercase [font-stretch:78%] [&::-webkit-details-marker]:hidden">
                 {t("form.toggle")}

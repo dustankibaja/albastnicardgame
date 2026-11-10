@@ -9,13 +9,13 @@ import { LanguageToggle } from "@/components/site/LanguageToggle";
  * attribute; it is never unmounted or re-created per scene.
  * (M1 step 1: smallest version — theme + active section, no marker yet.)
  */
-export function SceneNav() {
+export function SceneNav({ page = "home" }: { page?: "home" | "shop" } = {}) {
   const { t } = useI18n();
-  const [theme, setTheme] = useState<NavTheme>("hero");
+  const [theme, setTheme] = useState<NavTheme>(page === "shop" ? "paper" : "hero");
   const navHeight = 64;
   // The active destination is resolved by the SAME sentinel event as the theme
   // (see the scene effect below): one source, so the link and the scene can never disagree.
-  const [active, setActive] = useState<string | null>(null);
+  const [active, setActive] = useState<string | null>(page === "shop" ? "cards" : null);
   const navRef = useRef<HTMLElement>(null);
   const linksRef = useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -49,6 +49,7 @@ export function SceneNav() {
   // schedules at most ONE measurement per frame, and only while scrolling. A chapter
   // begins when its section's top edge reaches the bottom of the bar.
   useEffect(() => {
+    if (page === "shop") return; // the shop page keeps its paper state; there are no home chapters
     const entries = navScenes
       .map((sc) => ({ sc, el: document.getElementById(sc.section) }))
       .filter((x): x is { sc: NavScene; el: HTMLElement } => x.el !== null);
@@ -134,7 +135,7 @@ export function SceneNav() {
           {navAnchors.map((a) => (
             <a
               key={a.id}
-              href={`#${a.id}`}
+              href={a.href}
               aria-current={active === a.id ? "true" : undefined}
               className="scene-nav-link"
             >
@@ -191,7 +192,7 @@ export function SceneNav() {
             {navAnchors.map((a) => (
               <a
                 key={a.id}
-                href={`#${a.id}`}
+                href={a.href}
                 aria-current={active === a.id ? "true" : undefined}
                 className="scene-menu-link"
                 onClick={() => closeMenu(false)}

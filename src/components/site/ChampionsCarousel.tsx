@@ -123,6 +123,13 @@ export function ChampionsCarousel({
         })}
       </div>
 
+      {/* environment: the current rank, behind the cover */}
+      <div className="champ-env" aria-hidden="true">
+        <Numeral role="rank" outline>
+          {String(winners[index]?.placement ?? 1).padStart(2, "0")}
+        </Numeral>
+      </div>
+
       {ready && count > 1 ? (
         <div className="champ-controls mt-8">
           {/* primary state: the collector index, in the numeric grammar */}
