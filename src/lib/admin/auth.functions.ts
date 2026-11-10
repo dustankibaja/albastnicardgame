@@ -2,11 +2,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { setResponseHeader } from "@tanstack/react-start/server";
 import { createSupabaseServerClient } from "../supabase/server";
 import {
+  AdminDataError,
   resolveAdminStatus,
   signInAsAdmin,
-  AdminDataError,
+  signOutSession,
   type SessionState,
   type SignInResult,
+  type SignOutResult,
 } from "./auth-core";
 import { asClientLike } from "./server-adapter";
 import { loginSchema } from "./schemas";
@@ -40,9 +42,11 @@ export const signInAdmin = createServerFn({ method: "POST" })
     return signInAsAdmin(asClientLike(client), data.email, data.password);
   });
 
-export const signOutAdmin = createServerFn({ method: "POST" }).handler(async () => {
-  noStore();
-  const client = createSupabaseServerClient();
-  if (client) await client.auth.signOut();
-  return { ok: true as const };
-});
+export const signOutAdmin = createServerFn({ method: "POST" }).handler(
+  async (): Promise<SignOutResult> => {
+    noStore();
+    const client = createSupabaseServerClient();
+    if (!client) return { ok: false, reason: "failed" };
+    return signOutSession(asClientLike(client));
+  },
+);

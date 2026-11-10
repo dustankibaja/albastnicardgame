@@ -5,6 +5,9 @@ import { getAdminSession, signOutAdmin } from "@/lib/admin/auth.functions";
 import { getOverview, type OverviewStats } from "@/lib/admin/overview.functions";
 import { AlbaButton } from "@/components/site/AlbaButton";
 import { formatAdminDate } from "@/lib/admin/format";
+import { TournamentEditor } from "@/components/admin/TournamentEditor";
+import { TutorialEditor } from "@/components/admin/TutorialEditor";
+import { SettingsEditor } from "@/components/admin/SettingsEditor";
 
 const SECTIONS = [
   { id: "overview", label: "Overview" },
@@ -53,9 +56,16 @@ function AdminDashboard() {
   const router = useRouter();
   const logout = useServerFn(signOutAdmin);
   const [navOpen, setNavOpen] = useState(false);
+  const [logoutError, setLogoutError] = useState<string | null>(null);
 
   async function onLogout() {
-    await logout();
+    setLogoutError(null);
+    const result = await logout();
+    // Navigate away only after the auth service confirmed the sign-out.
+    if (!result.ok) {
+      setLogoutError("Could not sign out. Check your connection and try again.");
+      return;
+    }
     await router.navigate({ to: "/admin/login" });
   }
 
@@ -142,12 +152,23 @@ function AdminDashboard() {
   );
 }
 
+function renderSection(id: (typeof SECTIONS)[number]["id"], overview: OverviewStats | null) {
+  if (id === "overview") return <Overview overview={overview} />;
+  if (id === "tournament") return <TournamentEditor />;
+  if (id === "how-to-play") return <TutorialEditor />;
+  if (id === "settings") return <SettingsEditor />;
+  return <NotBuiltYet label={id === "winners" ? "Winners" : "Shop"} />;
+}
+
 function Overview({ overview }: { overview: OverviewStats | null }) {
   if (!overview) return null;
   const up = overview.upcoming;
   return (
     <div className="mt-8 grid gap-4 sm:grid-cols-2">
-      <Fact label="Upcoming tournament" value={up ? `Tournament #${up.number}` : "None"} />
+      <Fact
+        label="Next upcoming tournament"
+        value={up ? `Tournament #${up.number}` : "None scheduled"}
+      />
       <Fact
         label="Date and time"
         value={up?.startsAt ? `${formatAdminDate(up.startsAt)} · ${up.timezone}` : "Not set"}

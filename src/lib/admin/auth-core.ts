@@ -98,3 +98,35 @@ export async function signInAsAdmin(
   }
   return { ok: true };
 }
+
+export type SignOutResult = { ok: true } | { ok: false; reason: "failed" };
+
+/**
+ * Sign out. Success is reported ONLY when the auth service confirms it. A failure is
+ * returned as a failure, so the UI never claims a session was ended when it was not.
+ */
+export async function signOutSession(client: ClientLike): Promise<SignOutResult> {
+  try {
+    const { error } = await client.auth.signOut();
+    return error ? { ok: false, reason: "failed" } : { ok: true };
+  } catch {
+    return { ok: false, reason: "failed" };
+  }
+}
+
+export type LoginPageAction =
+  | { kind: "redirect-admin" }
+  | { kind: "clear-session-and-deny" }
+  | { kind: "show-login"; session: "anonymous" | "unconfigured" | "unavailable" };
+
+/**
+ * What the login page should do with the current server-verified session.
+ * A forbidden (signed-in, non-admin) session is cleared, never left in place.
+ */
+export function loginPageAction(status: SessionState): LoginPageAction {
+  if (status.kind === "admin") return { kind: "redirect-admin" };
+  if (status.kind === "forbidden") return { kind: "clear-session-and-deny" };
+  if (status.kind === "unconfigured") return { kind: "show-login", session: "unconfigured" };
+  if (status.kind === "unavailable") return { kind: "show-login", session: "unavailable" };
+  return { kind: "show-login", session: "anonymous" };
+}

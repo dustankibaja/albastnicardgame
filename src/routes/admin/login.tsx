@@ -1,7 +1,8 @@
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { getAdminSession, signInAdmin } from "@/lib/admin/auth.functions";
+import { getAdminSession, signInAdmin, signOutAdmin } from "@/lib/admin/auth.functions";
+import { loginPageAction } from "@/lib/admin/auth-core";
 import { loginSchema } from "@/lib/admin/schemas";
 import { AlbaButton } from "@/components/site/AlbaButton";
 
@@ -19,7 +20,13 @@ export const Route = createFileRoute("/admin/login")({
   }),
   beforeLoad: async () => {
     const session = await getAdminSession();
-    if (session.kind === "admin") throw redirect({ to: "/admin" });
+    const action = loginPageAction(session);
+    if (action.kind === "redirect-admin") throw redirect({ to: "/admin" });
+    if (action.kind === "clear-session-and-deny") {
+      // A signed-in non-administrator must not stay signed in on the login page.
+      await signOutAdmin();
+      return { session: { kind: "forbidden" as const, email: null } };
+    }
     return { session };
   },
   component: LoginPage,
@@ -42,7 +49,9 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [serverError, setServerError] = useState<string | null>(
-    searchError === "not-authorized" ? MESSAGES["not-authorized"] : null,
+    searchError === "not-authorized" || session.kind === "forbidden"
+      ? MESSAGES["not-authorized"]
+      : null,
   );
   const [busy, setBusy] = useState(false);
 
