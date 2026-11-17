@@ -1,7 +1,7 @@
 import { Picture } from "./Picture";
 import { Numeral } from "./Numeral";
 import { hasImage } from "@/content/assets";
-import { formatPrize, prizeFor, type Winner } from "@/content/winners";
+import { formatPrize, winnerPrize, type Winner } from "@/content/winners";
 import { cn } from "@/lib/utils";
 
 /*
@@ -39,7 +39,7 @@ export function ChampionFrame({
 }) {
   const mode = winner.photoMode ?? "editorial-photo";
   const portrait = winner.portrait && hasImage(winner.portrait) ? winner.portrait : null;
-  const prize = formatPrize(prizeFor(winner.placement));
+  const prize = formatPrize(winnerPrize(winner));
   const rankText = String(winner.placement).padStart(2, "0");
 
   return (

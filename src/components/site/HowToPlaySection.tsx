@@ -9,9 +9,8 @@ import { useI18n } from "@/lib/i18n";
  * instruction on the page: visitors are not sent into the app to learn the game.
  * There is no language switch: only the real English tutorial exists today.
  */
-const TUTORIAL_ID = "wGd1QJHSU0E";
 
-export function HowToPlaySection() {
+export function HowToPlaySection({ tutorialId }: { tutorialId: string }) {
   const { t } = useI18n();
 
   return (
@@ -38,7 +37,7 @@ export function HowToPlaySection() {
           <figure>
             <div className="how-video">
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${TUTORIAL_ID}`}
+                src={`https://www.youtube-nocookie.com/embed/${tutorialId}`}
                 title={t("how.videoTitle")}
                 loading="lazy"
                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

@@ -391,12 +391,74 @@ async function main() {
   );
 
   // ---- Storage ----
+  // Two objects: one that must survive every attempt (so the public-read check
+  // still has something to read), and one the admin is allowed to delete.
   await allowed("admin can upload to site-media", () =>
     as("authenticated", ADMIN, () =>
       db.query(
         "insert into storage.objects (bucket_id, name) values ('site-media','winners/test.png')",
       ),
     ),
+  );
+  await allowed("admin can upload a second object to site-media", () =>
+    as("authenticated", ADMIN, () =>
+      db.query(
+        "insert into storage.objects (bucket_id, name) values ('site-media','winners/disposable.png')",
+      ),
+    ),
+  );
+  await denied("anon UPDATE a site-media object", () =>
+    as("anon", null, () =>
+      db.query(
+        "update storage.objects set name = 'winners/hacked.png' where name = 'winners/test.png'",
+      ),
+    ),
+  );
+  await denied("anon DELETE a site-media object", () =>
+    as("anon", null, () => db.query("delete from storage.objects where name = 'winners/test.png'")),
+  );
+  await denied("ordinary user UPDATE a site-media object", () =>
+    as("authenticated", USER, () =>
+      db.query(
+        "update storage.objects set name = 'winners/hacked.png' where name = 'winners/test.png'",
+      ),
+    ),
+  );
+  await denied("ordinary user DELETE a site-media object", () =>
+    as("authenticated", USER, () =>
+      db.query("delete from storage.objects where name = 'winners/test.png'"),
+    ),
+  );
+  await expectCount(
+    "the site-media object survived every unauthorized attempt",
+    () =>
+      db.query("select count(*)::int as n from storage.objects where name = 'winners/test.png'"),
+    1,
+  );
+  await allowed("admin can replace a site-media object", () =>
+    as("authenticated", ADMIN, () =>
+      db.query(
+        "update storage.objects set name = 'winners/test.png' where name = 'winners/test.png'",
+      ),
+    ),
+  );
+  await allowed("admin can delete a site-media object", () =>
+    as("authenticated", ADMIN, () =>
+      db.query("delete from storage.objects where name = 'winners/disposable.png'"),
+    ),
+  );
+  await expectCount(
+    "the admin delete removed exactly the object it targeted",
+    () => db.query("select count(*)::int as n from storage.objects"),
+    1,
+  );
+  await expectCount(
+    "anonymous visitors can still read the public site-media bucket",
+    () =>
+      as("anon", null, () =>
+        db.query("select count(*)::int as n from storage.objects where bucket_id = 'site-media'"),
+      ),
+    1,
   );
 
   // ---- Data integrity constraints ----

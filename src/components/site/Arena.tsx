@@ -27,13 +27,21 @@ function startLabel(startAt: string): string {
   return `${time} EAT`;
 }
 
-export function ArenaFixture({ tournament, now }: { tournament: Tournament; now: number }) {
+export function ArenaFixture({
+  tournament,
+  now,
+  countdownEnabled,
+}: {
+  tournament: Tournament;
+  now: number;
+  countdownEnabled: boolean;
+}) {
   const { t, lang } = useI18n();
   const phase = getTournamentPhase(tournament, now);
   const date = formatTournamentDate(tournament, lang);
   const postponed = phase === "postponed";
   // Countdown only for a VERIFIED start time while the event is upcoming.
-  const showCountdown = phase === "upcoming" && Boolean(tournament.startAt);
+  const showCountdown = countdownEnabled && phase === "upcoming" && Boolean(tournament.startAt);
 
   return (
     <div className="arena-fixture relative">

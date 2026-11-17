@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ChampionFrame } from "./ChampionFrame";
 import { Numeral } from "./Numeral";
 import type { Tournament } from "@/content/tournaments";
-import { formatPrize, prizeFor, type Winner } from "@/content/winners";
+import { formatPrize, winnerPrize, type Winner } from "@/content/winners";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -152,7 +152,7 @@ export function ChampionsBeats({
       <ul className="sr-only">
         {winners.map((ww) => (
           <li key={ww.id}>
-            {ww.displayName}, {ww.location}, {formatPrize(prizeFor(ww.placement))}
+            {ww.displayName}, {ww.location}, {formatPrize(winnerPrize(ww))}
           </li>
         ))}
       </ul>

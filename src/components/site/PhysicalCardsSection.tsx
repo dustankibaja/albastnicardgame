@@ -9,6 +9,12 @@ import { Reveal } from "./Reveal";
 import { hasImage } from "@/content/assets";
 import { useScrollProgress } from "@/hooks/use-depth";
 import { useI18n } from "@/lib/i18n";
+import {
+  FALLBACK_PRODUCTS,
+  localizedProductDescription,
+  type PublicProduct,
+} from "@/lib/public/cms-mapping";
+import { formatPrice } from "@/lib/public/format";
 
 /*
  * TAKE THE GAME TO THE TABLE. Product first, generous white space, form last.
@@ -20,8 +26,15 @@ import { useI18n } from "@/lib/i18n";
  * edge) so the Safari box clearly leads on small screens (Phase 5 A/B test).
  * No specs, prices, stock or purchase claims.
  */
-export function PhysicalCardsSection({ variant = "home" }: { variant?: "home" | "shop" } = {}) {
-  const { t } = useI18n();
+export function PhysicalCardsSection({
+  variant = "home",
+  product = FALLBACK_PRODUCTS[0]!,
+}: {
+  variant?: "home" | "shop";
+  /** Published CMS product when one exists; otherwise the verified Physical Cards record. */
+  product?: PublicProduct;
+} = {}) {
+  const { t, lang } = useI18n();
   const stage = useRef<HTMLDivElement>(null);
   useScrollProgress(stage);
 
@@ -117,10 +130,24 @@ export function PhysicalCardsSection({ variant = "home" }: { variant?: "home" | 
               <span className="keep block">{t("phys.title1")}</span>
               <span className="keep block">{t("phys.title2")}</span>
             </h2>
-            <p className="type-lede mt-6 max-w-[28ch]">{t("phys.body")}</p>
-            <p className="label mt-6 inline-block rounded-full bg-alba-gold px-4 py-2">
-              {t("phys.status")}
+            <p className="type-lede mt-6 max-w-[28ch]">
+              {localizedProductDescription(product, lang) ?? t("phys.body")}
             </p>
+            {/* A price shows only when the CMS carries a real amount and currency. Never invented. */}
+            {product.price ? (
+              <p className="mt-4 text-xl font-extrabold">
+                {formatPrice(product.price.amount, product.price.currency)}
+              </p>
+            ) : null}
+            {product.availability === "coming_soon" ? (
+              <p className="label mt-6 inline-block rounded-full bg-alba-gold px-4 py-2">
+                {t("phys.status")}
+              </p>
+            ) : product.availability === "unavailable" ? (
+              <p className="label mt-6 inline-block rounded-full bg-alba-gold px-4 py-2">
+                {t("phys.unavailable")}
+              </p>
+            ) : null}
 
             {/* Form second: folded away, honest about being closed. */}
             {variant === "home" ? (

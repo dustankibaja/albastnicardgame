@@ -5,6 +5,8 @@ import { FinalCTA } from "@/components/site/FinalCTA";
 import { Footer } from "@/components/site/Footer";
 import { Hero } from "@/components/site/Hero";
 import { HowToPlaySection } from "@/components/site/HowToPlaySection";
+import { getPublicContent, getPublicShop } from "@/lib/public/cms.functions";
+import { teaserProduct } from "@/lib/public/cms-mapping";
 import { SceneNav } from "@/components/nav/SceneNav";
 import { PhysicalCardsSection } from "@/components/site/PhysicalCardsSection";
 import { TableToScreen } from "@/components/site/TableToScreen";
@@ -18,7 +20,11 @@ const description =
 export const Route = createFileRoute("/")({
   // One clock for SSR + hydration. Tournament/winner content is static and
   // version-controlled (src/content/), so nothing is fetched or polled.
-  loader: () => ({ renderedAt: Date.now() }),
+  loader: async () => ({
+    renderedAt: Date.now(),
+    content: await getPublicContent(),
+    shop: await getPublicShop(),
+  }),
   head: () => {
     const meta: Record<string, string>[] = [
       { title },
@@ -79,7 +85,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { renderedAt } = Route.useLoaderData();
+  const { renderedAt, content, shop } = Route.useLoaderData();
   return (
     <LanguageProvider>
       <DownloadProvider>
@@ -89,9 +95,14 @@ function Index() {
           <main>
             <Hero />
             <TableToScreen />
-            <HowToPlaySection />
-            <CompetitionSection renderedAt={renderedAt} />
-            <PhysicalCardsSection />
+            <HowToPlaySection tutorialId={content.tutorialId.data} />
+            <CompetitionSection
+              renderedAt={renderedAt}
+              tournaments={content.tournaments.data}
+              winners={content.winners.data}
+              countdownEnabled={content.countdown.data}
+            />
+            <PhysicalCardsSection product={teaserProduct(shop)} />
             <FinalCTA />
           </main>
           <Footer />

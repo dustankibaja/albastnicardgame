@@ -5,8 +5,8 @@ import { ChampionsBeats } from "./ChampionsBeats";
 import { ArenaFixture, PrizeLadder } from "./Arena";
 import { Numeral } from "./Numeral";
 import { Wave } from "./Wave";
-import { tournaments, type Tournament } from "@/content/tournaments";
-import { winners } from "@/content/winners";
+import type { Tournament } from "@/content/tournaments";
+import type { Winner } from "@/content/winners";
 import { useI18n } from "@/lib/i18n";
 import { formatTournamentDate, getFeaturedTournament, getTournamentPhase } from "@/lib/tournament";
 
@@ -18,7 +18,17 @@ import { formatTournamentDate, getFeaturedTournament, getTournamentPhase } from 
  * client render use the same clock (no hydration mismatch). After mount the
  * clock ticks once a second, only while a countdown is actually visible.
  */
-export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
+export function CompetitionSection({
+  renderedAt,
+  tournaments,
+  winners,
+  countdownEnabled,
+}: {
+  renderedAt: number;
+  tournaments: Tournament[];
+  winners: Winner[];
+  countdownEnabled: boolean;
+}) {
   const { t, lang } = useI18n();
   const [now, setNow] = useState(renderedAt);
   const [beatsMode, setBeatsMode] = useState(false);
@@ -88,7 +98,7 @@ export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
           </Reveal>
           <div className="lg:col-span-6 lg:col-start-7 lg:-mt-[clamp(6rem,10vw,10rem)]">
             {featured && phase ? (
-              <ArenaFixture tournament={featured} now={now} />
+              <ArenaFixture tournament={featured} now={now} countdownEnabled={countdownEnabled} />
             ) : (
               <p className="text-xl">{t("tour.none")}</p>
             )}

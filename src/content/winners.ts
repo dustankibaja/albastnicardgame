@@ -39,10 +39,17 @@ export type Winner = {
   imageFit?: "cover" | "contain";
   /** CSS object-position, e.g. "50% 30%". */
   imagePosition?: string;
+  /** Prize in TSH from the database. Absent for source-controlled winners: the placement table applies. */
+  prizeAmount?: number;
 };
 
 export function prizeFor(placement: Placement) {
   return tournamentPrizeStructure[placement];
+}
+
+/** The prize a winner was actually awarded: the stored amount when present, else the placement table. */
+export function winnerPrize(w: Pick<Winner, "placement" | "prizeAmount">): number {
+  return w.prizeAmount ?? prizeFor(w.placement);
 }
 
 /** "130,000 TSH" — fixed format so server and client render identically. */

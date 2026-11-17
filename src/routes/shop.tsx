@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { getPublicShop } from "@/lib/public/cms.functions";
+import { FALLBACK_PRODUCTS, type PublicProduct } from "@/lib/public/cms-mapping";
 import { DownloadProvider } from "@/components/site/DownloadModal";
 import { Footer } from "@/components/site/Footer";
 import { PhysicalCardsSection } from "@/components/site/PhysicalCardsSection";
@@ -12,6 +14,7 @@ import { site } from "@/content/site";
  * listed: no invented merchandise, accessories or decks.
  */
 export const Route = createFileRoute("/shop")({
+  loader: async () => ({ shop: await getPublicShop() }),
   head: () => {
     const title = "Shop — Albastini";
     const description =
@@ -36,16 +39,20 @@ export const Route = createFileRoute("/shop")({
 });
 
 function ShopPage() {
+  const { shop } = Route.useLoaderData();
+  // Physical Cards drives this section; its slug is the stable identifier.
+  const product =
+    shop.data.find((p) => p.slug === "physical-cards") ?? shop.data[0] ?? FALLBACK_PRODUCTS[0]!;
   return (
     <LanguageProvider>
       <DownloadProvider>
-        <ShopContent />
+        <ShopContent product={product} />
       </DownloadProvider>
     </LanguageProvider>
   );
 }
 
-function ShopContent() {
+function ShopContent({ product }: { product: PublicProduct }) {
   const { t } = useI18n();
   return (
     <div className="min-h-screen bg-alba-paper">
@@ -54,7 +61,7 @@ function ShopContent() {
         <header className="shell pt-[calc(76px+clamp(3rem,8vw,6rem))] pb-[clamp(2rem,4vw,3rem)]">
           <h1 className="display-xl type-poster text-alba-ink">{t("shop.title")}</h1>
         </header>
-        <PhysicalCardsSection variant="shop" />
+        <PhysicalCardsSection variant="shop" product={product} />
       </main>
       <Footer />
     </div>

@@ -97,6 +97,7 @@ const dict = {
     "phys.body":
       "Physical Albastini cards are made for real tables, real friends and one more game.",
     "phys.status": "Card availability updates coming soon.",
+    "phys.unavailable": "Currently unavailable.",
 
     "form.toggle": "Get card updates",
     "form.title": "Get card updates",
@@ -227,6 +228,7 @@ const dict = {
     "phys.body":
       "Karata halisi za Albastini ni kwa ajili ya meza halisi, marafiki halisi na mchezo mmoja zaidi.",
     "phys.status": "Taarifa za upatikanaji wa karata zinakuja hivi karibuni.",
+    "phys.unavailable": "Hakipatikani kwa sasa.",
 
     "form.toggle": "Pata taarifa za karata",
     "form.title": "Pata taarifa za karata",
