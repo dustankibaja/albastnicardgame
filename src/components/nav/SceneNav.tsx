@@ -128,7 +128,7 @@ export function SceneNav({ page = "home" }: { page?: "home" | "shop" } = {}) {
       className="scene-nav fixed inset-x-0 top-0 z-50"
     >
       <div className="scene-nav-bar shell">
-        <a href="#top" className="scene-nav-logo" aria-label={t("nav.home")}>
+        <a href="/#top" className="scene-nav-logo" aria-label={t("nav.home")}>
           <img src="/favicon.png" alt="" width="32" height="32" />
         </a>
         <nav aria-label={t("nav.primary")} className="scene-nav-links" ref={linksRef as never}>

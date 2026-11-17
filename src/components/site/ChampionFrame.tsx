@@ -45,7 +45,7 @@ export function ChampionFrame({
   return (
     <figure
       className={cn(
-        "champion relative mx-auto aspect-[4/5] w-full max-w-[440px] overflow-hidden rounded-[1.75rem]",
+        "champion relative mx-auto aspect-[4/5] w-full max-w-[27.5rem] overflow-hidden rounded-[1.75rem]",
         "bg-alba-night ring-1 ring-alba-gold/80",
         className,
       )}
@@ -75,7 +75,7 @@ export function ChampionFrame({
             id={portrait}
             alt={alt}
             priority={priority}
-            sizes="(min-width: 1024px) 440px, 86vw"
+            sizes="(min-width: 1024px) 36vw, 86vw"
             className="absolute inset-0"
             imgClassName={cn(
               "h-full w-full",

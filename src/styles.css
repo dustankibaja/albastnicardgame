@@ -123,7 +123,12 @@
 
   /* Layout */
   --gutter: clamp(1.25rem, 5vw, 4.5rem);
-  --max: 1440px;
+  /* In rem, so the whole composition grows with the root scale below. */
+  --max: 90rem;
+  /* The fixed nav's full height (4rem bar + 0.75rem top margin). Every
+     clearance below the nav reads this, so one change moves them together and
+     all of them grow with the root scale. */
+  --nav-h: 4.75rem;
   --section-y: clamp(5rem, 11vw, 10rem);
 
   /* Motion tokens */
@@ -144,18 +149,19 @@
 }
 
 /*
- * Very large screens (≥2200px): scale the whole composition proportionally
- * instead of floating a 1440px column in empty space. Width and root type grow
- * by the same ratio (1720/1440 ≈ 19px/16px ≈ 1.19), so the approved layout is
- * unchanged — just larger. Nothing at or below 1920px is affected.
+ * Large screens: scale the whole composition proportionally instead of
+ * floating a fixed column in empty space. One continuous ramp, no step.
+ *
+ *   value = 0.116 × 16px + 0.982vw
+ *
+ * At 1440px that is exactly 16px, so the ramp starts precisely where the
+ * approved layout ends: EVERYTHING AT OR BELOW 1440px IS UNTOUCHED. Above it
+ * the root grows with the viewport to a 27.5px ceiling (≈2610px), and because
+ * --max is in rem the column, gutters, type and spacing all grow by the same
+ * ratio. The approved composition is never re-proportioned, only enlarged.
  */
-@media (min-width: 2200px) {
-  :root {
-    --max: 1720px;
-  }
-  html {
-    font-size: 118.75%;
-  }
+html {
+  font-size: clamp(100%, calc(11.6% + 0.982vw), 171.875%);
 }
 
 @layer base {
@@ -516,7 +522,7 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  height: 4rem;
+  height: calc(var(--nav-h) - 0.75rem);
   margin-top: 0.75rem;
 }
 .scene-nav-logo img {
@@ -1255,7 +1261,7 @@
 
 /* TITLE: holds "FROM THE TABLE." first; the emphasis transfers to "TO THE SCREEN." */
 .tts-title {
-  top: calc(76px + 3vh);
+  top: calc(var(--nav-h) + 3vh);
   z-index: 3;
   text-shadow: 0 2px 18px rgb(0 0 0 / 0.5);
 }
@@ -1278,25 +1284,25 @@
 }
 .tts-card {
   position: absolute;
-  width: min(30vw, 260px);
+  width: min(30vw, 16.25rem);
   left: 0;
   top: 0;
-  --fan-x: calc((var(--k) - 1) * 0.5 * min(30vw, 260px) * 1.25);
+  --fan-x: calc((var(--k) - 1) * 0.5 * min(30vw, 16.25rem) * 1.25);
   --fan-r: calc((var(--k) - 1) * 12deg);
-  --fan-y: calc(abs(var(--k) - 1) * 26px);
+  --fan-y: calc(abs(var(--k) - 1) * 1.625rem);
   /* the deck: cards stack with a visible step (each card 9px up and 5px across
      from the one below), so the lower edges read as a physical deck, not a pile */
   /* Each card steps 14px across and 16px up from the one below. The step is
      held (it does not shrink during REVEAL), so the deck keeps its thickness. */
-  --deck-x: calc(var(--k) * 14px - 14px);
-  --deck-y: calc(var(--k) * -16px + 16px);
+  --deck-x: calc(var(--k) * 0.875rem - 0.875rem);
+  --deck-y: calc(var(--k) * -1rem + 1rem);
   transform: translate3d(
       calc(
-        var(--fan-x) * (1 - var(--w-align)) + var(--deck-x) * var(--w-align) - 50% - 60px *
+        var(--fan-x) * (1 - var(--w-align)) + var(--deck-x) * var(--w-align) - 50% - 3.75rem *
           var(--w-screen)
       ),
       calc(
-        var(--fan-y) * (1 - var(--w-align)) + var(--deck-y) * var(--w-align) - 50% + 40px *
+        var(--fan-y) * (1 - var(--w-align)) + var(--deck-y) * var(--w-align) - 50% + 2.5rem *
           var(--w-handoff)
       ),
       0
@@ -1315,7 +1321,7 @@
 .tts-phone {
   left: 50%;
   top: 56%;
-  width: min(34vw, 290px);
+  width: min(34vw, 18.125rem);
   /* REVEAL: the phone rises from low behind the deck, so its upper screen shows
      above and beside the top card. HAND-OFF: it comes forward and settles
      centred in the scene (raised slightly from the previous resting height). */
@@ -1334,7 +1340,7 @@
 
 @media (min-width: 1024px) {
   .tts-phone {
-    width: min(20vw, 300px);
+    width: min(20vw, 18.75rem);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1377,11 +1383,11 @@
     height: 200svh;
   }
   .tts-card {
-    width: min(42vw, 180px);
-    --fan-x: calc((var(--k) - 1) * 0.5 * min(42vw, 180px) * 0.9);
+    width: min(42vw, 11.25rem);
+    --fan-x: calc((var(--k) - 1) * 0.5 * min(42vw, 11.25rem) * 0.9);
   }
   .tts-title {
-    top: calc(72px + 2vh);
+    top: calc(4.5rem + 2vh);
   }
   .tts-line--table,
   .tts-line--screen {
@@ -1391,18 +1397,18 @@
     top: 66%;
   }
   .tts-phone {
-    width: min(50vw, 210px);
+    width: min(50vw, 13.125rem);
     /* the phone's resting centre sits below the title band, never under the nav */
     top: 58%;
     transform: translate3d(
       calc(-50% + 0px),
-      calc(-50% + 90px * (1 - var(--w-reveal)) - 80px * var(--w-screen)),
+      calc(-50% + 5.625rem * (1 - var(--w-reveal)) - 5rem * var(--w-screen)),
       0
     );
   }
   .tts-card {
     /* the deck stays visible below the phone on small screens */
-    --fan-y: calc(abs(var(--k) - 1) * 12px);
+    --fan-y: calc(abs(var(--k) - 1) * 0.75rem);
   }
 }
 
@@ -1414,7 +1420,7 @@
 /* Desktop only: the cover becomes a collectible poster. Mobile keeps its full width. */
 @media (min-width: 1024px) {
   .champion-scale {
-    max-width: min(560px, 36vw, calc((100svh - 230px) * 0.8));
+    max-width: min(35rem, 36vw, calc((100svh - 14.375rem) * 0.8));
   }
 }
 @media (min-width: 1024px) {
@@ -1426,7 +1432,7 @@
 }
 @media (min-width: 1440px) {
   .champion-scale {
-    max-width: min(600px, 34vw, calc((100svh - 230px) * 0.8));
+    max-width: min(37.5rem, 34vw, calc((100svh - 14.375rem) * 0.8));
   }
 }
 
@@ -1803,7 +1809,10 @@
 /* the three aces: a fan with the blue ace in front, asymmetric and tactile */
 .finale-fan-inner {
   position: relative;
-  width: min(92%, 440px);
+  /* In rem, so on a large screen the fan grows with everything around it
+     instead of staying a fixed object in a column that got wider. The 100%
+     guard means it can never exceed its column. */
+  width: min(100%, 40rem);
   aspect-ratio: 1 / 0.92;
   margin-inline: auto;
 }
@@ -1832,7 +1841,7 @@
 }
 @media (max-width: 1023px) {
   .finale-fan-inner {
-    width: min(84%, 340px);
+    width: min(84%, 21.25rem);
   }
 }
 
@@ -1907,7 +1916,7 @@
     min-height: 44px;
     min-width: 44px;
   }
-  .scene-nav a[href="#top"],
+  .scene-nav a[href="/#top"],
   .scene-nav .scene-nav-link,
   footer a {
     min-height: 44px;
@@ -1944,15 +1953,46 @@
   }
 }
 
-/* M5 — LARGE DESKTOP HERO (≥2200px only). The headline stops growing at 132px on
-   lg screens; on very wide displays it lost authority. This bounded step restores
-   its weight. 1440 and 1920 are unchanged. */
-@media (min-width: 2200px) {
-  .hero-title-lines {
-    font-size: 10.25rem !important;
+/*
+ * FLAGSHIP — THE HERO OWNS THE FIRST VIEWPORT (≥1024px).
+ *
+ * The hand of cards and the phone are the promise of the product, so on a
+ * laptop or desktop they are not something you scroll to find: the hero fills
+ * exactly one viewport and the whole stage is inside it.
+ *
+ * The stage keeps its approved aspect ratio and is bounded by the height that
+ * is actually left after the nav, so on a short screen it narrows rather than
+ * running off the bottom. Height drives the composition; width follows.
+ * Mobile and short landscape keep their own rules, below and above.
+ */
+@media (min-width: 1024px) {
+  .hero-section {
+    display: flex;
+    align-items: center;
+    min-height: 100svh;
   }
-  .hero-title-sub {
-    font-size: 4.5rem !important;
+  .hero-shell {
+    width: 100%;
+    /* the nav floats over the hero, so clear it, then centre what remains */
+    padding-top: calc(var(--nav-h) + clamp(1rem, 2.5vh, 3rem)) !important;
+    padding-bottom: clamp(1rem, 2.5vh, 3rem);
+  }
+  .hero-stage {
+    width: 100%;
+    max-width: min(100%, calc((100svh - var(--nav-h) - clamp(3rem, 8vh, 7rem)) / 0.78));
+    margin-inline: auto;
+  }
+}
+
+/* Both calls to action stay on one line on a wide screen: a two-line button
+   row reads as an accident, and there is room for it in every language. */
+@media (min-width: 1440px) {
+  .hero-actions {
+    flex-wrap: nowrap;
+  }
+  .hero-actions > * {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 }
 
@@ -2029,4 +2069,190 @@ li {
 /* the beat's cover takes the stage's full width, so its percentage sizing resolves */
 .champ-beats .champ-slide {
   width: 100%;
+}
+
+/* ============================================================
+ * FLAGSHIP — THE HAND OF CHAMPIONS (≥1024px)
+ *
+ * A single centred cover with dots underneath read as a slideshow. The
+ * champions of a tournament are a hand: one card played forward, the rest
+ * held beside it. The played card keeps the approved ChampionFrame exactly as
+ * it is — only what surrounds it changes.
+ *
+ * Below 1024px this never renders; the scroll-snap carousel owns that width.
+ * ============================================================ */
+.champ-hand {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 3.5rem);
+}
+
+.champ-info-tour {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+  line-height: 1.1;
+}
+.champ-info-count {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.champ-info-word {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+}
+
+/* Children stretch: the frame centres itself with its own auto margins. Centring
+   the grid items instead would size them to content and collapse the frame. */
+.champ-deck {
+  display: grid;
+}
+
+/* The held cards: angled, waiting to be played. The right padding is the room
+   the tilt and the forward travel need, so no card can swing past the gutter. */
+.champ-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0 1.25rem 0 0;
+  list-style: none;
+}
+.champ-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 0.85rem;
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  text-align: left;
+  color: inherit;
+  border: 2px solid color-mix(in oklab, currentColor 35%, transparent);
+  border-radius: 1rem;
+  background: color-mix(in oklab, var(--alba-night) 55%, transparent);
+  rotate: var(--tilt, 0deg);
+  transform-origin: left center;
+  transition:
+    rotate var(--dur-settle) var(--ease-settle),
+    translate var(--dur-settle) var(--ease-settle),
+    border-color var(--dur-std) var(--ease-out),
+    background-color var(--dur-std) var(--ease-out);
+}
+.champ-card-rank {
+  grid-row: 1 / 3;
+  align-self: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 78%;
+  font-size: 2rem;
+  line-height: 1;
+  opacity: 0.55;
+}
+.champ-card-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  line-height: 1.15;
+}
+.champ-card-place {
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+/* Played: straightened and drawn toward the deck it was played onto. */
+.champ-card[data-state="played"] {
+  rotate: 0deg;
+  translate: -0.75rem 0;
+  border-color: var(--alba-gold);
+  background: color-mix(in oklab, var(--alba-gold) 14%, transparent);
+}
+.champ-card[data-state="played"] .champ-card-rank {
+  color: var(--alba-gold);
+  opacity: 1;
+}
+.champ-card[data-state="held"]:hover {
+  rotate: 0deg;
+  translate: -0.35rem 0;
+  border-color: color-mix(in oklab, currentColor 60%, transparent);
+}
+.champ-card:focus-visible {
+  outline: 3px solid var(--alba-gold);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .champ-card {
+    transition: none;
+    rotate: 0deg;
+  }
+}
+
+/* The played cover is the dominant object: it has the middle column to itself. */
+@media (min-width: 1024px) {
+  .champ-hand .champion-scale {
+    max-width: min(32rem, 100%, calc((100svh - 14rem) * 0.8));
+  }
+}
+
+/* ============================================================
+ * FLAGSHIP — HOW TO PLAY, DEALT.
+ *
+ * The lesson arrives the way everything else on this page does: as cards on a
+ * table. Two cards are laid down behind the screen and the video is the one
+ * turned face up on top. Pure decoration — no content, no controls, hidden
+ * from assistive technology, and it never covers the player.
+ * ============================================================ */
+.how-stage {
+  position: relative;
+  isolation: isolate;
+}
+.how-card {
+  position: absolute;
+  display: none;
+  border-radius: 1.25rem;
+  background: var(--alba-paper);
+  border: 2px solid var(--alba-ink);
+  box-shadow: var(--shadow-card-v);
+  pointer-events: none;
+  z-index: 0;
+}
+.how-stage .how-video {
+  position: relative;
+  z-index: 1;
+}
+/* The caption stays above the deal, always readable. */
+.how-grid figcaption {
+  position: relative;
+  z-index: 2;
+}
+/* Only where there is room beside the player for the deal to read. */
+@media (min-width: 1024px) {
+  .how-card {
+    display: block;
+    inset: 0;
+  }
+  /* Dealt up and to the left, behind the screen: the deal never reaches the
+     caption below, and the player is never covered. */
+  .how-card--back {
+    rotate: -5deg;
+    translate: -1.4rem -1.1rem;
+    opacity: 0.5;
+  }
+  .how-card--front {
+    rotate: -2deg;
+    translate: -0.6rem -0.5rem;
+    opacity: 0.8;
+  }
 }

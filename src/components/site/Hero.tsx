@@ -91,7 +91,7 @@ export function Hero() {
       id="top"
       ref={stage}
       aria-labelledby="hero-title"
-      className="on-dark relative isolate overflow-hidden bg-alba-blue text-alba-paper"
+      className="hero-section on-dark relative isolate overflow-hidden bg-alba-blue text-alba-paper"
     >
       <div className="hero-shell shell relative z-10 grid items-center gap-4 pb-[clamp(0.75rem,1.5vw,1.5rem)] lg:gap-6 pt-24 sm:pt-28 lg:grid-cols-12 lg:pt-32">
         <div className="lg:col-span-5">
@@ -117,7 +117,7 @@ export function Hero() {
           <p className="mt-6 max-w-[28ch] text-xl leading-snug text-alba-paper/90 sm:text-2xl">
             {t("hero.sub")}
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="hero-actions mt-8 flex flex-col gap-3 sm:flex-row">
             <DownloadButton size="lg" className="w-full sm:w-auto">
               {t("cta.app")}
             </DownloadButton>
@@ -129,7 +129,7 @@ export function Hero() {
 
         {/* The stage: physical cards and the app, together. */}
         <div className="relative lg:col-span-7">
-          <div className="relative mx-auto aspect-[1/0.98] w-full max-w-[560px] lg:aspect-[1/0.78] lg:max-w-none">
+          <div className="hero-stage relative mx-auto aspect-[1/0.98] w-full max-w-[35rem] lg:aspect-[1/0.78]">
             {cards.map((c) => (
               <div
                 key={c.id}
@@ -149,7 +149,7 @@ export function Hero() {
                     id={c.id}
                     alt={t(c.alt)}
                     priority
-                    sizes="(min-width: 1024px) 18vw, 31vw"
+                    sizes="(min-width: 1024px) min(18vw, 22vh), 31vw"
                     className={cn("overflow-hidden rounded-[7%]", c.shadow)}
                     style={{ transform: `rotate(${c.rotate}deg) scale(${c.scale})` }}
                   />
@@ -166,7 +166,7 @@ export function Hero() {
                 <PhoneMockup
                   alt={t("alt.app")}
                   priority
-                  sizes="(min-width: 1024px) 22vw, 46vw"
+                  sizes="(min-width: 1024px) min(22vw, 27vh), 46vw"
                   className="rotate-[5deg]"
                 />
               </div>

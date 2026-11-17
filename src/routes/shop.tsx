@@ -58,7 +58,7 @@ function ShopContent({ product }: { product: PublicProduct }) {
     <div className="min-h-screen bg-alba-paper">
       <SceneNav page="shop" />
       <main>
-        <header className="shell pt-[calc(76px+clamp(3rem,8vw,6rem))] pb-[clamp(2rem,4vw,3rem)]">
+        <header className="shell pt-[calc(var(--nav-h)+clamp(3rem,8vw,6rem))] pb-[clamp(2rem,4vw,3rem)]">
           <h1 className="display-xl type-poster text-alba-ink">{t("shop.title")}</h1>
         </header>
         <PhysicalCardsSection variant="shop" product={product} />

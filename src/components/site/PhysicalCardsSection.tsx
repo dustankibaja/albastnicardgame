@@ -46,7 +46,7 @@ export function PhysicalCardsSection({
       // The product is pulled up into the arena by the stage offset, so the
       // anchor clears the navbar, that offset, and the box's rotation/parallax
       // overhang (+3.5rem): visitors land with the whole product in view.
-      style={{ scrollMarginTop: "calc(8.5rem + clamp(9rem, 20vw, 18rem))" }}
+      style={{ scrollMarginTop: "calc(var(--nav-h) + 3.75rem + clamp(9rem, 20vw, 18rem))" }}
     >
       {/* The night arena hands back to the product along the card-wave: the arena's colour
           hangs into the top of this section, as the blue does at the top of the arena. */}
@@ -64,7 +64,7 @@ export function PhysicalCardsSection({
                 : "relative z-10 lg:col-span-7"
             }
           >
-            <div className="relative mx-auto aspect-[1/1.34] w-full max-w-[760px] sm:aspect-[1/1.12] lg:aspect-[1/1]">
+            <div className="relative mx-auto aspect-[1/1.34] w-full max-w-[47.5rem] sm:aspect-[1/1.12] lg:aspect-[1/1]">
               {/* Stage is taller below 1024px so the anchored photo (top fixed to the
                 arena edge) always ends inside it and never covers the headline.
                 Genuine photo of nine card fronts on pure white (real_source_photo,
@@ -86,7 +86,7 @@ export function PhysicalCardsSection({
                 <Picture
                   id="cardFrontsOnWhite"
                   alt={t("alt.fronts")}
-                  sizes="(min-width: 1024px) 590px, 78vw"
+                  sizes="(min-width: 1024px) 40vw, 78vw"
                 />
               </div>
               <ProductFan />
@@ -97,7 +97,7 @@ export function PhysicalCardsSection({
                 <Picture
                   id="boxExpansion"
                   alt={t("alt.boxExpansion")}
-                  sizes="(min-width: 1024px) 340px, 34vw"
+                  sizes="(min-width: 1024px) 23vw, 34vw"
                   className="rotate-[7deg] drop-shadow-[0_30px_40px_rgb(0_0_0/0.3)]"
                 />
               </div>
@@ -108,7 +108,7 @@ export function PhysicalCardsSection({
                 <Picture
                   id="boxSafari"
                   alt={t("alt.boxSafari")}
-                  sizes="(min-width: 1024px) 420px, 54vw"
+                  sizes="(min-width: 1024px) 28vw, 54vw"
                   className="pack-settle -rotate-[3deg] drop-shadow-[0_50px_60px_rgb(0_0_0/0.45)]"
                 />
               </div>

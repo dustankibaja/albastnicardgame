@@ -20,7 +20,7 @@ export function HowToPlaySection({ tutorialId }: { tutorialId: string }) {
       className="relative overflow-x-clip bg-alba-paper text-alba-ink"
     >
       <Wave fill="var(--alba-blue)" flip className="-mt-px" />
-      <div className="shell grid items-center gap-12 pb-[clamp(5rem,9vw,8rem)] pt-[clamp(2.5rem,5vw,4rem)] lg:grid-cols-12 lg:gap-8">
+      <div className="how-grid shell grid items-center gap-12 pb-[clamp(5rem,9vw,8rem)] pt-[clamp(2.5rem,5vw,4rem)] lg:grid-cols-12 lg:gap-8">
         <Reveal className="lg:col-span-5">
           <h2 id="how-title" className="display-xl type-headline">
             <span className="keep block">{t("how.title1")}</span>
@@ -35,15 +35,23 @@ export function HowToPlaySection({ tutorialId }: { tutorialId: string }) {
 
         <Reveal delay={120} className="lg:col-span-7">
           <figure>
-            <div className="how-video">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${tutorialId}`}
-                title={t("how.videoTitle")}
-                loading="lazy"
-                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              />
+            {/* The lesson is dealt like a hand: two cards laid down behind the
+                screen, the video the card turned face up on top. Decoration
+                only — it carries no information and is hidden from assistive
+                technology. */}
+            <div className="how-stage">
+              <span className="how-card how-card--back" aria-hidden="true" />
+              <span className="how-card how-card--front" aria-hidden="true" />
+              <div className="how-video">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${tutorialId}`}
+                  title={t("how.videoTitle")}
+                  loading="lazy"
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
+              </div>
             </div>
             <figcaption className="label mt-4 text-alba-blue">{t("how.videoCaption")}</figcaption>
           </figure>

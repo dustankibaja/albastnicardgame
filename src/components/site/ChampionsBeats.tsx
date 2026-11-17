@@ -80,28 +80,73 @@ export function ChampionsBeats({
       className="champ-beats relative"
       style={{ height: `calc(100svh + ${count * BEAT_SVH}svh)` }}
     >
-      <div className="champ-beats-stage sticky top-0 flex h-[100svh] flex-col justify-center pt-[76px]">
-        <div className="champ-stage-inner relative">
-          {/* the large rank changes with the champion: the environment, not a label */}
-          <div className="champ-env" aria-hidden="true">
-            <Numeral role="rank" outline>
-              {String(w.placement).padStart(2, "0")}
-            </Numeral>
+      <div className="champ-beats-stage sticky top-0 flex h-[100svh] flex-col justify-center pt-[var(--nav-h)]">
+        {/* THE HAND. The champions of a tournament are held like a hand of cards:
+            the one in play is forward and full size in the middle, the others are
+            held beside it, angled, and playing one brings it forward. Scroll and
+            the rail drive the same index, so they can never disagree. */}
+        <div className="champ-hand champ-stage-inner relative">
+          <div className="champ-info">
+            <p className="champ-info-tour">{t("tour.numbered", { n: tournament.number })}</p>
+            <p className="champ-info-count">
+              <Numeral role="points" className="champ-index-cur">
+                {String(count).padStart(2, "0")}
+              </Numeral>
+              <span className="champ-info-word">{t("car.held")}</span>
+            </p>
           </div>
-          <div className="relative z-10">
-            <article key={w.id} className="champ-slide champ-slide--active grid items-center">
-              <ChampionFrame
-                winner={w}
-                index={index + 1}
-                total={count}
-                alt={w.portraitAltKey ? t(w.portraitAltKey) : w.displayName}
-                placeLabel={place}
-                tournamentLabel={t("tour.numbered", { n: tournament.number })}
-                priority={false}
-                className="champion-scale"
-              />
-            </article>
+
+          <div className="champ-deck relative">
+            {/* the large rank changes with the champion: the environment, not a label */}
+            <div className="champ-env" aria-hidden="true">
+              <Numeral role="rank" outline>
+                {String(w.placement).padStart(2, "0")}
+              </Numeral>
+            </div>
+            <div className="relative z-10">
+              <article key={w.id} className="champ-slide champ-slide--active grid items-center">
+                <ChampionFrame
+                  winner={w}
+                  index={index + 1}
+                  total={count}
+                  alt={w.portraitAltKey ? t(w.portraitAltKey) : w.displayName}
+                  placeLabel={place}
+                  tournamentLabel={t("tour.numbered", { n: tournament.number })}
+                  priority={false}
+                  className="champion-scale"
+                />
+              </article>
+            </div>
           </div>
+
+          {/* A list, named — not role="group", which would strip the list
+              semantics and orphan every item inside it. */}
+          <ul className="champ-rail" aria-label={label}>
+            {winners.map((ww, i) => (
+              <li key={ww.id}>
+                <button
+                  type="button"
+                  onClick={() => goTo(i)}
+                  aria-current={i === index ? "true" : undefined}
+                  aria-label={t("car.goto", {
+                    name: ww.displayName,
+                    place: t(placeKey[ww.placement] ?? "win.p1"),
+                  })}
+                  className="champ-card"
+                  data-state={i === index ? "played" : "held"}
+                  style={{ ["--tilt" as string]: `${(i - (count - 1) / 2) * 4}deg` }}
+                >
+                  <span className="champ-card-rank" aria-hidden="true">
+                    {String(ww.placement).padStart(2, "0")}
+                  </span>
+                  <span className="champ-card-name">{ww.displayName}</span>
+                  <span className="champ-card-place">
+                    {t(placeKey[ww.placement] ?? "win.p1")} · {formatPrize(winnerPrize(ww))}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="champ-controls mt-8">
@@ -121,21 +166,6 @@ export function ChampionsBeats({
           >
             <span aria-hidden="true">‹</span>
           </button>
-          <div className="flex items-center gap-2" role="group" aria-label={label}>
-            {winners.map((ww, i) => (
-              <button
-                key={ww.id}
-                type="button"
-                onClick={() => goTo(i)}
-                aria-label={t("car.goto", {
-                  name: ww.displayName,
-                  place: t(placeKey[ww.placement] ?? "win.p1"),
-                })}
-                aria-current={i === index ? "true" : undefined}
-                className={cn("champ-dot", i === index && "champ-dot--on")}
-              />
-            ))}
-          </div>
           <button
             type="button"
             onClick={() => goTo(index + 1)}

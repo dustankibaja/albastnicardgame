@@ -37,7 +37,7 @@ export const navScenes: NavScene[] = [
 
 /** Ordered anchors for the navigation (labels come from i18n). */
 export const navAnchors = [
-  { id: "how-to-play", key: "nav.howto", href: "#how-to-play" },
-  { id: "tournaments", key: "nav.tournaments", href: "#tournaments" },
+  { id: "how-to-play", key: "nav.howto", href: "/#how-to-play" },
+  { id: "tournaments", key: "nav.tournaments", href: "/#tournaments" },
   { id: "cards", key: "nav.shop", href: "/shop" },
 ] as const;

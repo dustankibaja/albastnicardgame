@@ -143,6 +143,7 @@ const dict = {
     "car.next": "Next champion",
     "car.slide": "{i} of {n}",
     "car.goto": "Show {name}, {place}",
+    "car.held": "champions",
     "alt.table": "Albastini cards spread across a wooden table",
     "alt.fronts": "Nine Albastini card fronts in different colours, laid out on white",
   },
@@ -275,6 +276,7 @@ const dict = {
     "car.next": "Bingwa anayefuata",
     "car.slide": "{i} kati ya {n}",
     "car.goto": "Onyesha {name}, {place}",
+    "car.held": "mabingwa",
     "alt.table": "Karata za Albastini zimetandazwa juu ya meza ya mbao",
     "alt.fronts":
       "Sura tisa za karata za Albastini za rangi tofauti, zimepangwa juu ya rangi nyeupe",
