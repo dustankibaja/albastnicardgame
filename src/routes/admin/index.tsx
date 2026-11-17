@@ -1,13 +1,27 @@
 import { createFileRoute, Link, redirect, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
+
+// Editors load on demand: ordinary public visitors never download admin editor code.
+const TournamentEditor = lazy(() =>
+  import("@/components/admin/TournamentEditor").then((m) => ({ default: m.TournamentEditor })),
+);
+const TutorialEditor = lazy(() =>
+  import("@/components/admin/TutorialEditor").then((m) => ({ default: m.TutorialEditor })),
+);
+const SettingsEditor = lazy(() =>
+  import("@/components/admin/SettingsEditor").then((m) => ({ default: m.SettingsEditor })),
+);
+const WinnersEditor = lazy(() =>
+  import("@/components/admin/WinnersEditor").then((m) => ({ default: m.WinnersEditor })),
+);
+const ShopEditor = lazy(() =>
+  import("@/components/admin/ShopEditor").then((m) => ({ default: m.ShopEditor })),
+);
 import { useServerFn } from "@tanstack/react-start";
 import { getAdminSession, signOutAdmin } from "@/lib/admin/auth.functions";
 import { getOverview, type OverviewStats } from "@/lib/admin/overview.functions";
 import { AlbaButton } from "@/components/site/AlbaButton";
 import { formatAdminDate } from "@/lib/admin/format";
-import { TournamentEditor } from "@/components/admin/TournamentEditor";
-import { TutorialEditor } from "@/components/admin/TutorialEditor";
-import { SettingsEditor } from "@/components/admin/SettingsEditor";
 
 const SECTIONS = [
   { id: "overview", label: "Overview" },
@@ -142,11 +156,17 @@ function AdminDashboard() {
             {error}
           </p>
         ) : null}
-        {current.id === "overview" ? (
-          <Overview overview={overview} />
-        ) : (
-          <NotBuiltYet label={current.label} />
-        )}
+        <div className="mt-8">
+          <Suspense
+            fallback={
+              <p role="status" className="text-sm">
+                Loading…
+              </p>
+            }
+          >
+            {renderSection(current.id, overview)}
+          </Suspense>
+        </div>
       </main>
     </div>
   );
@@ -157,7 +177,8 @@ function renderSection(id: (typeof SECTIONS)[number]["id"], overview: OverviewSt
   if (id === "tournament") return <TournamentEditor />;
   if (id === "how-to-play") return <TutorialEditor />;
   if (id === "settings") return <SettingsEditor />;
-  return <NotBuiltYet label={id === "winners" ? "Winners" : "Shop"} />;
+  if (id === "winners") return <WinnersEditor />;
+  return <ShopEditor />;
 }
 
 function Overview({ overview }: { overview: OverviewStats | null }) {
@@ -193,14 +214,6 @@ function Fact({ label, value }: { label: string; value: string }) {
       <p className="label text-alba-blue">{label}</p>
       <p className="mt-2 text-xl font-bold">{value}</p>
     </div>
-  );
-}
-
-function NotBuiltYet({ label }: { label: string }) {
-  return (
-    <p className="mt-8 max-w-prose text-base">
-      The {label} editor is not built in this release yet. Nothing here changes the public site.
-    </p>
   );
 }
 

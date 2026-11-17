@@ -37,3 +37,13 @@ export function failure(
     };
   return { ok: false, error: fallback };
 }
+
+import type { Q } from "./catalog-core";
+/**
+ * The mutation cores use a small structural surface that is covered by their tests with a
+ * fake client. The real Supabase client implements that surface; this single explicit cast
+ * is the only place the boundary is crossed (the full client type is too deep to infer).
+ */
+export function asCoreQuery(client: SupabaseServer): Q {
+  return client as unknown as Q;
+}
