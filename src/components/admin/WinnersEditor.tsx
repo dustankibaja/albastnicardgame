@@ -194,16 +194,22 @@ export function WinnersEditor() {
     }
   }
 
-  async function onDelete(id: string) {
-    const r = await remove({ data: { id } });
-    if (!r.ok) {
-      setState({ kind: "error", message: r.error });
-      return;
+  async function onDelete(id: string): Promise<boolean> {
+    try {
+      const r = await remove({ data: { id } });
+      if (!r.ok) {
+        setState({ kind: "error", message: r.error });
+        return false;
+      }
+      setSelectedId(null);
+      setDraft(null);
+      setState({ kind: "idle" });
+      await load();
+      return true;
+    } catch {
+      setState({ kind: "error", message: "The winner could not be deleted. Please try again." });
+      return false;
     }
-    setSelectedId(null);
-    setDraft(null);
-    setState({ kind: "idle" });
-    await load();
   }
 
   async function onMove(w: WinnerRow, direction: "up" | "down") {
@@ -291,7 +297,7 @@ export function WinnersEditor() {
                   title={`Delete ${w.displayName}?`}
                   body="This removes the winner from the database. It cannot be undone."
                   confirmLabel="Delete winner"
-                  onConfirm={() => void onDelete(w.id)}
+                  onConfirm={() => onDelete(w.id)}
                 />
               </div>
             </li>
@@ -401,6 +407,12 @@ export function WinnersEditor() {
             />
             Published on the website
           </label>
+          <p role="status" className="border-l-4 border-alba-blue bg-alba-gold/20 p-3 text-sm">
+            {current?.published
+              ? "This winner is published. Save changes, then refresh View website to see updates."
+              : "This winner is a draft and is not visible on the website. Tick Published on the website and Save winner to publish it."}{" "}
+            The website shows winners from the latest published, completed tournament with a date.
+          </p>
           <div className="grid gap-2">
             <p className="label">Photo</p>
             <p className="text-sm">

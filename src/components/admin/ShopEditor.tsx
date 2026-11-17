@@ -191,16 +191,22 @@ export function ShopEditor() {
     }
   }
 
-  async function onDelete(id: string) {
-    const r = await remove({ data: { id } });
-    if (!r.ok) {
-      setState({ kind: "error", message: r.error });
-      return;
+  async function onDelete(id: string): Promise<boolean> {
+    try {
+      const r = await remove({ data: { id } });
+      if (!r.ok) {
+        setState({ kind: "error", message: r.error });
+        return false;
+      }
+      setSelectedId(null);
+      setDraft(null);
+      setState({ kind: "idle" });
+      await load();
+      return true;
+    } catch {
+      setState({ kind: "error", message: "The product could not be deleted. Please try again." });
+      return false;
     }
-    setSelectedId(null);
-    setDraft(null);
-    setState({ kind: "idle" });
-    await load();
   }
 
   const set = <K extends keyof Draft>(k: K, v: Draft[K]) =>
@@ -252,7 +258,7 @@ export function ShopEditor() {
                 title={`Delete ${p.name}?`}
                 body="This removes the product from the database. It cannot be undone."
                 confirmLabel="Delete product"
-                onConfirm={() => void onDelete(p.id)}
+                onConfirm={() => onDelete(p.id)}
               />
             </li>
           ))}
