@@ -48,6 +48,16 @@ export type ClientLike = {
 
 export async function resolveAdminStatus(client: ClientLike): Promise<AdminStatus> {
   const { data, error } = await client.auth.getUser();
+  // Supabase reports a fresh browser with no auth cookie as an error, too.
+  // Only that specific case is anonymous; service failures must stay visible.
+  if (
+    !data.user &&
+    error &&
+    typeof error === "object" &&
+    "name" in error &&
+    error.name === "AuthSessionMissingError"
+  )
+    return { kind: "anonymous" };
   if (error) throw new AdminDataError("Could not verify the session.");
   const user = data.user;
   if (!user) return { kind: "anonymous" };

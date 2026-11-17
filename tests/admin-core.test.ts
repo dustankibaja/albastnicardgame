@@ -178,7 +178,7 @@ test("login: email must be valid; password required", () => {
 type Row = { display_name: string } | null;
 function fakeClient(opts: {
   user?: { id: string; email?: string } | null;
-  getUserError?: boolean;
+  getUserError?: boolean | { name: string };
   adminRow?: Row;
   adminQueryError?: boolean;
   signInError?: { status?: number } | null;
@@ -190,7 +190,7 @@ function fakeClient(opts: {
         calls.push("getUser");
         return {
           data: { user: opts.user ?? null },
-          error: opts.getUserError ? { message: "x" } : null,
+          error: opts.getUserError === true ? { message: "x" } : (opts.getUserError ?? null),
         };
       },
       signInWithPassword: async () => {
@@ -221,6 +221,15 @@ function fakeClient(opts: {
 test("no session -> anonymous (redirect to login upstream)", async () => {
   const { client } = fakeClient({ user: null });
   assert.deepEqual(await resolveAdminStatus(client), { kind: "anonymous" });
+});
+test("Supabase missing-session error redirects a fresh browser to login", async () => {
+  const { client, calls } = fakeClient({ getUserError: { name: "AuthSessionMissingError" } });
+  assert.deepEqual(await resolveAdminStatus(client), { kind: "anonymous" });
+  assert.deepEqual(calls, ["getUser"]);
+});
+test("auth network failures stay errors instead of being treated as signed out", async () => {
+  const { client } = fakeClient({ getUserError: { name: "AuthRetryableFetchError" } });
+  await assert.rejects(resolveAdminStatus(client), AdminDataError);
 });
 test("signed-in but NOT in admin_users -> forbidden, never admin", async () => {
   const { client } = fakeClient({ user: { id: "u1", email: "a@b.co" }, adminRow: null });
