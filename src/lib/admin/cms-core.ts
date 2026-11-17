@@ -116,3 +116,37 @@ export async function saveTutorial(
     return { ok: false, error: "The tutorial was not saved. It may no longer exist." };
   return { ok: true, data: true };
 }
+
+/** Create the first tournament without database-console intervention. RLS still enforces admin access. */
+export async function createTournament(
+  supabase: {
+    from(table: string): {
+      insert(values: Record<string, unknown>): {
+        select(
+          columns: string,
+        ): PromiseLike<{ data: unknown[] | null; error: { code?: string } | null }>;
+      };
+    };
+  },
+  v: TournamentInput,
+): Promise<CmsResult<TournamentRecord>> {
+  const { data, error } = await supabase
+    .from("tournaments")
+    .insert({
+      tournament_number: v.tournamentNumber,
+      title: v.title,
+      starts_at: v.startsAt,
+      timezone: v.timezone,
+      status: v.status,
+      registration_method: v.registrationMethod,
+      registration_url: v.registrationUrl,
+      play_mode: v.playMode,
+      published: v.published,
+    })
+    .select("*");
+  if (error?.code === "23505")
+    return { ok: false, error: "A tournament with this number already exists." };
+  if (error || data?.length !== 1)
+    return { ok: false, error: "The tournament was not created. Check your access and try again." };
+  return { ok: true, data: data[0] as TournamentRecord };
+}

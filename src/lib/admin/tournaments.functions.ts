@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { setResponseHeader } from "@tanstack/react-start/server";
 import { requireAdmin, failure, type MutationResult } from "./guard";
 import { tournamentSchema } from "./schemas";
-import { updateTournament } from "./cms-core";
+import { updateTournament, createTournament } from "./cms-core";
 
 export type TournamentRow = {
   id: string;
@@ -67,15 +67,17 @@ export const listTournaments = createServerFn({ method: "GET" }).handler(
 export const saveTournament = createServerFn({ method: "POST" })
   .validator((input: unknown) => {
     const raw = input as { id?: unknown; values?: unknown };
-    if (typeof raw?.id !== "string" || !/^[0-9a-f-]{36}$/i.test(raw.id))
+    if (raw?.id !== null && (typeof raw?.id !== "string" || !/^[0-9a-f-]{36}$/i.test(raw.id)))
       throw new Error("Invalid tournament id.");
-    return { id: raw.id, values: tournamentSchema.parse(raw.values) };
+    return { id: raw.id as string | null, values: tournamentSchema.parse(raw.values) };
   })
   .handler(async ({ data }): Promise<MutationResult<TournamentRow>> => {
     setResponseHeader("Cache-Control", "private, no-store");
     try {
       const supabase = await requireAdmin();
-      const result = await updateTournament(supabase, data.id, data.values);
+      const result = data.id
+        ? await updateTournament(supabase, data.id, data.values)
+        : await createTournament(supabase, data.values);
       if (!result.ok) return result;
       return { ok: true, data: toRow(result.data as Db) };
     } catch (e) {

@@ -262,3 +262,39 @@ test("valid administrator credentials -> ok", async () => {
   const { client } = fakeClient({ user: { id: "u1" }, adminRow: { display_name: "Owner" } });
   assert.deepEqual(await signInAsAdmin(client, "a@b.co", "pw"), { ok: true });
 });
+
+// An empty project must support its first tournament without manual SQL inserts.
+test("create tournament persists the number and requires a confirmed row", async () => {
+  const { createTournament } = await import("../src/lib/admin/cms-core");
+  let written: Record<string, unknown> | undefined;
+  const client = {
+    from: () => ({
+      insert: (values: Record<string, unknown>) => {
+        written = values;
+        return { select: async () => ({ data: [{ id: "new", ...values }], error: null }) };
+      },
+    }),
+  };
+  const result = await createTournament(client, goodTournament);
+  assert.equal(result.ok, true);
+  assert.equal(written?.tournament_number, 27);
+  assert.equal(written?.timezone, "Africa/Dar_es_Salaam");
+});
+test("create tournament reports duplicate numbers and denied inserts", async () => {
+  const { createTournament } = await import("../src/lib/admin/cms-core");
+  for (const code of ["23505", "42501"]) {
+    const client = {
+      from: () => ({ insert: () => ({ select: async () => ({ data: null, error: { code } }) }) }),
+    };
+    const result = await createTournament(client, goodTournament);
+    assert.equal(result.ok, false);
+    if (!result.ok && code === "23505") assert.match(result.error, /already exists/);
+  }
+});
+test("create tournament never reports success for an empty write", async () => {
+  const { createTournament } = await import("../src/lib/admin/cms-core");
+  const client = {
+    from: () => ({ insert: () => ({ select: async () => ({ data: [], error: null }) }) }),
+  };
+  assert.equal((await createTournament(client, goodTournament)).ok, false);
+});

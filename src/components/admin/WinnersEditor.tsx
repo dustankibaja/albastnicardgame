@@ -1,3 +1,4 @@
+import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import {
@@ -13,7 +14,7 @@ import { winnerSchema, PHOTO_MODES, SUPPORTED_CURRENCIES } from "@/lib/admin/sch
 import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_BYTES } from "@/lib/admin/catalog-core";
 import { AlbaButton } from "@/components/site/AlbaButton";
 import { SaveStatus, type SaveState } from "./SaveStatus";
-import { AlertConfirm, AdminField, fileToBase64 } from "./AlertConfirm";
+import { AlertConfirm, AdminField } from "./AlertConfirm";
 
 type Draft = {
   displayName: string;
@@ -77,7 +78,11 @@ export function WinnersEditor() {
       setLoadError(w.error);
       return;
     }
-    if (t.ok) setTournamentList(t.data);
+    if (!t.ok) {
+      setLoadError(t.error);
+      return;
+    }
+    setTournamentList(t.data);
     setRows(w.data);
   }, [list, tournaments]);
 
@@ -167,14 +172,26 @@ export function WinnersEditor() {
       return;
     }
     setState({ kind: "saving" });
-    const base64 = await fileToBase64(file);
-    const r = await upload({ data: { id: current.id, mime: file.type, size: file.size, base64 } });
-    if (!r.ok) {
-      setState({ kind: "error", message: r.error });
-      return;
+    try {
+      const r = await upload({ data: { id: current.id, mime: file.type, size: file.size } });
+      if (!r.ok) {
+        setState({ kind: "error", message: r.error });
+        return;
+      }
+      const client = createSupabaseBrowserClient();
+      if (!client) throw new Error("Image upload is not configured.");
+      const sent = await client.storage
+        .from("site-media")
+        .uploadToSignedUrl(r.data.path, r.data.token, file, { contentType: file.type });
+      if (sent.error) throw new Error("Upload failed. Check your connection and try again.");
+      setDraft((d) => (d ? { ...d, imagePath: r.data.path } : d));
+      setState({ kind: "idle" });
+    } catch {
+      setState({
+        kind: "error",
+        message: "The image could not be uploaded. Try a PNG, JPEG or WebP up to 5 MB.",
+      });
     }
-    setDraft((d) => (d ? { ...d, imagePath: r.data } : d));
-    setState({ kind: "saved" });
   }
 
   async function onDelete(id: string) {
@@ -208,10 +225,20 @@ export function WinnersEditor() {
           <h2 id="winners-list-h" className="label">
             Champions
           </h2>
-          <AlbaButton size="sm" type="button" onClick={startNew}>
+          <AlbaButton
+            size="sm"
+            type="button"
+            onClick={startNew}
+            disabled={!tournamentList.length || state.kind === "saving"}
+          >
             Add winner
           </AlbaButton>
         </div>
+        {!tournamentList.length ? (
+          <p className="mt-4 text-sm">
+            Create a tournament in the Tournaments tab first, then add its winners and photos here.
+          </p>
+        ) : null}
         {rows.length === 0 ? (
           <p className="mt-4 text-sm">No winners yet. Add the first winner.</p>
         ) : null}
@@ -378,11 +405,23 @@ export function WinnersEditor() {
             <p className="label">Photo</p>
             <p className="text-sm">
               {draft.imagePath
-                ? `Stored: ${draft.imagePath}`
+                ? "Image uploaded. Save this record to apply it to the website."
                 : "No photo stored. The site uses its verified photo until one is uploaded."}
             </p>
+            {draft.imagePath ? (
+              <img
+                src={
+                  createSupabaseBrowserClient()
+                    ?.storage.from("site-media")
+                    .getPublicUrl(draft.imagePath).data.publicUrl
+                }
+                alt="Selected image preview"
+                className="h-40 max-w-full object-contain"
+              />
+            ) : null}
             {!isNew && current ? (
               <input
+                disabled={state.kind === "saving"}
                 type="file"
                 accept={ALLOWED_IMAGE_TYPES.join(",")}
                 aria-label="Upload winner photo"
@@ -390,7 +429,9 @@ export function WinnersEditor() {
                 onChange={(e) => void onFile(e.target.files?.[0])}
               />
             ) : (
-              <p className="text-sm">Save the winner first, then upload a photo.</p>
+              <p className="text-sm">
+                Save the winner first to enable image upload, then save again to apply the photo.
+              </p>
             )}
           </div>
           <div className="flex flex-wrap items-center gap-4">

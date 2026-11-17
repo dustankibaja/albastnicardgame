@@ -1,3 +1,4 @@
+import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import {
@@ -11,7 +12,7 @@ import { productSchema, AVAILABILITY, SUPPORTED_CURRENCIES } from "@/lib/admin/s
 import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_BYTES } from "@/lib/admin/catalog-core";
 import { AlbaButton } from "@/components/site/AlbaButton";
 import { SaveStatus, type SaveState } from "./SaveStatus";
-import { AlertConfirm, AdminField, fileToBase64 } from "./AlertConfirm";
+import { AlertConfirm, AdminField } from "./AlertConfirm";
 
 type Draft = {
   slug: string;
@@ -168,14 +169,26 @@ export function ShopEditor() {
       return;
     }
     setState({ kind: "saving" });
-    const base64 = await fileToBase64(file);
-    const r = await upload({ data: { id: current.id, mime: file.type, size: file.size, base64 } });
-    if (!r.ok) {
-      setState({ kind: "error", message: r.error });
-      return;
+    try {
+      const r = await upload({ data: { id: current.id, mime: file.type, size: file.size } });
+      if (!r.ok) {
+        setState({ kind: "error", message: r.error });
+        return;
+      }
+      const client = createSupabaseBrowserClient();
+      if (!client) throw new Error("Image upload is not configured.");
+      const sent = await client.storage
+        .from("site-media")
+        .uploadToSignedUrl(r.data.path, r.data.token, file, { contentType: file.type });
+      if (sent.error) throw new Error("Upload failed. Check your connection and try again.");
+      setDraft((d) => (d ? { ...d, imagePath: r.data.path } : d));
+      setState({ kind: "idle" });
+    } catch {
+      setState({
+        kind: "error",
+        message: "The image could not be uploaded. Try a PNG, JPEG or WebP up to 5 MB.",
+      });
     }
-    setDraft((d) => (d ? { ...d, imagePath: r.data } : d));
-    setState({ kind: "saved" });
   }
 
   async function onDelete(id: string) {
@@ -388,11 +401,23 @@ export function ShopEditor() {
             <p className="label">Image</p>
             <p className="text-sm">
               {draft.imagePath
-                ? `Stored: ${draft.imagePath}`
+                ? "Image uploaded. Save this record to apply it to the website."
                 : "No image stored. The site uses its verified image."}
             </p>
+            {draft.imagePath ? (
+              <img
+                src={
+                  createSupabaseBrowserClient()
+                    ?.storage.from("site-media")
+                    .getPublicUrl(draft.imagePath).data.publicUrl
+                }
+                alt="Selected image preview"
+                className="h-40 max-w-full object-contain"
+              />
+            ) : null}
             {!isNew && current ? (
               <input
+                disabled={state.kind === "saving"}
                 type="file"
                 accept={ALLOWED_IMAGE_TYPES.join(",")}
                 aria-label="Upload product image"
@@ -400,7 +425,9 @@ export function ShopEditor() {
                 onChange={(e) => void onFile(e.target.files?.[0])}
               />
             ) : (
-              <p className="text-sm">Save the product first, then upload an image.</p>
+              <p className="text-sm">
+                Save the product first to enable image upload, then save again to apply the photo.
+              </p>
             )}
           </div>
           <div className="flex flex-wrap items-center gap-4">

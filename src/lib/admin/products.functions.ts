@@ -5,10 +5,9 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-  uploadImage,
+  mediaPath,
   validateImage,
   type CoreResult,
-  type StorageLike,
 } from "./catalog-core";
 import { productSchema } from "./schemas";
 
@@ -118,37 +117,30 @@ export const deleteProductFn = createServerFn({ method: "POST" })
 /** Product photo upload under site-media/products/. Same validation and confirmation rules as winners. */
 export const uploadProductImage = createServerFn({ method: "POST" })
   .validator((input: unknown) => {
-    const raw = input as { id?: unknown; mime?: unknown; size?: unknown; base64?: unknown };
-    if (!isUuid(raw?.id)) throw new Error("Invalid product id.");
-    if (
-      typeof raw?.mime !== "string" ||
-      typeof raw?.size !== "number" ||
-      typeof raw?.base64 !== "string"
-    ) {
+    const raw = input as { id?: unknown; mime?: unknown; size?: unknown };
+    if (!isUuid(raw?.id) || typeof raw.mime !== "string" || typeof raw.size !== "number")
       throw new Error("Invalid upload.");
-    }
-    return { id: raw.id, mime: raw.mime, size: raw.size, base64: raw.base64 };
+    return { id: raw.id, mime: raw.mime, size: raw.size };
   })
-  .handler(async ({ data }): Promise<CoreResult<string>> => {
+  .handler(async ({ data }): Promise<CoreResult<{ path: string; token: string }>> => {
     setResponseHeader("Cache-Control", "private, no-store");
     const check = validateImage({ type: data.mime, size: data.size });
     if (!check.ok) return check;
     try {
       const supabase = await requireAdmin();
-      const bytes = Buffer.from(data.base64, "base64");
-      if (bytes.length !== data.size)
-        return { ok: false, error: "The file did not arrive intact. Try again." };
-      return await uploadImage(
-        supabase.storage as unknown as StorageLike,
+      const row = await supabase.from("products").select("id").eq("id", data.id).maybeSingle();
+      if (row.error || !row.data)
+        return { ok: false, error: "Save the product before uploading an image." };
+      const path = mediaPath(
         "products",
         data.id,
-        { type: data.mime, size: data.size },
-        new Blob([bytes], { type: data.mime }),
+        data.mime as "image/png" | "image/jpeg" | "image/webp",
       );
+      const result = await supabase.storage.from("site-media").createSignedUploadUrl(path);
+      if (result.error || !result.data)
+        return { ok: false, error: "Could not prepare the image upload. Try again." };
+      return { ok: true, data: { path, token: result.data.token } };
     } catch (e) {
-      return {
-        ok: false,
-        error: failure(e, "The image could not be uploaded. Nothing was saved.").error,
-      };
+      return failure(e, "The image could not be uploaded. Try again.");
     }
   });
