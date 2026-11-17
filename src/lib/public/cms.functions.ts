@@ -1,3 +1,5 @@
+import { readSupabaseConfig } from "../supabase/config";
+import { setResponseHeader } from "@tanstack/react-start/server";
 import { createServerFn } from "@tanstack/react-start";
 import { createSupabaseServerClient } from "../supabase/server";
 import {
@@ -34,6 +36,7 @@ async function settle<T>(
 
 export const getPublicContent = createServerFn({ method: "GET" }).handler(
   async (): Promise<PublicContent> => {
+    setResponseHeader("Cache-Control", "no-store");
     const now = Date.now();
     const supabase = createSupabaseServerClient();
     if (!supabase) return fallbackContent(now); // environment missing: verified fallback everywhere
@@ -67,7 +70,7 @@ export const getPublicContent = createServerFn({ method: "GET" }).handler(
       const winners = await supabase
         .from("winners")
         .select(
-          "id, tournament_id, display_name, placement, location, prize_amount, photo_mode, published",
+          "id, tournament_id, display_name, placement, location, prize_amount, photo_mode, image_path, published",
         )
         .eq("tournament_id", tournament.id)
         .eq("published", true)
@@ -97,7 +100,11 @@ export const getPublicContent = createServerFn({ method: "GET" }).handler(
           .limit(1)) as unknown as { data: { youtube_id: string }[]; error: unknown },
     );
 
-    return composePublicContent(now, { upcoming, champion, countdown, tutorial });
+    return composePublicContent(
+      now,
+      { upcoming, champion, countdown, tutorial },
+      readSupabaseConfig()?.url,
+    );
   },
 );
 

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Picture } from "./Picture";
 import { Numeral } from "./Numeral";
 import { hasImage } from "@/content/assets";
@@ -37,6 +38,9 @@ export function ChampionFrame({
   priority?: boolean;
   className?: string;
 }) {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const uploadedPhoto =
+    winner.portraitUrl && winner.portraitUrl !== failedUrl ? winner.portraitUrl : null;
   const mode = winner.photoMode ?? "editorial-photo";
   const portrait = winner.portrait && hasImage(winner.portrait) ? winner.portrait : null;
   const prize = formatPrize(winnerPrize(winner));
@@ -69,23 +73,40 @@ export function ChampionFrame({
       </div>
 
       {/* the photograph, in its mode */}
-      {portrait ? (
+      {portrait || uploadedPhoto ? (
         <div className={cn("champion-photo", `champion-photo--${mode}`)}>
-          <Picture
-            id={portrait}
-            alt={alt}
-            priority={priority}
-            sizes="(min-width: 1024px) 36vw, 86vw"
-            className="absolute inset-0"
-            imgClassName={cn(
-              "h-full w-full",
-              mode === "portrait-cutout" ? "object-contain object-bottom" : "object-cover",
-            )}
-            imgStyle={{
-              objectPosition:
-                winner.imagePosition ?? (mode === "portrait-cutout" ? "50% 100%" : "55% 30%"),
-            }}
-          />
+          {uploadedPhoto ? (
+            <img
+              src={uploadedPhoto}
+              alt={alt}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              width={800}
+              height={1000}
+              onError={() => setFailedUrl(uploadedPhoto)}
+              className={cn(
+                "absolute inset-0 h-full w-full",
+                mode === "portrait-cutout" ? "object-contain object-bottom" : "object-cover",
+              )}
+              style={{ objectPosition: mode === "portrait-cutout" ? "50% 100%" : "50% 30%" }}
+            />
+          ) : portrait ? (
+            <Picture
+              id={portrait}
+              alt={alt}
+              priority={priority}
+              sizes="(min-width: 1024px) 36vw, 86vw"
+              className="absolute inset-0"
+              imgClassName={cn(
+                "h-full w-full",
+                mode === "portrait-cutout" ? "object-contain object-bottom" : "object-cover",
+              )}
+              imgStyle={{
+                objectPosition:
+                  winner.imagePosition ?? (mode === "portrait-cutout" ? "50% 100%" : "55% 30%"),
+              }}
+            />
+          ) : null}
         </div>
       ) : null}
 

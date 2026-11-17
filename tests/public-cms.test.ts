@@ -368,3 +368,47 @@ test("BINDING: price formatting uses a thousands separator and the currency", ()
   assert.equal(formatPrice(5000, "TZS"), "5,000 TZS");
   assert.equal(formatPrice(130000, "TZS"), "130,000 TZS");
 });
+
+test("CMS winner photo replaces a seeded portrait and stays within the project media bucket", () => {
+  const row = { ...W_ROWS[0]!, image_path: "winners/1234-photo-123.jpg" };
+  const result = mapWinner(row, "uuid-26", "https://ickootmaamsrkfblqlyp.supabase.co");
+  assert.equal(
+    result?.portraitUrl,
+    "https://ickootmaamsrkfblqlyp.supabase.co/storage/v1/object/public/site-media/winners/1234-photo-123.jpg",
+  );
+  assert.ok(
+    result?.portrait,
+    "the official fallback remains available if the upload fails to load",
+  );
+  const composed = composePublicContent(
+    NOW,
+    { ...cmsAll, champion: ok({ tournament: T26_ROW, winners: [row] }) },
+    "https://ickootmaamsrkfblqlyp.supabase.co",
+  );
+  assert.equal(composed.winners.data[0]?.portraitUrl, result?.portraitUrl);
+});
+test("unpublished winners and external or traversing photo paths never expose uploads", () => {
+  for (const image_path of [
+    "https://evil.example/photo.jpg",
+    "winners/../private.jpg",
+    "products/other.png",
+    "winners/photo.svg",
+  ]) {
+    assert.equal(
+      mapWinner(
+        { ...W_ROWS[0]!, image_path },
+        "uuid-26",
+        "https://ickootmaamsrkfblqlyp.supabase.co",
+      )?.portraitUrl,
+      undefined,
+    );
+  }
+  assert.equal(
+    mapWinner(
+      { ...W_ROWS[0]!, published: false, image_path: "winners/photo.jpg" },
+      "uuid-26",
+      "https://ickootmaamsrkfblqlyp.supabase.co",
+    ),
+    null,
+  );
+});

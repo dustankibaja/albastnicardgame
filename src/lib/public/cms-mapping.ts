@@ -58,6 +58,7 @@ export type WinnerRow = {
   location: string;
   prize_amount: number;
   photo_mode: "portrait-cutout" | "editorial-photo";
+  image_path?: string | null;
   published: boolean;
 };
 export type ProductRow = {
@@ -98,11 +99,14 @@ export function mapTournament(row: TournamentRow): Tournament | null {
 }
 
 /**
- * A published winner row becomes the Winner shape. Photo references are repository assets, so
- * the seeded winners keep theirs by display name. A winner with no matching repository asset
- * shows the frame's typographic state rather than a fake image.
+ * Uploaded CMS photos take priority; verified repository portraits remain a fallback.
+ * Only paths within this project's winner media folder become public image URLs.
  */
-export function mapWinner(row: WinnerRow, tournamentId: string): Winner | null {
+export function mapWinner(
+  row: WinnerRow,
+  tournamentId: string,
+  projectUrl?: string,
+): Winner | null {
   if (!row.published) return null;
   if (![1, 2, 3].includes(row.placement)) return null;
   if (!row.display_name || !row.location) return null;
@@ -118,6 +122,14 @@ export function mapWinner(row: WinnerRow, tournamentId: string): Winner | null {
     prizeAmount: row.prize_amount,
   };
   if (seeded?.portrait) winner.portrait = seeded.portrait;
+  if (
+    projectUrl &&
+    /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(projectUrl) &&
+    row.image_path &&
+    /^winners\/[a-zA-Z0-9_-]+\.(png|jpe?g|webp)$/.test(row.image_path)
+  ) {
+    winner.portraitUrl = `${projectUrl}/storage/v1/object/public/site-media/${row.image_path}`;
+  }
   if (seeded?.portraitAltKey) winner.portraitAltKey = seeded.portraitAltKey;
   if (seeded?.imageFit) winner.imageFit = seeded.imageFit;
   if (seeded?.imagePosition) winner.imagePosition = seeded.imagePosition;
@@ -174,6 +186,7 @@ export function composePublicContent(
     countdown: QueryOutcome<{ value: unknown } | null>;
     tutorial: QueryOutcome<{ youtube_id: string }[]>;
   },
+  projectUrl?: string,
 ): PublicContent {
   const fallback = fallbackContent(now);
 
@@ -193,7 +206,7 @@ export function composePublicContent(
   if (q.champion.ok && q.champion.data) {
     const mapped = mapTournament(q.champion.data.tournament);
     const winners = q.champion.data.winners
-      .map((w) => (mapped ? mapWinner(w, mapped.id) : null))
+      .map((w) => (mapped ? mapWinner(w, mapped.id, projectUrl) : null))
       .filter((w): w is Winner => w !== null)
       .sort((a, b) => a.placement - b.placement);
     if (mapped && winners.length > 0) {

@@ -28,6 +28,8 @@ export type Winner = {
   tournamentId: string;
   /** Genuine photo from the asset registry. Omit if none: the frame shows a typographic state. */
   portrait?: SiteImageId;
+  /** Public URL of a CMS photo in this project's site-media bucket. */
+  portraitUrl?: string;
   portraitAltKey?: TKey;
   /**
    * Photo mode for ChampionFrame (M1):
