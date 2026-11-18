@@ -133,7 +133,18 @@ export function CompetitionSection({
               )}
             </div>
           </div>
-        ) : null}
+        ) : (
+          <div className="mt-16">
+            <h3 className="display-xl">
+              {t("win.title1")} {t("win.title2")}
+            </h3>
+            <p>
+              {lang === "sw"
+                ? "Matokeo yataonekana hapa yakichapishwa."
+                : "Tournament results will appear here when published."}
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );

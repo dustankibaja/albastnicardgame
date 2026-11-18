@@ -161,7 +161,7 @@ export function fallbackContent(now: number): PublicContent {
       .reverse()
       .find((t) => staticWinners.some((w) => w.tournamentId === t.id)) ?? null;
   const list = [upcoming, championTournament].filter(
-    (t, i, all): t is Tournament => !!t && all.indexOf(t) === i,
+    (t, i, all): t is Tournament => !!t && all.findIndex((item) => item?.id === t.id) === i,
   );
   return {
     tournaments: { source: "fallback", data: list.length ? list : staticTournaments },
@@ -234,7 +234,7 @@ export function composePublicContent(
   );
 
   const list = [upcomingDomain.data, championTournament].filter(
-    (t, i, all): t is Tournament => !!t && all.indexOf(t) === i,
+    (t, i, all): t is Tournament => !!t && all.findIndex((item) => item?.id === t.id) === i,
   );
 
   return {

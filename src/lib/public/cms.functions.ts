@@ -58,25 +58,19 @@ export const getPublicContent = createServerFn({ method: "GET" }).handler(
       const latest = await supabase
         .from("tournaments")
         .select(
-          "id, tournament_number, title, starts_at, timezone, status, registration_method, registration_url, published",
+          "id,tournament_number,title,starts_at,timezone,status,registration_method,registration_url,published,winners!inner(id,tournament_id,display_name,placement,location,prize_amount,photo_mode,image_path,published)",
         )
-        .eq("status", "completed")
         .eq("published", true)
+        .eq("winners.published", true)
         .order("starts_at", { ascending: false, nullsFirst: false })
         .limit(1);
-      if (latest.error) return { data: null, error: latest.error };
-      const tournament = (latest.data as TournamentRow[] | null)?.[0];
-      if (!tournament) return { data: null, error: null };
-      const winners = await supabase
-        .from("winners")
-        .select(
-          "id, tournament_id, display_name, placement, location, prize_amount, photo_mode, image_path, published",
-        )
-        .eq("tournament_id", tournament.id)
-        .eq("published", true)
-        .order("placement", { ascending: true });
-      if (winners.error) return { data: null, error: winners.error };
-      return { data: { tournament, winners: (winners.data as WinnerRow[]) ?? [] }, error: null };
+      const row = latest.data?.[0];
+      return {
+        data: row
+          ? { tournament: row as TournamentRow, winners: row.winners as WinnerRow[] }
+          : null,
+        error: latest.error,
+      };
     });
 
     const countdown = await settle(

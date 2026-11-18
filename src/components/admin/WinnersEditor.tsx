@@ -241,7 +241,8 @@ export function WinnersEditor() {
       <section aria-labelledby="winners-list-h">
         <p className="mb-4 text-sm">
           Choose Edit winner to change their name, rank, location, prize or photo. Only published
-          winners belonging to the latest published completed tournament appear on the website.
+          winners belonging to the most recent published tournament with results appear on the
+          website.
         </p>
         {state.kind === "error" ? (
           <p role="alert" className="mb-4 border-2 border-alba-ink p-3">
@@ -448,7 +449,7 @@ export function WinnersEditor() {
             {current?.published
               ? "This winner is published. Save changes, then refresh View website to see updates."
               : "This winner is a draft and is not visible on the website. Tick Published on the website and Save winner to publish it."}{" "}
-            The website shows winners from the latest published, completed tournament with a date.
+            The website shows winners from the most recent published tournament with results.
           </p>
           <div className="grid gap-2">
             <p className="label">Photo</p>

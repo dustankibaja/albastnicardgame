@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { CompetitionSection } from "@/components/site/CompetitionSection";
 import { DownloadProvider } from "@/components/site/DownloadModal";
 import { FinalCTA } from "@/components/site/FinalCTA";
@@ -85,6 +86,25 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const router = useRouter();
+  useEffect(() => {
+    let busy = false;
+    const refresh = async () => {
+      if (document.visibilityState !== "visible" || busy) return;
+      busy = true;
+      try {
+        await router.invalidate();
+      } finally {
+        busy = false;
+      }
+    };
+    const timer = window.setInterval(refresh, 15000);
+    window.addEventListener("focus", refresh);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", refresh);
+    };
+  }, [router]);
   const { renderedAt, content, shop } = Route.useLoaderData();
   return (
     <LanguageProvider>
