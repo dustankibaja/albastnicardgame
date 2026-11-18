@@ -1,13 +1,30 @@
 import { useState } from "react";
 import { Picture } from "./Picture";
+import { Numeral } from "./Numeral";
 import { hasImage } from "@/content/assets";
 import { formatPrize, winnerPrize, type Winner } from "@/content/winners";
 import { cn } from "@/lib/utils";
 
+/*
+ * CHAMPION FRAME — one collectible system, two photo modes.
+ *
+ *   portrait-cutout  a figure extracted from its background; it rises out of
+ *                    the frame and the wave-cut nameplate sits over its base.
+ *   editorial-photo  a scene kept whole; the environment is part of the
+ *                    photograph, so the frame only keys and grades its edge.
+ *
+ * Shared, identical in every mode: outer ratio, yellow keyline, wave edge,
+ * rank architecture (outlined numeral), placement chip, collector index,
+ * nameplate (name, location, prize), and Tournament metadata.
+ * The photograph is the only thing that changes.
+ */
 export function ChampionFrame({
   winner,
+  index,
+  total,
   alt,
   placeLabel,
+  tournamentLabel,
   priority = false,
   className,
 }: {
@@ -24,41 +41,131 @@ export function ChampionFrame({
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const uploadedPhoto =
     winner.portraitUrl && winner.portraitUrl !== failedUrl ? winner.portraitUrl : null;
+  const mode = winner.photoMode ?? "editorial-photo";
   const portrait = winner.portrait && hasImage(winner.portrait) ? winner.portrait : null;
   const prize = formatPrize(winnerPrize(winner));
+  const rankText = String(winner.placement).padStart(2, "0");
+
   return (
     <figure
       className={cn(
-        "mx-auto w-full max-w-[27.5rem] overflow-hidden rounded-2xl border border-white/20 bg-alba-night",
+        "champion relative mx-auto aspect-[4/5] w-full max-w-[27.5rem] overflow-hidden rounded-[1.75rem]",
+        "bg-alba-night ring-1 ring-alba-gold/80",
         className,
       )}
+      data-photo-mode={mode}
     >
-      {(uploadedPhoto || portrait) && (
-        <div className="relative h-[clamp(12rem,47svh,31rem)] bg-alba-night">
+      {/* the stage: blue light falling on the arena */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(120% 85% at 50% 16%, color-mix(in oklab, var(--alba-blue) 80%, var(--alba-paper)) 0%, var(--alba-blue) 44%, var(--alba-night) 100%)",
+        }}
+      />
+
+      {/* rank architecture: outlined numeral behind the photograph */}
+      <div className="champion-rank" aria-hidden="true">
+        <Numeral role="rank" outline>
+          {rankText}
+        </Numeral>
+      </div>
+
+      {/* the photograph, in its mode */}
+      {portrait || uploadedPhoto ? (
+        <div className={cn("champion-photo", `champion-photo--${mode}`)}>
           {uploadedPhoto ? (
             <img
               src={uploadedPhoto}
               alt={alt}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              width={800}
+              height={1000}
               onError={() => setFailedUrl(uploadedPhoto)}
-              className="h-full w-full object-contain"
+              className={cn(
+                "absolute inset-0 h-full w-full",
+                mode === "portrait-cutout" ? "object-contain object-bottom" : "object-cover",
+              )}
+              style={{ objectPosition: mode === "portrait-cutout" ? "50% 100%" : "50% 30%" }}
             />
           ) : portrait ? (
             <Picture
               id={portrait}
               alt={alt}
               priority={priority}
-              sizes="(min-width:1024px) 36vw, 86vw"
-              className="block h-full w-full"
-              imgClassName="h-full w-full object-contain"
+              sizes="(min-width: 1024px) 36vw, 86vw"
+              className="absolute inset-0"
+              imgClassName={cn(
+                "h-full w-full",
+                mode === "portrait-cutout" ? "object-contain object-bottom" : "object-cover",
+              )}
+              imgStyle={{
+                objectPosition:
+                  winner.imagePosition ?? (mode === "portrait-cutout" ? "50% 100%" : "55% 30%"),
+              }}
             />
           ) : null}
         </div>
-      )}
-      <figcaption className="grid gap-1 border-t border-white/15 px-5 py-3 text-left text-white">
-        <strong className="text-sm uppercase tracking-wide text-alba-gold">{placeLabel}</strong>
-        <span className="text-xl font-bold">{winner.displayName}</span>
-        <span className="text-sm">
-          {winner.location} · {prize}
+      ) : null}
+
+      {/* the wave-cut nameplate boundary */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 400 120"
+        preserveAspectRatio="none"
+        className="champion-wave"
+      >
+        <path
+          d="M0 40 C 80 6, 170 2, 230 30 S 340 78, 400 36 L400 120 L0 120 Z"
+          fill="var(--alba-night)"
+        />
+        <path
+          d="M0 40 C 80 6, 170 2, 230 30 S 340 78, 400 36"
+          fill="none"
+          stroke="var(--alba-gold)"
+          strokeWidth="1.6"
+        />
+      </svg>
+
+      {/* top metadata: tournament + collector index */}
+      <div className="champion-top">
+        <span className="meta-label">{tournamentLabel}</span>
+        <span className="meta-label champion-index">
+          <Numeral role="points" className="champion-index-num">
+            {String(index).padStart(2, "0")}
+          </Numeral>
+          <span aria-hidden="true">/</span>
+          {String(total).padStart(2, "0")}
+        </span>
+      </div>
+
+      {/* placement chip */}
+      <span className="champion-place">
+        <svg viewBox="0 0 40 40" aria-hidden="true" className="champion-place-disc">
+          <circle cx="20" cy="20" r="18.6" />
+          <circle
+            cx="20"
+            cy="20"
+            r="12.6"
+            fill="none"
+            stroke="var(--alba-night)"
+            strokeWidth="2.2"
+            strokeDasharray="4.1 3.5"
+          />
+        </svg>
+        {placeLabel}
+      </span>
+
+      {/* nameplate: name, location, prize (prize in tabular numerals, TSH secondary) */}
+      <figcaption className="champion-plate">
+        <span className="champion-name display-xl">{winner.displayName}</span>
+        <span className="champion-meta">
+          <span className="champion-loc">{winner.location}</span>
+          <Numeral role="prize" unit="TSH">
+            {prize.replace(" TSH", "")}
+          </Numeral>
         </span>
       </figcaption>
     </figure>

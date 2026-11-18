@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Reveal } from "./Reveal";
 import { Picture } from "./Picture";
 import { useDownload } from "./DownloadModal";
+import { appStoreLinks } from "@/content/links";
 import { winnerPrize } from "@/content/winners";
 import "./hall.css";
 import { ArenaFixture, PrizeLadder } from "./Arena";
@@ -33,7 +34,7 @@ export function CompetitionSection({
 }) {
   const { t, lang } = useI18n();
   const [now, setNow] = useState(renderedAt);
-  const {openDownload}=useDownload();
+  const { openDownload } = useDownload();
   const featured = getFeaturedTournament(tournaments, now);
   const phase = featured ? getTournamentPhase(featured, now) : null;
   const ticking = Boolean(featured?.startAt) && phase === "upcoming";
@@ -107,14 +108,94 @@ export function CompetitionSection({
             box can never cover the carousel controls. */}
         {champions ? (
           <section className="hall" aria-labelledby="hall-title">
-            <span className="hall-water" aria-hidden="true">{champions.tournament.number}</span>
-            <header><div><small>Albastini · {t("tour.numbered",{n:champions.tournament.number})}</small><h3 id="hall-title">{lang==="sw"?"Ukumbi wa":"Hall of"}<br/>{lang==="sw"?"Mabingwa":"Champions"}</h3></div><p>{formatTournamentDate(champions.tournament,lang)}<br/>{champions.list.length===3 ? (lang==="sw"?"Wachezaji watatu. Meza moja.":"Three players. One table.") : null}</p></header>
-            <div className="hall-podium">{champions.list.map(w=><article key={w.id} data-rank={w.placement} className="hall-card">
-              <div className="hall-photo">{w.portraitUrl ? <img src={w.portraitUrl} alt={w.displayName} loading="lazy"/> : w.portrait ? <Picture id={w.portrait} alt={w.displayName} sizes="(max-width:700px) 85vw, 30vw"/> : null}
-              <b className="hall-rank" aria-label={t(w.placement===1?"win.p1":w.placement===2?"win.p2":"win.p3")}>{w.placement}<i>♦</i></b>{w.placement===1 && <strong className="hall-badge">{lang==="sw"?"Bingwa":"Champion"}</strong>}</div>
-              <div className="hall-caption"><div><h4>{w.displayName}</h4><p>{w.location}</p></div><b>{winnerPrize(w).toLocaleString("en-US")}<small>TSH</small></b></div>
-            </article>)}</div>
-            {featured?.status==="upcoming" && <footer><div><small>{lang==="sw"?"Inayofuata":"Next up"}</small><h4>{t("tour.numbered",{n:featured.number})} · {formatTournamentDate(featured,lang)} {featured.startAt && new Intl.DateTimeFormat(lang==="sw"?"sw-TZ":"en-US",{timeZone:"Africa/Dar_es_Salaam",hour:"numeric",minute:"2-digit"}).format(new Date(featured.startAt))} EAT</h4></div>{featured.registrationUrl ? <a href={featured.registrationUrl}>{lang==="sw"?"Jisajili":"Register"}</a> : <button type="button" onClick={openDownload}>{lang==="sw"?"Jisajili kwenye app":"Take your seat. Register in the app"}</button>}</footer>}
+            <span className="hall-water" aria-hidden="true">
+              {champions.tournament.number}
+            </span>
+            <header>
+              <div>
+                <small>Albastini · {t("tour.numbered", { n: champions.tournament.number })}</small>
+                <h3 id="hall-title">
+                  {lang === "sw" ? "Ukumbi wa" : "Hall of"}
+                  <br />
+                  {lang === "sw" ? "Mabingwa" : "Champions"}
+                </h3>
+              </div>
+              <p>
+                {formatTournamentDate(champions.tournament, lang)}
+                <br />
+                {champions.list.length === 3
+                  ? lang === "sw"
+                    ? "Wachezaji watatu. Meza moja."
+                    : "Three players. One table."
+                  : null}
+              </p>
+            </header>
+            <div className="hall-podium">
+              {champions.list.map((w) => (
+                <article key={w.id} data-rank={w.placement} className="hall-card">
+                  <div className="hall-photo">
+                    {w.portraitUrl ? (
+                      <img src={w.portraitUrl} alt={w.displayName} loading="lazy" />
+                    ) : w.portrait ? (
+                      <Picture
+                        id={w.portrait}
+                        alt={w.displayName}
+                        sizes="(max-width:700px) 85vw, 30vw"
+                      />
+                    ) : null}
+                    <b
+                      className="hall-rank"
+                      aria-label={t(
+                        w.placement === 1 ? "win.p1" : w.placement === 2 ? "win.p2" : "win.p3",
+                      )}
+                    >
+                      {w.placement}
+                      <i>♦</i>
+                    </b>
+                    {w.placement === 1 && (
+                      <strong className="hall-badge">
+                        {lang === "sw" ? "Bingwa" : "Champion"}
+                      </strong>
+                    )}
+                  </div>
+                  <div className="hall-caption">
+                    <div>
+                      <h4>{w.displayName}</h4>
+                      <p>{w.location}</p>
+                    </div>
+                    <b>
+                      {winnerPrize(w).toLocaleString("en-US")}
+                      <small>TSH</small>
+                    </b>
+                  </div>
+                </article>
+              ))}
+            </div>
+            {featured?.status === "upcoming" && (
+              <footer>
+                <div>
+                  <small>{lang === "sw" ? "Inayofuata" : "Next up"}</small>
+                  <h4>
+                    {t("tour.numbered", { n: featured.number })} ·{" "}
+                    {formatTournamentDate(featured, lang)}{" "}
+                    {featured.startAt &&
+                      new Intl.DateTimeFormat(lang === "sw" ? "sw-TZ" : "en-US", {
+                        timeZone: "Africa/Dar_es_Salaam",
+                        hour: "numeric",
+                        minute: "2-digit",
+                      }).format(new Date(featured.startAt))}{" "}
+                    EAT
+                  </h4>
+                </div>
+                {featured.registrationUrl ? (
+                  <a href={featured.registrationUrl}>{lang === "sw" ? "Jisajili" : "Register"}</a>
+                ) : (
+                  <button type="button" onClick={takeSeat}>
+                    {lang === "sw" ? "Jisajili kwenye app" : "Take your seat. Register in the app"}
+                  </button>
+                )}
+              </footer>
+            )}
           </section>
         ) : (
           <div className="mt-16">

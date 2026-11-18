@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChampionFrame } from "./ChampionFrame";
+import { Numeral } from "./Numeral";
 import type { Tournament } from "@/content/tournaments";
 import { formatPrize, winnerPrize, type Winner } from "@/content/winners";
 import { useI18n, type TKey } from "@/lib/i18n";
@@ -86,14 +87,22 @@ export function ChampionsBeats({
             the rail drive the same index, so they can never disagree. */}
         <div className="champ-hand champ-stage-inner relative">
           <div className="champ-info">
+            <p className="champ-info-tour">{t("tour.numbered", { n: tournament.number })}</p>
             <p className="champ-info-count">
+              <Numeral role="points" className="champ-index-cur">
+                {String(count).padStart(2, "0")}
+              </Numeral>
               <span className="champ-info-word">{t("car.held")}</span>
             </p>
           </div>
 
           <div className="champ-deck relative">
             {/* the large rank changes with the champion: the environment, not a label */}
-
+            <div className="champ-env" aria-hidden="true">
+              <Numeral role="rank" outline>
+                {String(w.placement).padStart(2, "0")}
+              </Numeral>
+            </div>
             <div className="relative z-10">
               <article key={w.id} className="champ-slide champ-slide--active grid items-center">
                 <ChampionFrame
@@ -104,6 +113,7 @@ export function ChampionsBeats({
                   placeLabel={place}
                   tournamentLabel={t("tour.numbered", { n: tournament.number })}
                   priority={false}
+                  className="champion-scale"
                 />
               </article>
             </div>
@@ -126,6 +136,9 @@ export function ChampionsBeats({
                   data-state={i === index ? "played" : "held"}
                   style={{ ["--tilt" as string]: `${(i - (count - 1) / 2) * 4}deg` }}
                 >
+                  <span className="champ-card-rank" aria-hidden="true">
+                    {String(ww.placement).padStart(2, "0")}
+                  </span>
                   <span className="champ-card-name">{ww.displayName}</span>
                   <span className="champ-card-place">
                     {t(placeKey[ww.placement] ?? "win.p1")} · {formatPrize(winnerPrize(ww))}
@@ -137,6 +150,13 @@ export function ChampionsBeats({
         </div>
 
         <div className="champ-controls mt-8">
+          <p className="champ-index" aria-hidden="true">
+            <Numeral role="points" className="champ-index-cur">
+              {String(index + 1).padStart(2, "0")}
+            </Numeral>
+            <span className="champ-index-sep">/</span>
+            <span className="champ-index-tot">{String(count).padStart(2, "0")}</span>
+          </p>
           <button
             type="button"
             onClick={() => goTo(index - 1)}

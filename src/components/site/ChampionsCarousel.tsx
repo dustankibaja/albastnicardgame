@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { ChampionFrame } from "./ChampionFrame";
+import { Numeral } from "./Numeral";
 import type { Tournament } from "@/content/tournaments";
 import { formatPrize, prizeFor, type Winner } from "@/content/winners";
 import { useI18n, type TKey } from "@/lib/i18n";
@@ -114,6 +115,7 @@ export function ChampionsCarousel({
                   placeLabel={place}
                   tournamentLabel={t("tour.numbered", { n: tournament.number })}
                   priority={false}
+                  className="champion-scale"
                 />
               </article>
             </div>
@@ -122,11 +124,22 @@ export function ChampionsCarousel({
       </div>
 
       {/* environment: the current rank, behind the cover */}
+      <div className="champ-env" aria-hidden="true">
+        <Numeral role="rank" outline>
+          {String(winners[index]?.placement ?? 1).padStart(2, "0")}
+        </Numeral>
+      </div>
 
       {ready && count > 1 ? (
         <div className="champ-controls mt-8">
           {/* primary state: the collector index, in the numeric grammar */}
-
+          <p className="champ-index" aria-hidden="true">
+            <Numeral role="points" className="champ-index-cur">
+              {String(index + 1).padStart(2, "0")}
+            </Numeral>
+            <span className="champ-index-sep">/</span>
+            <span className="champ-index-tot">{String(count).padStart(2, "0")}</span>
+          </p>
           <button
             type="button"
             onClick={() => goTo(index - 1)}
