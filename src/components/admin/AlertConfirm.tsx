@@ -1,5 +1,4 @@
-import { useState, type ReactNode } from "react";
-import * as Dialog from "@radix-ui/react-alert-dialog";
+import { useId, useRef, useState, type ReactNode } from "react";
 
 /** All modal styles live in the scanned admin source, never the excluded UI kit. */
 export function AlertConfirm({
@@ -15,7 +14,9 @@ export function AlertConfirm({
   confirmLabel: string;
   onConfirm: () => void | boolean | Promise<void | boolean>;
 }) {
-  const [open, setOpen] = useState(false);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+  const bodyId = useId();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   async function confirm() {
@@ -24,7 +25,7 @@ export function AlertConfirm({
     try {
       const result = await onConfirm();
       if (result === false) setError("The record was not deleted. Please try again.");
-      else setOpen(false);
+      else dialog.current?.close();
     } catch {
       setError("The record could not be deleted. Check your connection and try again.");
     } finally {
@@ -32,33 +33,45 @@ export function AlertConfirm({
     }
   }
   return (
-    <Dialog.Root
-      open={open}
-      onOpenChange={(next) => {
-        if (!busy) {
-          setOpen(next);
+    <>
+      <span
+        onClick={() => {
           setError(null);
-        }
-      }}
-    >
-      <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[1000] bg-black/70" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-[1001] grid max-h-[85vh] w-[calc(100%_-_2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-5 overflow-y-auto rounded-xl border-2 border-alba-ink bg-alba-paper p-6 text-alba-ink shadow-xl">
-          <Dialog.Title className="text-xl font-bold">{title}</Dialog.Title>
-          <Dialog.Description className="text-base">{body}</Dialog.Description>
+          dialog.current?.showModal();
+        }}
+      >
+        {trigger}
+      </span>
+      <dialog
+        ref={dialog}
+        aria-labelledby={titleId}
+        aria-describedby={bodyId}
+        onCancel={(event) => {
+          if (busy) event.preventDefault();
+        }}
+        className="fixed inset-0 m-auto max-h-[85vh] w-[calc(100%_-_2rem)] max-w-lg overflow-y-auto rounded-xl border-2 border-alba-ink bg-alba-paper p-6 text-alba-ink shadow-xl backdrop:bg-black/70"
+      >
+        <div className="grid gap-5">
+          <h2 id={titleId} className="text-xl font-bold">
+            {title}
+          </h2>
+          <p id={bodyId} className="text-base">
+            {body}
+          </p>
           {error ? (
             <p role="alert" className="font-bold">
               {error}
             </p>
           ) : null}
           <div className="flex flex-wrap justify-end gap-3">
-            <Dialog.Cancel
+            <button
+              type="button"
               disabled={busy}
+              onClick={() => dialog.current?.close()}
               className="min-h-11 border-2 border-alba-ink px-5 font-bold disabled:opacity-50"
             >
               Cancel
-            </Dialog.Cancel>
+            </button>
             <button
               type="button"
               disabled={busy}
@@ -68,9 +81,9 @@ export function AlertConfirm({
               {busy ? "Deleting…" : confirmLabel}
             </button>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </div>
+      </dialog>
+    </>
   );
 }
 

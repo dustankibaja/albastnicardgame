@@ -203,13 +203,14 @@ export function composePublicContent(
   let championTournament: Tournament | null = null;
   let championWinners: Winner[] = [];
   let championSource: Source = "fallback";
+  if (q.champion.ok && !q.champion.data) championSource = "cms";
   if (q.champion.ok && q.champion.data) {
     const mapped = mapTournament(q.champion.data.tournament);
     const winners = q.champion.data.winners
       .map((w) => (mapped ? mapWinner(w, mapped.id, projectUrl) : null))
       .filter((w): w is Winner => w !== null)
       .sort((a, b) => a.placement - b.placement);
-    if (mapped && winners.length > 0) {
+    if (mapped) {
       championTournament = mapped;
       championWinners = winners;
       championSource = "cms";

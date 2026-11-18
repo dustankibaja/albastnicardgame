@@ -73,17 +73,21 @@ export function WinnersEditor() {
 
   const load = useCallback(async () => {
     setLoadError(null);
-    const [w, t] = await Promise.all([list(), tournaments()]);
-    if (!w.ok) {
-      setLoadError(w.error);
-      return;
+    try {
+      const [w, t] = await Promise.all([list(), tournaments()]);
+      if (!w.ok) {
+        setLoadError(w.error);
+        return;
+      }
+      if (!t.ok) {
+        setLoadError(t.error);
+        return;
+      }
+      setTournamentList(t.data);
+      setRows(w.data);
+    } catch {
+      setLoadError("Could not load winners. Please reload and sign in again if needed.");
     }
-    if (!t.ok) {
-      setLoadError(t.error);
-      return;
-    }
-    setTournamentList(t.data);
-    setRows(w.data);
   }, [list, tournaments]);
 
   useEffect(() => {
@@ -145,20 +149,28 @@ export function WinnersEditor() {
     }
     setErrors({});
     setState({ kind: "saving" });
-    const result = await save({
-      data: {
-        id: isNew ? null : selectedId,
-        tournamentId: draft.tournamentId,
-        values: parsed.data,
-      },
-    });
-    if (!result.ok) {
-      setState({ kind: "error", message: result.error });
-      return;
+    try {
+      const result = await save({
+        data: {
+          id: isNew ? null : selectedId,
+          tournamentId: draft.tournamentId,
+          values: parsed.data,
+        },
+      });
+      if (!result.ok) {
+        setState({ kind: "error", message: result.error });
+        return;
+      }
+      setState({ kind: "saved" });
+      setSelectedId(result.data.id);
+      setDraft(fromRow(result.data));
+      await load();
+    } catch {
+      setState({
+        kind: "error",
+        message: "The winner could not be saved. Check your connection and try again.",
+      });
     }
-    setState({ kind: "saved" });
-    setSelectedId(result.data.id);
-    await load();
   }
 
   async function onFile(file: File | undefined) {
@@ -227,6 +239,15 @@ export function WinnersEditor() {
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr]">
       <section aria-labelledby="winners-list-h">
+        <p className="mb-4 text-sm">
+          Choose Edit winner to change their name, rank, location, prize or photo. Only published
+          winners belonging to the latest published completed tournament appear on the website.
+        </p>
+        {state.kind === "error" ? (
+          <p role="alert" className="mb-4 border-2 border-alba-ink p-3">
+            {state.message}
+          </p>
+        ) : null}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h2 id="winners-list-h" className="label">
             Champions
@@ -263,10 +284,26 @@ export function WinnersEditor() {
                 {w.placement}. {w.displayName}
                 <span className="block text-sm font-normal">
                   {w.location} · {w.prizeAmount.toLocaleString("en-US")} {w.currency}
-                  {w.published ? "" : " · Hidden"}
+                  {w.published ? " · Published" : " · Draft"}
+                  <span className="block">
+                    Tournament #
+                    {tournamentList.find((t) => t.id === w.tournamentId)?.tournamentNumber ?? "—"} ·{" "}
+                    {tournamentList.find((t) => t.id === w.tournamentId)?.status ?? "unknown"}
+                    {!tournamentList.find((t) => t.id === w.tournamentId)?.published
+                      ? " · Tournament unpublished"
+                      : ""}
+                  </span>
                 </span>
               </button>
               <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => select(w)}
+                  className="min-h-11 border-2 border-alba-ink bg-alba-gold px-3 font-bold"
+                  aria-label={`Edit ${w.displayName}`}
+                >
+                  Edit winner
+                </button>
                 <button
                   type="button"
                   className="min-h-11 min-w-11 border-2 border-alba-ink px-3 disabled:opacity-40"

@@ -201,20 +201,6 @@ test("D: a published tutorial with a malformed ID is not used", () => {
   );
 });
 
-// ---- EMPTY DATA -> verified fallback ----
-test("EMPTY: no champions -> winners fall back", () => {
-  assert.equal(
-    composePublicContent(NOW, { ...cmsAll, champion: ok(null) }).winners.source,
-    "fallback",
-  );
-});
-test("EMPTY: champions with zero published winners -> winners fall back", () => {
-  assert.equal(
-    composePublicContent(NOW, { ...cmsAll, champion: ok({ tournament: T26_ROW, winners: [] }) })
-      .winners.source,
-    "fallback",
-  );
-});
 test("EMPTY: resolveDomain treats an empty array as unusable", () => {
   assert.deepEqual(resolveDomain<number[]>({ ok: true, data: [] }, [1]), {
     source: "fallback",
@@ -411,4 +397,17 @@ test("unpublished winners and external or traversing photo paths never expose up
     ),
     null,
   );
+});
+
+// An intentional empty CMS result must not resurrect removed/static winners.
+test("deleting all winners leaves the public champion list empty", () => {
+  const c = composePublicContent(NOW, {
+    ...cmsAll,
+    champion: ok({ tournament: T26_ROW, winners: [] }),
+  });
+  assert.deepEqual(c.winners, { source: "cms", data: [] });
+});
+test("no published completed tournament does not expose static winners", () => {
+  const c = composePublicContent(NOW, { ...cmsAll, champion: ok(null) });
+  assert.deepEqual(c.winners, { source: "cms", data: [] });
 });
