@@ -188,10 +188,28 @@ export function CompetitionSection({
                   </h4>
                 </div>
                 {featured.registrationUrl ? (
-                  <a href={featured.registrationUrl}>{lang === "sw" ? "Jisajili" : "Register"}</a>
+                  <a className="hall-cta" href={featured.registrationUrl}>
+                    <span className="hall-cta-copy">
+                      <small>
+                        {lang === "sw" ? "JIUNGE KWENYE RAUNDI" : "REGISTER IN THE APP"}
+                      </small>
+                      <strong>{lang === "sw" ? "Chukua nafasi yako" : "Take your seat"}</strong>
+                    </span>
+                    <span className="hall-cta-arrow" aria-hidden="true">
+                      ↗
+                    </span>
+                  </a>
                 ) : (
-                  <button type="button" onClick={takeSeat}>
-                    {lang === "sw" ? "Jisajili kwenye app" : "Take your seat. Register in the app"}
+                  <button className="hall-cta" type="button" onClick={takeSeat}>
+                    <span className="hall-cta-copy">
+                      <small>
+                        {lang === "sw" ? "JIUNGE KWENYE RAUNDI" : "REGISTER IN THE APP"}
+                      </small>
+                      <strong>{lang === "sw" ? "Chukua nafasi yako" : "Take your seat"}</strong>
+                    </span>
+                    <span className="hall-cta-arrow" aria-hidden="true">
+                      ↗
+                    </span>
                   </button>
                 )}
               </footer>
