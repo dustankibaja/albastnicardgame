@@ -20,6 +20,10 @@ const jobs = {
   cardBlack: { file: "cards/ace-black.png", widths: [260, 520, 640] },
   cardBlue: { file: "cards/ace-blue.png", widths: [260, 520, 640] },
   cardFan: { file: "brand/albastini-mark-official.png", widths: [300, 600, 1120] },
+  // M1 card primitive: front and back on ONE canvas (512x768, normalised masters).
+  cardFrontRed: { file: "cards/card-front-red.png", widths: [256, 512] },
+  cardFrontBlue: { file: "cards/card-front-blue.png", widths: [256, 512] },
+  cardBack: { file: "cards/card-back.png", widths: [256, 512] },
   boxSafari: { file: "box-safari-retail.webp", widths: [300, 600] },
   boxExpansion: { file: "box-expansion.webp", widths: [300, 600] },
   // Phase 4 — genuine source photography (derivatives documented in assets-source/phase4/DERIVATIVES.md)

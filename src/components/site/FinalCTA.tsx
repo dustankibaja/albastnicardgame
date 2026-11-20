@@ -1,55 +1,71 @@
-import { useRef } from "react";
 import { CardsButton } from "./CardsButton";
+import { Wave } from "./Wave";
 import { DownloadButton } from "./DownloadButton";
 import { Picture } from "./Picture";
 import { Reveal } from "./Reveal";
-import { useScrollProgress } from "@/hooks/use-depth";
 import { useI18n } from "@/lib/i18n";
 
 /*
- * The ending: the whole hand of Albastini cards (brand artwork) rises out
- * of the white table into the dark, partially cropped by the page edge.
+ * THE FINALE. A poster, not a footer-adjacent CTA block.
+ *  - READY TO PLAY? dominates; the phrase and the two actions follow.
+ *  - The three official aces are the authority: a fan, the blue ace in front.
+ *    The blue ace is the same artwork that leaves the Physical Cards fan
+ *    (match-cut continuity), so the ending reads as the same product.
+ *  - No crown: the crown only appears in the brand mark. Nothing here competes
+ *    with the message.
+ * Desktop: copy left, fan right. Mobile: copy first, fan below the actions.
  */
 export function FinalCTA() {
   const { t } = useI18n();
-  const ref = useRef<HTMLElement>(null);
-  useScrollProgress(ref);
 
   return (
     <section
-      ref={ref}
+      id="finale"
       aria-labelledby="final-title"
-      className="on-dark relative z-10 overflow-x-clip bg-alba-ink text-alba-paper"
+      className="finale on-dark relative z-10 overflow-x-clip bg-alba-ink text-alba-paper"
     >
-      <div
-        aria-hidden
-        className="depth pointer-events-none absolute -right-[18%] -top-[clamp(5rem,12vw,10rem)] w-[min(66vw,520px)] sm:-right-[6%]"
-        style={{ ["--dy" as string]: -50, ["--dr" as string]: -3 }}
-      >
-        <Picture
-          id="cardFan"
-          alt=""
-          sizes="(min-width: 640px) 520px, 66vw"
-          className="rotate-[8deg]"
-        />
-      </div>
-
-      <div className="shell relative pb-[clamp(5rem,10vw,8rem)] pt-[clamp(15rem,62vw,17rem)] sm:pt-[clamp(8rem,14vw,12rem)]">
-        <Reveal className="max-w-3xl">
+      {/* the white table gives way to the finale along the card-wave, as at every join */}
+      <Wave fill="var(--alba-paper)" flip className="absolute inset-x-0 top-0 -mt-px z-0" />
+      <div className="shell finale-grid relative z-[1]">
+        <Reveal className="finale-copy">
           <h2 id="final-title" className="display-xl type-poster">
             <span className="keep block">{t("final.title1")}</span>
             <span className="keep block">{t("final.title2")}</span>
           </h2>
-          <p className="display-xl mt-8 text-[clamp(2rem,5vw,3.75rem)] text-alba-gold">
-            {t("brand.tagline")}
-          </p>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+          <p className="finale-phrase display-xl text-alba-gold">{t("brand.tagline")}</p>
+          <div className="finale-actions">
             <DownloadButton size="lg" className="w-full sm:w-auto">
               {t("cta.app")}
             </DownloadButton>
             <CardsButton size="lg" className="w-full sm:w-auto">
               {t("cta.cards")}
             </CardsButton>
+          </div>
+        </Reveal>
+
+        <Reveal className="finale-fan" delay={120}>
+          <div aria-hidden="true" className="finale-fan-inner">
+            <Picture
+              id="aceRed"
+              alt=""
+              sizes="(min-width: 1024px) 26vw, 38vw"
+              className="finale-card finale-card--red"
+              imgClassName="block h-auto w-full"
+            />
+            <Picture
+              id="aceBlack"
+              alt=""
+              sizes="(min-width: 1024px) 26vw, 38vw"
+              className="finale-card finale-card--black"
+              imgClassName="block h-auto w-full"
+            />
+            <Picture
+              id="aceBlue"
+              alt=""
+              sizes="(min-width: 1024px) 26vw, 38vw"
+              className="finale-card finale-card--blue"
+              imgClassName="block h-auto w-full"
+            />
           </div>
         </Reveal>
       </div>

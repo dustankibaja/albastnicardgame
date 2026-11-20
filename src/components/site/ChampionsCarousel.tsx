@@ -100,44 +100,40 @@ export function ChampionsCarousel({
               aria-label={t("car.slide", { i: i + 1, n: count })}
               className="w-full shrink-0 snap-start snap-always px-1 pt-4"
             >
-              <article className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+              <article
+                className={cn(
+                  "grid items-center champ-slide",
+                  i === index && "champ-slide--active",
+                )}
+              >
                 <ChampionFrame
                   winner={w}
+                  index={i + 1}
+                  total={count}
                   alt={w.portraitAltKey ? t(w.portraitAltKey) : w.displayName}
                   placeLabel={place}
+                  tournamentLabel={t("tour.numbered", { n: tournament.number })}
                   priority={false}
-                  className="mx-auto w-full max-w-[440px] lg:col-span-5"
                 />
-                <div className="lg:col-span-7">
-                  <h4 className="display-xl text-[clamp(3rem,9vw,7.5rem)]">{w.displayName}</h4>
-                  <dl className="mt-8 flex flex-wrap gap-x-12 gap-y-6">
-                    <div>
-                      <dt className="label text-alba-paper/80">{t("win.prize")}</dt>
-                      <dd className="display-xl mt-1 text-[clamp(2.5rem,5vw,4rem)] text-alba-gold">
-                        {formatPrize(prizeFor(w.placement))}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="label text-alba-paper/80">{t("win.location")}</dt>
-                      <dd className="mt-2 text-2xl font-semibold">{w.location}</dd>
-                    </div>
-                  </dl>
-                </div>
               </article>
             </div>
           );
         })}
       </div>
 
+      {/* environment: the current rank, behind the cover */}
+
       {ready && count > 1 ? (
-        <div className="mt-8 flex items-center justify-center gap-4 lg:justify-start">
+        <div className="champ-controls mt-8">
+          {/* primary state: the collector index, in the numeric grammar */}
+
           <button
             type="button"
             onClick={() => goTo(index - 1)}
             disabled={index === 0}
             aria-controls={`${uid}-viewport`}
             aria-label={t("car.prev")}
-            className="grid size-12 place-items-center rounded-full border-2 border-alba-paper/40 transition-colors duration-[var(--dur-fast)] hover:border-alba-paper disabled:opacity-35"
+            className="champ-arrow"
           >
             <ChevronLeft aria-hidden className="size-6" />
           </button>
@@ -171,7 +167,7 @@ export function ChampionsCarousel({
             disabled={index === count - 1}
             aria-controls={`${uid}-viewport`}
             aria-label={t("car.next")}
-            className="grid size-12 place-items-center rounded-full border-2 border-alba-paper/40 transition-colors duration-[var(--dur-fast)] hover:border-alba-paper disabled:opacity-35"
+            className="champ-arrow"
           >
             <ChevronRight aria-hidden className="size-6" />
           </button>

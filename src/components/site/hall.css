@@ -1,0 +1,258 @@
+.hall {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: radial-gradient(ellipse 60% 55% at 50% 58%, #2a44d6, #14238f 45%, #0a1250);
+  color: white;
+  margin: 5rem calc(50% - 50vw) 0;
+  padding: clamp(2rem, 4.45vw, 5rem) max(6.65vw, calc((100vw - 84rem) / 2));
+  font-family: Inter, Arial, sans-serif;
+}
+.hall-water {
+  position: absolute;
+  z-index: -1;
+  top: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  font: bold min(53vw, 50rem)/1 Arial;
+  color: transparent;
+  -webkit-text-stroke: 2px #ffffff24;
+}
+.hall header,
+.hall footer,
+.hall-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+}
+.hall small {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hall h3,
+.hall h4,
+.hall-rank {
+  font-family: "Bricolage Grotesque", Arial, sans-serif;
+  font-weight: 800;
+}
+.hall h3 {
+  font-size: clamp(3.4rem, 6.7vw, 7rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  margin-top: 0.8rem;
+}
+.hall header > p {
+  text-align: right;
+}
+.hall-podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2.5%;
+  margin: 3rem 0 4rem;
+}
+.hall-card {
+  width: 27%;
+  padding: 1%;
+  border-radius: 1.5rem;
+  background: #f7f1e3;
+  color: #0a1250;
+  box-shadow: 0 40px 60px -20px #0009;
+}
+.hall-card[data-rank="2"] {
+  order: 0;
+  transform: rotate(-5deg);
+}
+.hall-card[data-rank="1"] {
+  order: 1;
+  width: 34%;
+  background: #fbf6e9;
+  box-shadow:
+    0 0 0 3px #e32636,
+    0 35px 70px #0006;
+}
+.hall-card[data-rank="3"] {
+  order: 2;
+  transform: rotate(5deg);
+}
+.hall-photo {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  background: #25346b;
+}
+.hall-photo img,
+.hall-photo picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 24%;
+}
+.hall-rank,
+.hall-badge {
+  position: absolute;
+  top: 0.6rem;
+}
+.hall-rank {
+  left: 0.8rem;
+  color: white;
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 1px 6px #0009;
+}
+.hall-rank i {
+  display: block;
+  color: #111;
+  font-size: 0.55em;
+  font-style: normal;
+  -webkit-text-stroke: 1px white;
+}
+.hall-card[data-rank="1"] i {
+  color: #e32636;
+}
+.hall-card[data-rank="3"] i {
+  color: #2a44d6;
+}
+.hall-badge {
+  right: 0.6rem;
+  background: #e32636;
+  color: white;
+  padding: 0.4rem 0.65rem;
+  border-radius: 2rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.hall-caption {
+  padding: 0.8rem 0.3rem 0.35rem;
+  gap: 0.4rem;
+}
+.hall-caption h4,
+.hall footer h4 {
+  font-size: clamp(1.25rem, 2vw, 2rem);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+.hall-card[data-rank="1"] h4 {
+  font-size: clamp(1.7rem, 3.5vw, 3.5rem);
+}
+.hall-caption p {
+  font-size: 0.85rem;
+  color: #3a4272;
+}
+.hall-caption > b {
+  text-align: right;
+}
+.hall footer {
+  border-top: 1px solid #ffffff48;
+  padding-top: 1.4rem;
+}
+.hall-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.1rem;
+  min-width: min(100%, 22rem);
+  min-height: 4.5rem;
+  padding: 0.72rem 0.75rem 0.72rem 1.25rem;
+  border: 2px solid #ffd900;
+  border-radius: 1rem;
+  background: #ffd900;
+  color: #0a1250;
+  box-shadow: 6px 6px 0 #080f46;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+.hall-cta:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 #080f46;
+  background: #ffe94d;
+}
+.hall-cta:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 4px;
+}
+.hall-cta-copy {
+  display: grid;
+  gap: 0.22rem;
+}
+.hall-cta-copy small {
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  line-height: 1.1;
+  opacity: 0.72;
+}
+.hall-cta-copy strong {
+  font-family: "Bricolage Grotesque", Arial, sans-serif;
+  font-size: clamp(1.15rem, 2vw, 1.65rem);
+  line-height: 1;
+}
+.hall-cta-arrow {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: #0a1250;
+  color: #ffd900;
+  font-size: 1.55rem;
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+.hall-cta:hover .hall-cta-arrow {
+  transform: rotate(8deg) translate(2px, -2px);
+}
+@media (max-width: 760px) {
+  .hall {
+    padding: 2rem 6vw;
+  }
+  .hall header,
+  .hall footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .hall header > p {
+    text-align: left;
+  }
+  .hall-cta {
+    width: 100%;
+    min-width: 0;
+  }
+  .hall-podium {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+    margin: 2rem 0;
+  }
+  .hall .hall-card[data-rank] {
+    width: min(92%, 23rem);
+    padding: 0.75rem;
+    transform: none;
+    order: var(--order);
+  }
+  .hall-card[data-rank="1"] {
+    --order: 0;
+  }
+  .hall-card[data-rank="2"] {
+    --order: 1;
+  }
+  .hall-card[data-rank="3"] {
+    --order: 2;
+  }
+  .hall-photo {
+    aspect-ratio: 4/4.6;
+  }
+}

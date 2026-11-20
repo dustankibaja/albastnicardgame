@@ -28,6 +28,8 @@ type Layer = {
   dy: number;
   dr: number;
   delay: number;
+  /** DEAL: where the card starts (relative to rest) and the arc it takes. */
+  from: { x: number; y: number; r: number };
 };
 
 /*
@@ -48,6 +50,7 @@ const cards: Layer[] = [
     dy: 30,
     dr: -2,
     delay: 140,
+    from: { x: 46, y: 62, r: 34 },
   },
   {
     id: "aceBlack",
@@ -60,6 +63,7 @@ const cards: Layer[] = [
     dy: 48,
     dr: -1,
     delay: 210,
+    from: { x: 58, y: 70, r: -26 },
   },
   {
     id: "aceBlue",
@@ -72,6 +76,7 @@ const cards: Layer[] = [
     dy: 64,
     dr: 1.5,
     delay: 280,
+    from: { x: 38, y: 74, r: 18 },
   },
 ];
 
@@ -86,32 +91,33 @@ export function Hero() {
       id="top"
       ref={stage}
       aria-labelledby="hero-title"
-      className="on-dark relative isolate overflow-hidden bg-alba-blue text-alba-paper"
+      className="hero-section on-dark relative isolate overflow-hidden bg-alba-blue text-alba-paper"
     >
-      <div className="shell relative z-10 grid items-center gap-4 pb-[clamp(0.75rem,1.5vw,1.5rem)] lg:gap-6 pt-24 sm:pt-28 lg:grid-cols-12 lg:pt-32">
+      <div className="hero-shell shell relative z-10 grid items-center gap-4 pb-[clamp(0.75rem,1.5vw,1.5rem)] lg:gap-6 pt-24 sm:pt-28 lg:grid-cols-12 lg:pt-32">
         <div className="lg:col-span-5">
-          <h1 id="hero-title" className="display-xl">
-            <span className="enter block text-[clamp(4.25rem,19vw,10rem)] lg:text-[clamp(5.5rem,8.6vw,8.25rem)]">
+          <h1
+            id="hero-title"
+            className="display-xl"
+            aria-label={`${t("hero.title1")} ${t("hero.title2")} ${t("hero.one")}`}
+          >
+            <span
+              className="hero-title-lines block text-[clamp(4.25rem,19vw,10rem)] lg:text-[clamp(5.5rem,8.6vw,8.25rem)]"
+              aria-hidden="true"
+            >
               <span className="block whitespace-nowrap">{t("hero.title1")}</span>
               <span className="block whitespace-nowrap">{t("hero.title2")}</span>
             </span>
             <span
-              className="enter mt-3 block keep text-[clamp(2.4rem,10.5vw,5.75rem)] text-alba-gold lg:text-[clamp(3rem,5.6vw,5rem)]"
-              style={{ ["--delay" as string]: "80ms" }}
+              className="hero-title-sub mt-3 block keep text-[clamp(2.4rem,10.5vw,5.75rem)] text-alba-gold lg:text-[clamp(3rem,5.6vw,5rem)]"
+              aria-hidden="true"
             >
               {t("hero.one")}
             </span>
           </h1>
-          <p
-            className="enter mt-6 max-w-[28ch] text-xl leading-snug text-alba-paper/90 sm:text-2xl"
-            style={{ ["--delay" as string]: "140ms" }}
-          >
+          <p className="mt-6 max-w-[28ch] text-xl leading-snug text-alba-paper/90 sm:text-2xl">
             {t("hero.sub")}
           </p>
-          <div
-            className="enter mt-8 flex flex-col gap-3 sm:flex-row"
-            style={{ ["--delay" as string]: "180ms" }}
-          >
+          <div className="hero-actions mt-8 flex flex-col gap-3 sm:flex-row">
             <DownloadButton size="lg" className="w-full sm:w-auto">
               {t("cta.app")}
             </DownloadButton>
@@ -123,19 +129,27 @@ export function Hero() {
 
         {/* The stage: physical cards and the app, together. */}
         <div className="relative lg:col-span-7">
-          <div className="relative mx-auto aspect-[1/0.98] w-full max-w-[560px] lg:aspect-[1/0.78] lg:max-w-none">
+          <div className="hero-stage relative mx-auto aspect-[1/0.98] w-full max-w-[35rem] lg:aspect-[1/0.78]">
             {cards.map((c) => (
               <div
                 key={c.id}
                 className={cn("depth absolute", c.box)}
                 style={depthVars(c.dx, c.dy, c.dr)}
               >
-                <div className="enter" style={{ ["--delay" as string]: `${c.delay}ms` }}>
+                <div
+                  className="verb-deal-card"
+                  style={{
+                    ["--delay" as string]: `${c.delay}ms`,
+                    ["--from-x" as string]: `${c.from.x}%`,
+                    ["--from-y" as string]: `${c.from.y}%`,
+                    ["--from-r" as string]: `${c.from.r}deg`,
+                  }}
+                >
                   <Picture
                     id={c.id}
                     alt={t(c.alt)}
                     priority
-                    sizes="(min-width: 1024px) 18vw, 31vw"
+                    sizes="(min-width: 1024px) min(18vw, 22vh), 31vw"
                     className={cn("overflow-hidden rounded-[7%]", c.shadow)}
                     style={{ transform: `rotate(${c.rotate}deg) scale(${c.scale})` }}
                   />
@@ -148,23 +162,15 @@ export function Hero() {
               className="depth absolute left-[27%] top-0 z-10 w-[46%] lg:left-[49%] lg:top-[0%] lg:w-[37%]"
               style={depthVars(20, 96, 1.5)}
             >
-              <div className="enter" style={{ ["--delay" as string]: "260ms" }}>
+              <div className="hero-phone-enter" style={{ ["--delay" as string]: "260ms" }}>
                 <PhoneMockup
                   alt={t("alt.app")}
                   priority
-                  sizes="(min-width: 1024px) 22vw, 46vw"
+                  sizes="(min-width: 1024px) min(22vw, 27vh), 46vw"
                   className="rotate-[5deg]"
                 />
               </div>
             </div>
-          </div>
-          <div className="mx-auto mt-2 flex max-w-[560px] justify-between lg:max-w-none lg:px-[2%]">
-            <p className="label">
-              <span className="text-alba-gold">01</span> {t("hero.physical")}
-            </p>
-            <p className="label lg:mr-[4%]">
-              <span className="text-alba-gold">02</span> {t("hero.digital")}
-            </p>
           </div>
         </div>
       </div>

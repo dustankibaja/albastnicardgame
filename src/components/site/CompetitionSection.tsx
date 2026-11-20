@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
-import { AlbaButton } from "./AlbaButton";
-import { DownloadButton } from "./DownloadButton";
 import { Reveal } from "./Reveal";
-import { TournamentCountdown } from "./TournamentCountdown";
-import { ChampionsCarousel } from "./ChampionsCarousel";
+import { Picture } from "./Picture";
+import { useDownload } from "./DownloadModal";
+import { appStoreLinks } from "@/content/links";
+import { winnerPrize } from "@/content/winners";
+import "./hall.css";
+import { ArenaFixture, PrizeLadder } from "./Arena";
+import { Numeral } from "./Numeral";
 import { Wave } from "./Wave";
-import { tournaments, type Tournament } from "@/content/tournaments";
-import { winners } from "@/content/winners";
+import type { Tournament } from "@/content/tournaments";
+import type { Winner } from "@/content/winners";
 import { useI18n } from "@/lib/i18n";
-import {
-  formatTournamentDate,
-  formatTournamentTime,
-  getFeaturedTournament,
-  getTournamentPhase,
-} from "@/lib/tournament";
+import { formatTournamentDate, getFeaturedTournament, getTournamentPhase } from "@/lib/tournament";
 
 /**
  * Competition chapter: upcoming tournament + verified winners in one section.
@@ -23,10 +21,20 @@ import {
  * client render use the same clock (no hydration mismatch). After mount the
  * clock ticks once a second, only while a countdown is actually visible.
  */
-export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
+export function CompetitionSection({
+  renderedAt,
+  tournaments,
+  winners,
+  countdownEnabled,
+}: {
+  renderedAt: number;
+  tournaments: Tournament[];
+  winners: Winner[];
+  countdownEnabled: boolean;
+}) {
   const { t, lang } = useI18n();
   const [now, setNow] = useState(renderedAt);
-
+  const { openDownload } = useDownload();
   const featured = getFeaturedTournament(tournaments, now);
   const phase = featured ? getTournamentPhase(featured, now) : null;
   const ticking = Boolean(featured?.startAt) && phase === "upcoming";
@@ -60,7 +68,9 @@ export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
       className="on-dark relative overflow-x-clip text-alba-paper"
       style={{
         background:
-          "linear-gradient(to bottom, var(--alba-blue) 0%, var(--alba-blue) 28%, var(--alba-night) 72%, var(--alba-night) 100%)",
+          // A deliberate step into the arena: blue holds briefly, the night closes in
+          // over a short band, then the lower chapter is the arena. Not a slow drift.
+          "linear-gradient(to bottom, var(--alba-blue) 0%, var(--alba-blue) 3%, var(--alba-night) 13%, var(--alba-night) 100%)",
       }}
     >
       {/* The white chapters give way to the arena along the card wave. */}
@@ -81,117 +91,143 @@ export function CompetitionSection({ renderedAt }: { renderedAt: number }) {
           <Reveal className="lg:col-span-4 lg:pt-6">
             <p className="type-lede max-w-[26ch] text-alba-paper/90">{t("tour.body")}</p>
           </Reveal>
-          <Reveal
-            delay={100}
-            className="lg:col-span-6 lg:col-start-7 lg:-mt-[clamp(10rem,16vw,15rem)] xl:col-span-5 xl:col-start-8"
-          >
+          <div className="lg:col-span-6 lg:col-start-7 lg:-mt-[clamp(6rem,10vw,10rem)]">
             {featured && phase ? (
-              <TournamentPanel tournament={featured} phase={phase} now={now} />
+              <ArenaFixture tournament={featured} now={now} countdownEnabled={countdownEnabled} />
             ) : (
-              <div className="rounded-[1.75rem] bg-alba-ink p-8">
-                <p className="text-xl">{t("tour.none")}</p>
-              </div>
+              <p className="text-xl">{t("tour.none")}</p>
             )}
-          </Reveal>
+            <div className="mt-12">
+              <PrizeLadder />
+            </div>
+          </div>
         </div>
 
         {/* Champions — verified records only; the block disappears if there are none.
             Bottom padding = the Physical Cards product rise + air, so the rising
             box can never cover the carousel controls. */}
         {champions ? (
-          <div className="mt-[clamp(5rem,9vw,8rem)] border-t border-alba-paper/15 pt-[clamp(3rem,6vw,5rem)]">
-            <Reveal>
-              <h3 className="display-xl type-editorial">
-                <span className="block sm:inline">{t("win.title1")}</span>{" "}
-                <span className="block sm:inline">{t("win.title2")}</span>
-              </h3>
-              <p className="label mt-4 text-alba-paper/85">
-                {t("tour.numbered", { n: champions.tournament.number })}
-                {", "}
+          <section className="hall" aria-labelledby="hall-title">
+            <span className="hall-water" aria-hidden="true">
+              {champions.tournament.number}
+            </span>
+            <header>
+              <div>
+                <small>Albastini · {t("tour.numbered", { n: champions.tournament.number })}</small>
+                <h3 id="hall-title">
+                  {lang === "sw" ? "Ukumbi wa" : "Hall of"}
+                  <br />
+                  {lang === "sw" ? "Mabingwa" : "Champions"}
+                </h3>
+              </div>
+              <p>
                 {formatTournamentDate(champions.tournament, lang)}
+                <br />
+                {champions.list.length === 3
+                  ? lang === "sw"
+                    ? "Wachezaji watatu. Meza moja."
+                    : "Three players. One table."
+                  : null}
               </p>
-            </Reveal>
-            <div className="mt-10">
-              <ChampionsCarousel tournament={champions.tournament} winners={champions.list} />
+            </header>
+            <div className="hall-podium">
+              {champions.list.map((w) => (
+                <article key={w.id} data-rank={w.placement} className="hall-card">
+                  <div className="hall-photo">
+                    {w.portraitUrl ? (
+                      <img src={w.portraitUrl} alt={w.displayName} loading="lazy" />
+                    ) : w.portrait ? (
+                      <Picture
+                        id={w.portrait}
+                        alt={w.displayName}
+                        sizes="(max-width:700px) 85vw, 30vw"
+                      />
+                    ) : null}
+                    <b
+                      className="hall-rank"
+                      aria-label={t(
+                        w.placement === 1 ? "win.p1" : w.placement === 2 ? "win.p2" : "win.p3",
+                      )}
+                    >
+                      {w.placement}
+                      <i>♦</i>
+                    </b>
+                    {w.placement === 1 && (
+                      <strong className="hall-badge">
+                        {lang === "sw" ? "Bingwa" : "Champion"}
+                      </strong>
+                    )}
+                  </div>
+                  <div className="hall-caption">
+                    <div>
+                      <h4>{w.displayName}</h4>
+                      <p>{w.location}</p>
+                    </div>
+                    <b>
+                      {winnerPrize(w).toLocaleString("en-US")}
+                      <small>TSH</small>
+                    </b>
+                  </div>
+                </article>
+              ))}
             </div>
-          </div>
-        ) : null}
-      </div>
-    </section>
-  );
-}
-
-function TournamentPanel({
-  tournament,
-  phase,
-  now,
-}: {
-  tournament: Tournament;
-  phase: "upcoming" | "live" | "ended" | "postponed" | "cancelled";
-  now: number;
-}) {
-  const { t, lang } = useI18n();
-  const date = formatTournamentDate(tournament, lang);
-  // Without a verified number or title, the date itself is the heading
-  // (avoids repeating "Next tournament" in both the label and the heading).
-  const named =
-    tournament.title ?? (tournament.number ? t("tour.numbered", { n: tournament.number }) : null);
-  const heading = named ?? date;
-  const time = formatTournamentTime(tournament, lang);
-  const modeKey = tournament.mode ? (`tour.mode.${tournament.mode}` as const) : null;
-
-  return (
-    <div className="overflow-hidden rounded-[1.75rem] bg-alba-ink">
-      <div className="p-7 sm:p-10">
-        <p className="label text-alba-gold">
-          {phase === "live" ? t("tour.live") : phase === "ended" ? t("tour.ended") : t("tour.next")}
-        </p>
-        <h3 className="display-xl mt-3 text-[clamp(1.85rem,9.2vw,3.75rem)] text-alba-paper lg:text-[clamp(2.5rem,3.4vw,3.75rem)]">
-          {named ? heading : <DateHeading text={heading} />}
-        </h3>
-        <ul className="mt-4 grid gap-1 text-xl">
-          {/* While postponed with no new date, the old date must not read as current. */}
-          {named && phase !== "postponed" ? <li>{date}</li> : null}
-          {time ? <li>{t("tour.timeTz", { time })}</li> : null}
-          {modeKey ? <li>{t(modeKey)}</li> : null}
-          {tournament.location ? <li>{tournament.location}</li> : null}
-        </ul>
-        <ul className="mt-5 grid gap-1 text-lg text-alba-paper/85">
-          {tournament.registration === "app" ? <li>{t("tour.registerApp")}</li> : null}
-          {phase === "postponed" ? <li>{t("tour.postponed")}</li> : null}
-          {!tournament.startAt && phase !== "postponed" ? <li>{t("tour.timeTba")}</li> : null}
-        </ul>
-      </div>
-
-      {phase === "upcoming" && tournament.startAt ? (
-        <div className="border-t border-alba-paper/15 px-3 pb-3 sm:px-5 sm:pb-5">
-          <TournamentCountdown target={Date.parse(tournament.startAt)} now={now} />
-        </div>
-      ) : null}
-
-      <div className="flex flex-col gap-3 border-t border-alba-paper/15 p-7 sm:flex-row sm:items-center sm:justify-between sm:p-10">
-        {tournament.registrationUrl ? (
-          <AlbaButton asChildHref={tournament.registrationUrl} size="lg">
-            {t("cta.playApp")}
-          </AlbaButton>
+            {featured?.status === "upcoming" && (
+              <footer>
+                <div>
+                  <small>{lang === "sw" ? "Inayofuata" : "Next up"}</small>
+                  <h4>
+                    {t("tour.numbered", { n: featured.number })} ·{" "}
+                    {formatTournamentDate(featured, lang)}{" "}
+                    {featured.startAt &&
+                      new Intl.DateTimeFormat(lang === "sw" ? "sw-TZ" : "en-US", {
+                        timeZone: "Africa/Dar_es_Salaam",
+                        hour: "numeric",
+                        minute: "2-digit",
+                      }).format(new Date(featured.startAt))}{" "}
+                    EAT
+                  </h4>
+                </div>
+                {featured.registrationUrl ? (
+                  <a className="hall-cta" href={featured.registrationUrl}>
+                    <span className="hall-cta-copy">
+                      <small>
+                        {lang === "sw" ? "JIUNGE KWENYE RAUNDI" : "REGISTER IN THE APP"}
+                      </small>
+                      <strong>{lang === "sw" ? "Chukua nafasi yako" : "Take your seat"}</strong>
+                    </span>
+                    <span className="hall-cta-arrow" aria-hidden="true">
+                      ↗
+                    </span>
+                  </a>
+                ) : (
+                  <button className="hall-cta" type="button" onClick={takeSeat}>
+                    <span className="hall-cta-copy">
+                      <small>
+                        {lang === "sw" ? "JIUNGE KWENYE RAUNDI" : "REGISTER IN THE APP"}
+                      </small>
+                      <strong>{lang === "sw" ? "Chukua nafasi yako" : "Take your seat"}</strong>
+                    </span>
+                    <span className="hall-cta-arrow" aria-hidden="true">
+                      ↗
+                    </span>
+                  </button>
+                )}
+              </footer>
+            )}
+          </section>
         ) : (
-          <DownloadButton size="lg" className="w-full sm:w-auto">
-            {t("cta.playApp")}
-          </DownloadButton>
+          <div className="mt-16">
+            <h3 className="display-xl">
+              {t("win.title1")} {t("win.title2")}
+            </h3>
+            <p>
+              {lang === "sw"
+                ? "Matokeo yataonekana hapa yakichapishwa."
+                : "Tournament results will appear here when published."}
+            </p>
+          </div>
         )}
       </div>
-    </div>
-  );
-}
-
-/** "Saturday, 21 November 2026" → weekday line + the date kept whole. */
-function DateHeading({ text }: { text: string }) {
-  const i = text.indexOf(", ");
-  if (i < 0) return <span className="keep">{text}</span>;
-  return (
-    <>
-      <span className="block">{text.slice(0, i + 1)}</span>
-      <span className="keep block">{text.slice(i + 2)}</span>
-    </>
+    </section>
   );
 }

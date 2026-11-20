@@ -24,6 +24,18 @@ import cardFan600Avif from "@/assets/optimized/cardFan-600.avif";
 import cardFan600Webp from "@/assets/optimized/cardFan-600.webp";
 import cardFan1120Avif from "@/assets/optimized/cardFan-1120.avif";
 import cardFan1120Webp from "@/assets/optimized/cardFan-1120.webp";
+import cardFrontRed256Avif from "@/assets/optimized/cardFrontRed-256.avif";
+import cardFrontRed256Webp from "@/assets/optimized/cardFrontRed-256.webp";
+import cardFrontRed512Avif from "@/assets/optimized/cardFrontRed-512.avif";
+import cardFrontRed512Webp from "@/assets/optimized/cardFrontRed-512.webp";
+import cardFrontBlue256Avif from "@/assets/optimized/cardFrontBlue-256.avif";
+import cardFrontBlue256Webp from "@/assets/optimized/cardFrontBlue-256.webp";
+import cardFrontBlue512Avif from "@/assets/optimized/cardFrontBlue-512.avif";
+import cardFrontBlue512Webp from "@/assets/optimized/cardFrontBlue-512.webp";
+import cardBack256Avif from "@/assets/optimized/cardBack-256.avif";
+import cardBack256Webp from "@/assets/optimized/cardBack-256.webp";
+import cardBack512Avif from "@/assets/optimized/cardBack-512.avif";
+import cardBack512Webp from "@/assets/optimized/cardBack-512.webp";
 import boxSafari300Avif from "@/assets/optimized/boxSafari-300.avif";
 import boxSafari300Webp from "@/assets/optimized/boxSafari-300.webp";
 import boxSafari600Avif from "@/assets/optimized/boxSafari-600.avif";
@@ -125,6 +137,42 @@ export const images = {
       [cardFan300Webp, 300],
       [cardFan600Webp, 600],
       [cardFan1120Webp, 1120],
+    ],
+  },
+  cardFrontRed: {
+    ratio: 1.5,
+    width: 512,
+    avif: [
+      [cardFrontRed256Avif, 256],
+      [cardFrontRed512Avif, 512],
+    ],
+    webp: [
+      [cardFrontRed256Webp, 256],
+      [cardFrontRed512Webp, 512],
+    ],
+  },
+  cardFrontBlue: {
+    ratio: 1.5,
+    width: 512,
+    avif: [
+      [cardFrontBlue256Avif, 256],
+      [cardFrontBlue512Avif, 512],
+    ],
+    webp: [
+      [cardFrontBlue256Webp, 256],
+      [cardFrontBlue512Webp, 512],
+    ],
+  },
+  cardBack: {
+    ratio: 1.5,
+    width: 512,
+    avif: [
+      [cardBack256Avif, 256],
+      [cardBack512Avif, 512],
+    ],
+    webp: [
+      [cardBack256Webp, 256],
+      [cardBack512Webp, 512],
     ],
   },
   boxSafari: {

@@ -28,15 +28,30 @@ export type Winner = {
   tournamentId: string;
   /** Genuine photo from the asset registry. Omit if none: the frame shows a typographic state. */
   portrait?: SiteImageId;
+  /** Public URL of a CMS photo in this project's site-media bucket. */
+  portraitUrl?: string;
   portraitAltKey?: TKey;
+  /**
+   * Photo mode for ChampionFrame (M1):
+   *  - "portrait-cutout": a figure extracted from its background, rising out of the frame.
+   *  - "editorial-photo": a scene kept whole (the environment is part of the photograph).
+   */
+  photoMode?: "portrait-cutout" | "editorial-photo";
   /** "cover" when cropping is safe; "contain" when cropping would cut important content. */
   imageFit?: "cover" | "contain";
   /** CSS object-position, e.g. "50% 30%". */
   imagePosition?: string;
+  /** Prize in TSH from the database. Absent for source-controlled winners: the placement table applies. */
+  prizeAmount?: number;
 };
 
 export function prizeFor(placement: Placement) {
   return tournamentPrizeStructure[placement];
+}
+
+/** The prize a winner was actually awarded: the stored amount when present, else the placement table. */
+export function winnerPrize(w: Pick<Winner, "placement" | "prizeAmount">): number {
+  return w.prizeAmount ?? prizeFor(w.placement);
 }
 
 /** "130,000 TSH" — fixed format so server and client render identically. */
@@ -53,6 +68,7 @@ export const winners: Winner[] = [
     location: "Dar es Salaam, Tanzania",
     tournamentId: "tournament-26",
     portrait: "davidSanyaPortrait",
+    photoMode: "portrait-cutout",
     portraitAltKey: "alt.david",
     imageFit: "contain",
     imagePosition: "50% 100%",
@@ -64,6 +80,7 @@ export const winners: Winner[] = [
     location: "Kilimanjaro, Tanzania",
     tournamentId: "tournament-26",
     portrait: "bedadiPortrait",
+    photoMode: "editorial-photo",
     portraitAltKey: "alt.bedadi",
     imageFit: "cover",
     imagePosition: "55% 30%",
@@ -76,6 +93,7 @@ export const winners: Winner[] = [
     location: "Iringa, Tanzania",
     tournamentId: "tournament-26",
     portrait: "mjeshiPortrait",
+    photoMode: "portrait-cutout",
     portraitAltKey: "alt.mjeshi",
     // Near-square cut-out: "cover" (bottom-anchored) only trims jacket edges
     // and gives him the same presence as the other champions.

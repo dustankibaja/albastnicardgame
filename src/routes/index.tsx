@@ -1,13 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { CompetitionSection } from "@/components/site/CompetitionSection";
 import { DownloadProvider } from "@/components/site/DownloadModal";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { Footer } from "@/components/site/Footer";
 import { Hero } from "@/components/site/Hero";
 import { HowToPlaySection } from "@/components/site/HowToPlaySection";
-import { Navbar } from "@/components/site/Navbar";
+import { getPublicContent, getPublicShop } from "@/lib/public/cms.functions";
+import { teaserProduct } from "@/lib/public/cms-mapping";
+import { SceneNav } from "@/components/nav/SceneNav";
 import { PhysicalCardsSection } from "@/components/site/PhysicalCardsSection";
-import { TwoWaysSection } from "@/components/site/TwoWaysSection";
+import { TableToScreen } from "@/components/site/TableToScreen";
 import { LanguageProvider } from "@/lib/i18n";
 import { site } from "@/content/site";
 
@@ -18,7 +21,11 @@ const description =
 export const Route = createFileRoute("/")({
   // One clock for SSR + hydration. Tournament/winner content is static and
   // version-controlled (src/content/), so nothing is fetched or polled.
-  loader: () => ({ renderedAt: Date.now() }),
+  loader: async () => ({
+    renderedAt: Date.now(),
+    content: await getPublicContent(),
+    shop: await getPublicShop(),
+  }),
   head: () => {
     const meta: Record<string, string>[] = [
       { title },
@@ -79,19 +86,43 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { renderedAt } = Route.useLoaderData();
+  const router = useRouter();
+  useEffect(() => {
+    let busy = false;
+    const refresh = async () => {
+      if (document.visibilityState !== "visible" || busy) return;
+      busy = true;
+      try {
+        await router.invalidate();
+      } finally {
+        busy = false;
+      }
+    };
+    const timer = window.setInterval(refresh, 15000);
+    window.addEventListener("focus", refresh);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", refresh);
+    };
+  }, [router]);
+  const { renderedAt, content, shop } = Route.useLoaderData();
   return (
     <LanguageProvider>
       <DownloadProvider>
         <div className="min-h-screen bg-alba-ink">
-          <Navbar />
+          <SceneNav />
           {/* CEO-approved journey: Hero / Two Ways → How to Play → Competition → Physical Cards → Final CTA */}
           <main>
             <Hero />
-            <TwoWaysSection />
-            <HowToPlaySection />
-            <CompetitionSection renderedAt={renderedAt} />
-            <PhysicalCardsSection />
+            <TableToScreen />
+            <HowToPlaySection tutorialId={content.tutorialId.data} />
+            <CompetitionSection
+              renderedAt={renderedAt}
+              tournaments={content.tournaments.data}
+              winners={content.winners.data}
+              countdownEnabled={content.countdown.data}
+            />
+            <PhysicalCardsSection product={teaserProduct(shop)} />
             <FinalCTA />
           </main>
           <Footer />
