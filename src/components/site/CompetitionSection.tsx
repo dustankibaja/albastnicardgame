@@ -171,15 +171,11 @@ function TournamentPanel({
 
       <div className="flex flex-col gap-3 border-t border-alba-paper/15 p-7 sm:flex-row sm:items-center sm:justify-between sm:p-10">
         {tournament.registrationUrl ? (
-          <AlbaButton asChildHref={tournament.registrationUrl} size="lg" className="tournament-register-cta">
-            <span className="tournament-register-copy">
-              <small>{lang === "sw" ? "JIUNGE KWENYE APP" : "REGISTER IN THE APP"}</small>
-              <strong>{t("cta.playApp")}</strong>
-            </span>
-            <span className="tournament-register-arrow" aria-hidden="true">↗</span>
+          <AlbaButton asChildHref={tournament.registrationUrl} size="lg">
+            {t("cta.playApp")}
           </AlbaButton>
         ) : (
-          <DownloadButton size="lg" className="tournament-register-cta w-full sm:w-auto">
+          <DownloadButton size="lg" className="w-full sm:w-auto">
             {t("cta.playApp")}
           </DownloadButton>
         )}
